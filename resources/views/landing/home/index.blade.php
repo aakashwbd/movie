@@ -6,7 +6,7 @@
             localStorage.setItem('accessToken', token)
         </script>
     @endif
-    <div class="container content-config">
+    <div class="container content-config" id="member-page">
         <div id="searchBannerImg">
             <div class="row align-items-center">
                 <div class="col-lg-4 col-sm-12 order-sm-2 order-lg-1 mb-3">
@@ -58,7 +58,7 @@
             <ul class="list" id="homeSearchListContainer"></ul>
 
             <div class="text-center">
-                <button class="btn text-white text-capitalize" id="loadMoreBtn">show more result</button>
+                <button class="btn btn-outline-light text-capitalize" id="loadMoreBtn">show more result</button>
             </div>
         </div>
     </div>
@@ -94,9 +94,49 @@
 @push('custom-js')
     <script>
         $('#searchForm').submit(function (e) {
+            let token = localStorage.getItem('accessToken')
             e.preventDefault();
             let form = $(this);
-            formSubmit('post', form)
+            // formSubmit('post', form)
+
+            let form_data = JSON.stringify(form.serializeJSON());
+            let formData = JSON.parse(form_data);
+
+            // console.log(formData)
+            let url = form.attr("action");
+
+            $.ajax({
+                type: 'post',
+                url: url,
+                data: formData,
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                    Authorization: token,
+                },
+                success: function (response) {
+                    if (
+                        response.status === "success" &&
+                        response.action === "search-user"
+                    ) {
+
+                        $('html, body').animate({
+                            scrollTop: $("#searchList").offset().top
+                        }, 100);
+                        $("#homeSearchListContainer").html("");
+                        userList(response);
+
+
+                    }
+
+
+
+                    // location.reload()
+                },
+                error: function (xhr, resp, text) {
+                    console.log(xhr);
+
+                }
+            });
         })
 
         $('#sendFlashForm').submit(function (e) {

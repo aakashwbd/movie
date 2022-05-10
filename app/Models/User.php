@@ -7,11 +7,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Carbon\Carbon;
 
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
-    protected $appends = ['is_favourite'];
+    protected $appends = ['is_favourite', 'is_latest', 'is_blocked'];
 
     /**
      * The attributes that are mass assignable.
@@ -43,6 +44,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(favourite::class, 'favourite_user_id', 'id');
     }
+    public function blocked()
+    {
+        return $this->hasMany(BlockList::class, 'block_user_id', 'id');
+    }
 
 
     public function getIsFavouriteAttribute(){
@@ -51,6 +56,20 @@ class User extends Authenticatable
         }else{
             return false;
         }
+    }
+
+
+
+    public function getIsBlockedAttribute(){
+        if(request()->user('sanctum')){
+            return (bool)$this->blocked->where('user_id', request()->user('sanctum')['id'])->first();
+        }else{
+            return false;
+        }
+    }
+
+    public function getIsLatestAttribute(){
+        return $this->created_at->toFormattedDateString();
     }
 
 }

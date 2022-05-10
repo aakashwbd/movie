@@ -67,14 +67,14 @@
                                 <div id="userPhone" class="d-none">
                                     <div class="form-group">
                                         <label class="form-label" id="phone_label" for="phone">Mobile</label>
-                                        <input class="form-control" type="text" id="phone" name="phone" placeholder="">
+                                        <input class="form-control" readonly type="text" id="phone" name="phone" placeholder="">
                                     </div>
                                 </div>
 
                                 <div id="userEmail" class="d-none">
                                     <div class="form-group">
-                                        <label class="form-label " id="email_label" for="email">Email</label>
-                                        <input class="form-control" type="email" id="email" name="email" placeholder="">
+                                        <label class="form-label" id="email_label" for="email">Email</label>
+                                        <input class="form-control" readonly type="email" id="email" name="email" placeholder="">
                                     </div>
                                 </div>
 
@@ -100,7 +100,8 @@
                                 <div class="form-group">
                                     <label class="form-label" id="hiv_label" for="hiv">HIV Status</label>
                                     <select class="form-select" id="hiv" name="test">
-                                        <option>1</option>
+                                        <option value="positive">Positive</option>
+                                        <option value="negative">Negative</option>
                                     </select>
                                 </div>
                             </div>
@@ -110,7 +111,8 @@
                                 <div class="form-group">
                                     <label class="form-label" id="preference_label" for="preference">Preference</label>
                                     <select class="form-select" id="preference" name="preference">
-                                        <option>1</option>
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
                                     </select>
                                 </div>
                             </div>
@@ -123,7 +125,7 @@
                         </div>
                         <div class="col-lg-6 offset-lg-3 mb-3">
                             <div class="d-flex align-items-center">
-                                <button class="btn btn-tweeter form-control text-capitalize me-2">cancel</button>
+                                <button type="button" onclick="cancleHandler()" class="btn btn-outline-secondary form-control text-capitalize me-2">cancel</button>
                                 <button type="submit" class="btn btn-primary form-control text-capitalize">save</button>
                             </div>
                         </div>
@@ -182,7 +184,7 @@
                     </div>
                 </div>
 
-                <div class="tab-pane fade show p-4" id="setting" role="tabpanel">
+                <div class="tab-pane fade show p-4 {{ ((request()->get('tab')) == "setting") ? "active" : ''}}" id="setting" role="tabpanel">
                     <form action="" class="text-white p-4">
                         <div class="row">
                             <div class="col-lg-6 mb-3">
@@ -378,6 +380,17 @@
 @endsection
 @push('custom-js')
     <script>
+
+
+
+        function cancleHandler(){
+            location.href = window.origin
+        }
+
+
+
+
+
         function profileUploader(event) {
             event.preventDefault();
             let file = event.target.files[0];
@@ -655,10 +668,11 @@
 
         function favouriteList(res){
             res.data.forEach(item=>{
+
                 $('#favouriteListShow').append(`
                     <div class="col-lg-6 col-12 col-sm-12 mb-3">
                             <div class="d-flex border-bottom p-2">
-                                <img class="avatar-sm" src="${item.favourite_user.image}" alt="">
+                                <img class="avatar-sm" src="${item.favourite_user.image ? item.favourite_user.image : window.origin + "/asset/image/default.jpg"}" alt="">
                                 <div class="ms-3">
                                    <h6>${item.favourite_user.username}</h6>
                                    <span>${item.favourite_user.address}</span>
@@ -676,7 +690,7 @@
                 $('#blockListShow').append(`
                     <div class="col-lg-6 col-12 col-sm-12 mb-3">
                             <div class="d-flex border-bottom p-2">
-                                <img class="avatar-sm" src="${item.block_user.image}" alt="">
+                                <img class="avatar-sm" src="${item.block_user.image ? item.block_user.image : window.origin + "/asset/image/default.jpg"}" alt="">
                                 <div class="ms-3">
                                    <h6>${item.block_user.username}</h6>
                                    <span>${item.block_user.address}</span>

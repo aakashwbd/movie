@@ -41,6 +41,7 @@ if (sizeof($explode) === 3) {
                          id="nav-recent" role="tabpanel">
 
                         <div id="top-blog"></div>
+                        <div id="emptyBlogList" class="d-none alert alert-warning">Please create a new blog to view the list.</div>
                         <div class="row" id="blogList"></div>
                     </div>
 
@@ -50,13 +51,11 @@ if (sizeof($explode) === 3) {
 
                         </div>
                         <div id="blogCommentList">
-
-                            <form action="{{url('/api/blog/comment')}}" class="d-flex align-items-center" id="blogCommentForm">
-                                <input type="hidden" id="blog_id" name="blog_id" value="">
-                                <input type="text" name="comment_text" class="form-control me-3" placeholder="write your comment">
-                                <button class="btn btn-primary">Send</button>
-                            </form>
-
+{{--                            <form action="{{url('/api/blog/comment')}}" class="d-flex align-items-center" id="blogCommentForm">--}}
+{{--                                <input type="hidden" id="blog_id" name="blog_id" value="">--}}
+{{--                                <input type="text" name="comment_text" class="form-control me-3" placeholder="write your comment">--}}
+{{--                                <button class="btn btn-primary">Send</button>--}}
+{{--                            </form>--}}
                         </div>
 
 
@@ -65,7 +64,7 @@ if (sizeof($explode) === 3) {
 
                 <div class="col-lg-4 col-sm-12 col-12">
                     <div class="title">
-                        <span class="bg-primary text-white py-1 px-4">Popular</span>
+                        <span id="popularBlogListTitle" class="d-none bg-primary text-white py-1 px-4">Popular</span>
                     </div>
 
 {{--                    <div class="d-flex align-items-center my-3">--}}
@@ -93,13 +92,7 @@ if (sizeof($explode) === 3) {
 
 @push('custom-js')
     <script>
-        $('#blogCommentForm').submit(function (e) {
-            e.preventDefault();
 
-            let token = localStorage.getItem('accessToken')
-            let form = $(this);
-            formSubmit('post', form, token)
-        })
 
         let constant = {
             location: window.location.search,
@@ -110,52 +103,106 @@ if (sizeof($explode) === 3) {
         }
 
         function allBlog(res){
-            res.data.forEach(item => {
-                $('#blogList').append(`
-                    <div class="col-lg-6 col-sm-12 col-12 my-5">
-                        <img class="img-fluid" src="${item.image}" alt="">
-                        <h6 class="my-3">${item.title}</h6>
-                        <span class="text-black-50 fst-italic text-capitalize"></span>
-                        <a href="{{url('/blogs?tab=comments')}}/${item.id}">
-                            <article class="text-black-50 blog-short-description my-2">
-                                ${item.description}
-                            </article>
-                        </a>
-                    </div>
-                `)
-            })
+            if(res.data.length > 0){
+                // $('#popularBlogListTitle').removeClass('d-none')
+                res.data.forEach(item => {
+                    $('#blogList').append(`
+                            <div class="col-lg-6 col-sm-12 col-12 my-5">
+                                <div class='card border'>
+
+                                    <img class="card-img-top" src="${item.image}" alt="">
+                                    <div class='card-body'>
+                                         <h6 class="my-3">${item.title}</h6>
+                                        <span class="text-black-50 fst-italic text-capitalize"></span>
+                                        <a href="{{url('/blogs?tab=comments')}}/${item.id}">
+                                            <article class="text-black-50 blog-short-description my-2">
+                                                ${item.description}
+                                            </article>
+                                        </a>
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+                    `)
+                })
+            }else{
+                $('#emptyBlogList').removeClass('d-none')
+            }
+
+        }
+
+        function clearError(input) {
+            $('#' + input.id).removeClass('is-invalid');
+            $('#' + input.id + '_label').removeClass('text-danger');
+            $('#' + input.id + '_icon').removeClass('text-danger');
+            $('#' + input.id + '_icon_border').removeClass('field-error');
+            $('#' + input.id + '_error').html('');
         }
 
         function singleBlog(res){
-            console.log("single blog res: ", res)
-            $('#blog_id').val(res.data.id)
-
+            let token = localStorage.getItem('accessToken')
             $('#singleBlog').append(`
-                    <img src="${res.data.image}" alt="">
+                    <img style='width: 100%; height: 500px' class='mb-3' src="${res.data.image}" alt="">
                     <h6>${res.data.title}</h6>
                     <article>${res.data.description}</article>
 
+                    ${token ? (`
+                     <form action="{{url('/api/blog/comment')}}" class="d-flex mt-5" id="blogCommentForm">
+                             <div class='w-100'>
+                                <input type="hidden" id="blog_id" name="blog_id" value="${res.data.id}">
+                                <input type="text" id='comment_text' name="comment_text" class="form-control me-3 comment_text" placeholder="write your comment" onchange="clearError(this)">
+                                <span id='comment_text_error' class='text-danger comment_text_error'></span>
+                            </div>
 
-                `)
+                            <button class="btn btn-primary ms-2">Send</button>
+                        </form>
 
-            if(res.data.blog_comments){
-                res.data.blog_comments.forEach(item=>{
-                    $('#blogCommentList').append(`
-                            <ul class="mt-2">
-                                <li class="d-flex my-3">
-                                    <img style="width: 50px; height: 50px" src="${item.user.image}" alt="">
-
-                                    <div class="ms-3">
-                                        <h6>${item.user.username}</h6>
-                                        <span id="comments${item.id}">${item.comment_text}</span>
-                                    </div>
-                                </li>
-
-                            </ul>
+                    `) : ''}
             `)
-                })
-            }
 
+            $('#blogCommentForm').submit(function (e) {
+                e.preventDefault();
+                let token = localStorage.getItem('accessToken')
+                let form = $(this);
+
+                let form_data = JSON.stringify(form.serializeJSON());
+                let formData = JSON.parse(form_data);
+
+
+                let url = form.attr("action");
+
+
+                $.ajax({
+                    type: 'post',
+                    url: url,
+                    data: formData,
+                    headers: {
+                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                        "Authorization": token,
+                    },
+                    success: function (response) {
+                        toastr.success(response.message)
+                        location.reload()
+
+                    },
+                    error: function (xhr, resp, text) {
+
+                        if (xhr && xhr.responseJSON) {
+                            let response = xhr.responseJSON;
+                            if (response.status && response.status === "validate_error") {
+                                $.each(response.message, function (index, message) {
+                                    $("." + message.field).addClass("is-invalid");
+                                    $("." + message.field + "_label").addClass("text-danger");
+                                    $("." + message.field + "_error").html(message.error);
+                                });
+                            }
+                        }
+                    }
+                });
+
+            })
         }
 
 
@@ -186,14 +233,57 @@ if (sizeof($explode) === 3) {
 
         $(document).ready(function (){
             if(constant.location === constant.allBlogs){
-
                 fetchData(constant.allBlogURL)
             }
             else if(constant.location === constant.singleBlog){
                 fetchData(constant.singleBlogURL)
-
             }
+
+
+            $.ajax({
+                url: window.origin + '/api/admin/blog/comment/<?= $comment_id?>',
+                type: 'GET',
+                dataType: "json",
+                processData: false,
+                contentType: false,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                },
+                success: function (res) {
+
+                    blogComment(res)
+
+                },
+                error: function (err){
+                    console.log(err)
+                }
+            })
         })
+
+
+        function blogComment(res){
+            res.data.forEach(item => {
+                let image = window.origin + '/asset/image/default.jpg'
+
+                    if(item.user.image){
+                        image = item.user.image
+                    }
+
+                $('#blogCommentList').append(`
+                            <ul class="mt-2">
+                                <li class="d-flex my-3">
+                                    <img style="width: 50px; height: 50px" src="${image}" alt="">
+
+                                    <div class="ms-3">
+                                        <h6>${item.user.username ? item.user.username : ''}</h6>
+                                        <span id="comments${item.id}">${item.comment_text}</span>
+                                    </div>
+                                </li>
+                            </ul>
+            `)
+            })
+
+        }
 
 
     </script>

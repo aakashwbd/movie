@@ -217,7 +217,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="locationModal" data-bs-keyboard="false" tabindex="-1">
+<div class="modal fade" id="locationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header justify-content-center">
@@ -248,13 +248,23 @@
             </div>
             <div class="modal-body">
                 <div class="text-center mb-3">
-                    <span>Please Enter Your Email or Phone For Recovery Password</span>
+                    <span id="forget_modal_title">Please Enter Your Email or Phone For Recovery Password</span>
                 </div>
                 <form action="{{url('api/forgot-password')}}" id="recoverForm">
                     <div class="form-group">
-                        <input required type="text" name="emailorphone" id="emailorphone"
-                               class="form-control email phone" placeholder="Email or Phone">
-                        <span class="text-danger phone_error email_error" id="forgetFromEmailOrPhone"></span>
+
+                        <input type="text" name="emailorphone" id="emailorphone"
+                               class="form-control emptyEmailPhone loginEmptyEmailPhone_input emptyEmailPhone email phone"
+                               placeholder="Email or Phone" onchange="clearError(this)">
+                        <span class="text-danger phone_error email_error" id="emailorphone_error"></span>
+
+                        <span class="text-danger d-none"
+                              id="loginEmptyEmailPhone">The email or phone filed is required</span>
+
+                        <span class="text-danger d-none"
+                              id="validateEmailPhone">Please, Enter the valid email or phone.</span>
+                        <span class="text-danger d-none"
+                              id="emailorphone_register_error">Please, Registered first</span>
                     </div>
                     <div class="text-center my-3">
                         <button type="submit" class="btn btn-primary form-control">Submit</button>
@@ -292,7 +302,8 @@
                     <div class="row my-3">
                         <div class="col-lg-4 col-sm-12 col-12">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="reports[]" value="prostitution" id="report1">
+                                <input class="form-check-input" type="checkbox" name="reports[]" value="prostitution"
+                                       id="report1">
                                 <label class="form-check-label" for="report1">
                                     Prostitution
                                 </label>
@@ -301,7 +312,8 @@
 
                         <div class="col-lg-4 col-sm-12 col-12">
                             <div class="form-check">
-                                <input class="form-check-input" name="reports[]" type="checkbox" value="scam" id="report2">
+                                <input class="form-check-input" name="reports[]" type="checkbox" value="scam"
+                                       id="report2">
                                 <label class="form-check-label" for="report2">
                                     Scam
                                 </label>
@@ -310,7 +322,8 @@
 
                         <div class="col-lg-4 col-sm-12 col-12">
                             <div class="form-check">
-                                <input class="form-check-input" name="reports[]" type="checkbox" value="minor" id="report3">
+                                <input class="form-check-input" name="reports[]" type="checkbox" value="minor"
+                                       id="report3">
                                 <label class="form-check-label" for="report3">
                                     Minor
                                 </label>
@@ -319,7 +332,8 @@
                     </div>
 
                     <label for="message" id="message_label" class="message_label">Message</label>
-                    <textarea name="message" id="message" class="form-control my-3 message" onchange="clearError(this)"></textarea>
+                    <textarea name="message" id="message" class="form-control my-3 message"
+                              onchange="clearError(this)"></textarea>
                     <span id="message_error" class="text-danger message_error"></span>
 
                     <div class="text-center">
@@ -358,7 +372,7 @@
 <script src="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/cdbootstrap/js/cdb.min.js"></script>
 
-
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{{asset('js/app.js')}}"></script>
 <script src="{{asset('js/main.js')}}"></script>
 <script>
@@ -373,13 +387,11 @@
         let url = form.attr('action');
 
         let checked = []
-        $("input[name='reports[]']:checked").each(function ()
-        {
-           checked.push($(this).val());
+        $("input[name='reports[]']:checked").each(function () {
+            checked.push($(this).val());
 
         });
         formData.reports = checked
-
 
 
         $.ajax({
@@ -426,13 +438,103 @@
         $('#' + input.id + '_icon').removeClass('text-danger');
         $('#' + input.id + '_icon_border').removeClass('field-error');
         $('#' + input.id + '_error').html('');
+        $('#' + input.id + '_register_error').html('');
     }
 
     $('#recoverForm').submit(function (e) {
         e.preventDefault();
 
         let form = $(this);
-        formSubmit("post", form);
+
+
+        let form_data = JSON.stringify(form.serializeJSON());
+        let formData = JSON.parse(form_data);
+
+        if (formData.emailorphone) {
+            let data = {
+                email: null,
+                phone: null,
+            };
+
+            let emailRegex =
+                /(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/;
+
+            let numberRegex = /^\s*[+-]?(\d+|\d*\.\d+|\d+\.\d*)([Ee][+-]?\d+)?\s*$/
+
+
+            if(emailRegex.test(formData.emailorphone)){
+                data.email = formData.emailorphone;
+                formData.email = data.email;
+            }else if(numberRegex.test(formData.emailorphone)){
+                data.phone = formData.emailorphone;
+                formData.phone = data.phone;
+            }else{
+                $("#validateEmailPhone").removeClass('d-none')
+                $('.emptyEmailPhone').addClass("is-invalid")
+            }
+
+        }else{
+            $('#loginEmptyEmailPhone').removeClass('d-none')
+            $('.emptyEmailPhone').addClass("is-invalid")
+            $('.loginEmptyEmailPhone_label').addClass("text-danger")
+        }
+
+        if (formData.dob) {
+            let now = new Date().getFullYear();
+            formData.age = now - formData.dob;
+        }
+
+
+        let url = form.attr("action");
+
+
+
+        $.ajax({
+            type: 'post',
+            url: url,
+            data: formData,
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+            success: function (response) {
+                console.log(response)
+                if (response.form === "recoverForm") {
+                    if (response.data) {
+                        $("#recoverPasswordForm").removeClass("d-none");
+                        $("#recoverForm").addClass("d-none");
+
+                        if (response.data.email) {
+                            $("#recoverEmailHiddenInput").val(response.data.email);
+                            $("#forget_modal_title").text("Set a new password for "+ response.data.email );
+                        } else if (response.data.phone) {
+                            $("#recoverPhoneHiddenInput").val(response.data.phone);
+                            $("#forget_modal_title").text("Set a new password for "+ response.data.phone);
+
+                        }
+                    } else {
+                        if(formData.emailorphone !== ''){
+                            $("#emailorphone_register_error").removeClass("d-none");
+                        }
+                    }
+                }
+
+
+            },
+            error: function (xhr, resp, text) {
+                if (xhr && xhr.responseJSON) {
+                    let response = xhr.responseJSON;
+                    if (response.status && response.status === "validate_error") {
+                        $.each(response.message, function (index, message) {
+                            $("." + message.field).addClass("is-invalid");
+                            $("." + message.field + "_label").addClass(
+                                "text-danger"
+                            );
+                            $("." + message.field + "_error").html(message.error);
+                        });
+                    }
+                }
+            }
+        });
     })
 
     $('#recoverPasswordForm').submit(function (e) {

@@ -119,6 +119,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/blog/{id}', [\App\Http\Controllers\BlogController::class, 'getSingleBlog']);
     Route::delete('/blog/{id}', [\App\Http\Controllers\BlogController::class, 'delete']);
     Route::patch('/blog/{id}', [\App\Http\Controllers\BlogController::class, 'update']);
+    Route::get('/blog/comment/{id}', [\App\Http\Controllers\BlogCommentController::class, 'getAllComment']);
 
     Route::post('/flash', [\App\Http\Controllers\FlashController::class, 'store']);
     Route::get('/flash/get', [\App\Http\Controllers\FlashController::class, 'show']);
@@ -147,6 +148,7 @@ Route::prefix('admin')->group(function () {
 
 });
 Route::post('/blog/comment', [\App\Http\Controllers\BlogCommentController::class, 'store']);
+
 Route::post('file/store', [\App\Http\Controllers\FileController::class, 'store']);
 Route::get('file/video', [\App\Http\Controllers\FileController::class, 'getVideo']);
 Route::get('file/video/{id}', [\App\Http\Controllers\FileController::class, 'singleVideo']);
@@ -154,7 +156,10 @@ Route::post('file/video/search', [\App\Http\Controllers\FileController::class, '
 
 Route::post('video/search', [\App\Http\Controllers\VideoController::class, 'search']);
 Route::post('place/store', [\App\Http\Controllers\AdController::class, 'store']);
-Route::post('place/update', [\App\Http\Controllers\AdController::class, 'update']);
+
+Route::patch('place/{id}', [\App\Http\Controllers\AdController::class, 'update']);
+Route::delete('place/{id}', [\App\Http\Controllers\AdController::class, 'delete']);
+
 Route::get('place/get-all', [\App\Http\Controllers\AdController::class, 'getAll']);
 Route::post('/news/search', [\App\Http\Controllers\AdController::class, 'search']);
 

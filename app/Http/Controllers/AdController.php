@@ -18,18 +18,41 @@ class AdController extends Controller
 
     public function store (Request $request){
         try {
+            $validator = Validator::make($request->all(), [
+                "title" => "required",
+                "address" => "required",
+                "description" => "required",
+            ]);
+
+            if ($validator->fails()) {
+                $errors = $validator->errors()->messages();
+                return validateError($errors);
+            }
+
+            $duration = [];
+            if($request->duration == 'month'){
+                $duration['month'] = 1;
+            }
+            if($request->duration == 'week'){
+                $duration['week'] = 1;
+            }
+            if($request->duration == 'hour'){
+                $duration['hour'] = 24;
+            }
+
             $ad = new Ad();
             $ad->user_id = auth()->id();
             $ad->title = $request->title;
             $ad->address = $request->address;
             $ad->description = $request->description;
-            $ad->duration = $request->duration;
+            $ad->duration = $duration;
             $ad->image = $request->image;
+
 
             if ($ad->save()){
                 return response([
                     "status" => "success",
-                    "message" => "Ads Upload Successfully Done"
+                    "message" => "A new advertisement has been created."
                 ]);
             }
         }catch (\Exception $e){
@@ -40,24 +63,57 @@ class AdController extends Controller
         }
     }
 
-    public function update (Request $request){
+    public function update (Request $request, $id){
 
         try {
-            $ad =   Ad::where('id', $request->ad_id);
+            $ad =   Ad::where('id', $id)->first();
+
+            $duration = [];
+            if($request->duration == 'month'){
+                $duration['month'] = 1;
+            }
+            if($request->duration == 'week'){
+                $duration['week'] = 1;
+            }
+            if($request->duration == 'hour'){
+                $duration['hour'] = 24;
+            }
+
+
             if($ad){
                 $ad->title = $request->title ?? $ad->title;
                 $ad->address = $request->address ?? $ad->address;
                 $ad->description = $request->description ?? $ad->description;
-//                $ad->duration = $request->duration ?? $ad->duration;
-//                $ad->image = $request->image ?? $ad->image;
+                $ad->duration = $duration;
+                $ad->image = $request->image ?? $ad->image;
 
                 if ($ad->update()){
                     return response([
                         "status" => "success",
-                        "message" => "Ads Update Successfully Done"
+                        "message" => "Ads information has been updated."
                     ]);
                 }
             }
+
+
+        }catch (\Exception $e){
+            return response([
+                'status' => 'serverError',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function delete ($id){
+
+        try {
+            $ad =   Ad::where('id', $id)->delete();
+
+
+            return response([
+                                "status" => "success",
+                                "message" => "The advertisement has been deleted."
+                            ]);
 
 
         }catch (\Exception $e){

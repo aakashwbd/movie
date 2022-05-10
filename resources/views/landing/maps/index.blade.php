@@ -95,6 +95,7 @@
                 data: formData,
                 success: function (res) {
                     toastr.success(res.message)
+                    location.reload()
                 }, error: function (jqXhr, ajaxOptions, thrownError) {
                     console.log(jqXhr)
                 }

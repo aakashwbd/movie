@@ -10,6 +10,10 @@ class Ad extends Model
     use HasFactory;
     protected $guarded=[];
 
+    protected $casts=[
+        'duration'=>'array',
+    ];
+
     public function user(){
         return $this->belongsTo(User::class);
     }

@@ -125,6 +125,7 @@ $(document).ready(function () {
      * FETCH USER WHEN SEARCH FORM ADDRESS FIELD EMPTY
      */
     let searchFormAddress = $(".getLocation").val();
+
     let formData = new FormData();
     if (searchFormAddress === "") {
         let user = JSON.parse(localStorage.getItem("user"));
@@ -238,8 +239,7 @@ $(document).ready(function () {
                     images[Math.floor(Math.random() * images.length)];
             } else if (res.status === "success" && res.data.length === 0) {
                 if (bannerImg) {
-                    bannerImg.src =
-                        "https://images.unsplash.com/photo-1631427962232-803d4f30c64f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80";
+                    bannerImg.src = window.origin + '/asset/image/banner.jpg'
                 }
             }
         },
@@ -277,9 +277,7 @@ formSubmit = function (type, form, token = null) {
     }
 
 
-
     let url = form.attr("action");
-
 
 
     $.ajax({
@@ -325,9 +323,8 @@ formSubmit = function (type, form, token = null) {
 
             if (response.form === "passwordChanged") {
                 toastr.success(response.message);
-                $("#forgotModal").modal("hide");
+                location.reload()
             }
-
 
 
             if (
@@ -362,7 +359,7 @@ formSubmit = function (type, form, token = null) {
                 window.location.href = window.origin + "/admin";
                 location.reload()
             }
-            // location.reload()
+            location.reload()
         },
         error: function (xhr, resp, text) {
             console.log(xhr);
@@ -391,10 +388,9 @@ clearError = function (input) {
 };
 $("#signOut").click(function () {
     localStorage.removeItem("accessToken");
-    location.reload();
     localStorage.removeItem("user");
+    location.href = window.origin
 });
-
 
 
 uploader = function (
@@ -505,11 +501,23 @@ $(document).on("click", ".editCategory", function () {
 
 userList = function (res) {
 
+
+    let date = new Date();
+    let currentDate = ((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '-' + ((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) + '-' + date.getFullYear()
+
+
     res.data.forEach((item) => {
+
+
         let img = window.origin + '/images/Default_Image_Thumbnail.png'
-        if(item.image){
+        if (item.image) {
             img = item.image
         }
+
+        let getDate = new Date(item.created_at);
+        let createdDate = ((getDate.getMonth() > 8) ? (getDate.getMonth() + 1) : ('0' + (getDate.getMonth() + 1))) + '-' + ((getDate.getDate() > 9) ? getDate.getDate() : ('0' + getDate.getDate())) + '-' + getDate.getFullYear()
+
+
         $("#message-box").append(`
             <div class="messenger d-none" id="messenger${item.id}">
                 <div class="header">
@@ -538,32 +546,39 @@ userList = function (res) {
                     <div class="row">
                         <div class="col-lg-1 col-sm-4 col-4">
                             <a href="JavaScript:void(0)" onclick="visitProfile(${
-                                item.id
-                            })">
+            item.id
+        })">
                                     <img id="userImage${
-                                        item.id
-                                    }" class="userListProfileImg profile__image img-blur"
+            item.id
+        }" class="userListProfileImg profile__image img-blur"
                                  src="${img}"
                                  alt="">
                              </a>
                         </div>
                         <div class="col-lg-8 col-sm-6 col-6">
                             <div class="d-flex align-items-center mb-3">
-                        <span class="iconify me-3 text-primary" data-icon="entypo:location" data-width="30"
-                              data-height="30"></span>
-                                <span id="user-address">${item.address}</span>
-                                <span class="mx-3">|</span>
-                                <span class="iconify text-primary" data-icon="clarity:new-solid" data-width="30"
-                                      data-height="30"></span>
+                            ${item.address ?
+            (`<span class="iconify me-3 text-primary" data-icon="entypo:location" data-width="30" data-height="30"></span>
+                                 <span id="user-address">${item.address}</span>
+                                 <span class="mx-3">|</span>`) : ""
+        }
+                            ${currentDate > createdDate   ? '' : (`
+                                <span class="iconify text-danger" data-icon="clarity:new-solid" data-width="20" data-height="20"></span>
+                            `)}
+
                             </div>
+
                             <div class="d-flex align-items-center">
-                                <span class="iconify text-success me-3" data-icon="ci:dot-03-m" data-width="30"
-                              data-height="30"></span>
-                                <span id="user-name" class="me-3">${
-                                    item.username
-                                }</span>
-                                <span class="me-3">${item.age}y.o</span>
-                                <span>host/visit</span>
+                                ${item.username ? (`
+<!--                                    <span class="iconify text-success me-3" data-icon="ci:dot-03-m" data-width="30" data-height="30"></span>-->
+                                    <span id="user-name" class="me-3">${item.username}</span>
+                                `) : ''}
+
+                                ${item.age ? (`
+                                    <span class="me-3">${item.age}y.o</span>
+                                `) : ''}
+
+<!--                                <span>host/visit</span>-->
                             </div>
 
                         </div>
@@ -578,8 +593,8 @@ userList = function (res) {
                                         data-icon="bxs:message-rounded"
                                         data-width="30"
                                         data-height="30" onclick="messenger('messengerIcon${
-                                            item.id
-                                        }', ${item.id})"></span>
+            item.id
+        }', ${item.id})"></span>
                                 </li>
 
                                 <li class="extra-list-item">
@@ -608,27 +623,27 @@ userList = function (res) {
                                     <ul class="dropdown-menu dropdown-menu-end p-2">
                                         <li class="dropdown-item">
                                             <button onclick="favouriteHandler(${
-                                                item.id
-                                            })" class="btn form-control text-capitalize">
+            item.id
+        })" class="btn form-control text-capitalize">
                                                 <span
                                                     class="iconify
                                                     ${
-                                                        item.is_favourite
-                                                            ? "text-primary"
-                                                            : null
-                                                    }"
+            item.is_favourite
+                ? "text-primary"
+                : null
+        }"
                                                     data-icon="ic:round-favorite"
                                                     data-width="20"
                                                     data-height="20"></span>
-                                                <span>favorite</span>
+                                                <span>${item.is_favourite ? "Unfavorite" : 'favorite'}</span>
                                             </button>
                                         </li>
                                         <li class="dropdown-divider"></li>
 
                                         <li class="dropdown-item">
                                             <button onclick="mapHandler(${
-                                                item.id
-                                            })"  class="btn form-control text-capitalize">
+            item.id
+        })"  class="btn form-control text-capitalize">
                                     <span class="iconify"  data-icon="bxs:map-pin" data-width="20"
                                           data-height="20"></span>
                                                 <span>map</span>
@@ -638,8 +653,8 @@ userList = function (res) {
 
                                         <li class="dropdown-item">
                                             <button onclick="alertHandler(${
-                                                item.id
-                                            })" class="btn form-control text-capitalize" data-bs-toggle="modal"
+            item.id
+        })" class="btn form-control text-capitalize" data-bs-toggle="modal"
                                                     data-bs-target="#alertModal">
                                     <span class="iconify" data-icon="akar-icons:triangle-alert-fill" data-width="20"
                                           data-height="20"></span>
@@ -652,11 +667,11 @@ userList = function (res) {
 
                                         <li class="dropdown-item">
                                             <button onclick="blockHandler(${
-                                                item.id
-                                            })" class="btn form-control text-capitalize">
+            item.id
+        })" class="btn form-control text-capitalize">
                                     <span class="iconify" data-icon="akar-icons:block" data-width="20"
                                           data-height="20"></span>
-                                                <span>blocklist</span>
+                                                <span>${item.is_blocked ? "Unblock" : 'block'}</span>
                                             </button>
                                         </li>
                                     </ul>
@@ -848,7 +863,6 @@ var fromuserId = "";
 var TouserId = "";
 
 messenger = function (id, userid) {
-    console.log("Usersss", userid);
     let token = localStorage.getItem("accessToken") || null;
     if (token) {
         $("#messenger" + userid).removeClass("d-none");
@@ -916,11 +930,11 @@ messenger = function (id, userid) {
 
             $("#messages" + e.to_user_id).append(`
                 <li class="${
-                    e.to_user_id == TouserId ? "text-start" : "text-end"
-                }">
+                e.to_user_id == TouserId ? "text-start" : "text-end"
+            }">
                     <span class="${
-                        e.to_user_id == TouserId ? "bg-success" : "bg-warning"
-                    } d-inline-block rounded mb-2 p-2">
+                e.to_user_id == TouserId ? "bg-success" : "bg-warning"
+            } d-inline-block rounded mb-2 p-2">
                         ${e.message}
                     </span>
                 </li>
@@ -932,13 +946,13 @@ messenger = function (id, userid) {
 
             $("#messages" + e.from_user_id).append(`
                 <li class="${
-                    e.from_user_id != e.to_user_id ? "text-end" : "text-start"
-                }">
+                e.from_user_id != e.to_user_id ? "text-end" : "text-start"
+            }">
                     <span class="${
-                        e.from_user_id != e.to_user_id
-                            ? "bg-warning"
-                            : "bg-success"
-                    } d-inline-block rounded mb-2 p-2">
+                e.from_user_id != e.to_user_id
+                    ? "bg-warning"
+                    : "bg-success"
+            } d-inline-block rounded mb-2 p-2">
                         ${e.message}
                     </span>
                 </li>
@@ -969,13 +983,13 @@ function fetchMSG(to_user_id, userid) {
             res.data.forEach((item) => {
                 $("#messages" + userid).append(`
                     <li class="${
-                        item.from_user == userid ? "text-end" : "text-start"
-                    }">
+                    item.from_user == userid ? "text-end" : "text-start"
+                }">
                         <span class="${
-                            item.from_user == userid
-                                ? "bg-warning"
-                                : "bg-success"
-                        } d-inline-block rounded mb-2 p-2">
+                    item.from_user == userid
+                        ? "bg-warning"
+                        : "bg-success"
+                } d-inline-block rounded mb-2 p-2">
                             ${item.messages}
                         </span>
                     </li>
@@ -989,6 +1003,7 @@ function fetchMSG(to_user_id, userid) {
         },
     });
 }
+
 //
 // $(document).ready(function () {
 //     let token = localStorage.getItem("accessToken");

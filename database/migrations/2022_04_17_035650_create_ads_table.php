@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('address')->nullable();
             $table->string('description')->nullable();
             $table->string('image')->nullable();
-            $table->string('duration')->nullable();
+            $table->json('duration')->nullable();
             $table->timestamps();
         });
     }

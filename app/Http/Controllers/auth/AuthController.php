@@ -24,13 +24,14 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-//        dd($request->all());
         try {
             $validator = Validator::make($request->all(), [
                 "email" => "unique:users|email:rfc,dns",
                 "phone" => "unique:users",
                 "password" => "required|min:6",
             ]);
+
+
 
             if ($validator->fails()) {
                 $errors = $validator->errors()->messages();
@@ -212,7 +213,7 @@ class AuthController extends Controller
                 if ($userData->update()) {
                     return response([
                         "status" => "success",
-                        "message" => "Profile Update Successfully Complete"
+                        "message" => "The profile information has been updated"
                     ]);
                 }
             }
@@ -241,7 +242,7 @@ class AuthController extends Controller
                     return response([
                         "status" => "success",
                         "form" => "passwordChanged",
-                        "message" => "Password Recover Successfully Complete"
+                        "message" => "The password has been recovered."
                     ]);
                 }
             }
