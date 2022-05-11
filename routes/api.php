@@ -22,6 +22,10 @@ Route::prefix('auth')->group(function () {
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('profile', [AuthController::class, "profileInfo"]);
+        Route::post('profile/settings', [\App\Http\Controllers\ProfileSetting::class, "store"]);
+        Route::get('profile/settings', [\App\Http\Controllers\ProfileSetting::class, "getProfile"]);
+        Route::patch('profile/settings/suspend', [\App\Http\Controllers\ProfileSetting::class, "suspend"]);
+        Route::delete('profile/settings/delete', [\App\Http\Controllers\ProfileSetting::class, "delete"]);
     });
 });
 

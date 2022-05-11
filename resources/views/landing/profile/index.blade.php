@@ -1,11 +1,8 @@
 <?php
-    $currentControllerName = Request::segment(1);
-    $currentFullRouteName = Route::getFacadeRoot()
-        ->current()
-        ->uri();
-
-
-    //    echo phpinfo();
+$currentControllerName = Request::segment(1);
+$currentFullRouteName = Route::getFacadeRoot()
+    ->current()
+    ->uri();
 ?>
 
 
@@ -27,18 +24,21 @@
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link {{ ((request()->get('tab')) == "setting") ? "active" : ''}}" id="setting-tab" data-bs-toggle="tab" data-bs-target="#setting"
+                    <button class="nav-link {{ ((request()->get('tab')) == "setting") ? "active" : ''}}"
+                            id="setting-tab" data-bs-toggle="tab" data-bs-target="#setting"
                             type="button" role="tab" aria-controls="contact" aria-selected="false">Setting
                     </button>
                 </li>
 
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link {{ ((request()->get('tab')) == "favorite") ? "active" : ''}}" id="favorite-tab" data-bs-toggle="tab" data-bs-target="#favorite"
+                    <button class="nav-link {{ ((request()->get('tab')) == "favorite") ? "active" : ''}}"
+                            id="favorite-tab" data-bs-toggle="tab" data-bs-target="#favorite"
                             type="button" role="tab" aria-controls="home" aria-selected="true">Favorite
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link {{ ((request()->get('tab')) == "blacklist") ? "active" : ''}}" id="blacklist-tab" data-bs-toggle="tab" data-bs-target="#blocklist"
+                    <button class="nav-link {{ ((request()->get('tab')) == "blacklist") ? "active" : ''}}"
+                            id="blacklist-tab" data-bs-toggle="tab" data-bs-target="#blocklist"
                             type="button" role="tab" aria-controls="profile" aria-selected="false">Blacklist
                     </button>
                 </li>
@@ -67,14 +67,16 @@
                                 <div id="userPhone" class="d-none">
                                     <div class="form-group">
                                         <label class="form-label" id="phone_label" for="phone">Mobile</label>
-                                        <input class="form-control" readonly type="text" id="phone" name="phone" placeholder="">
+                                        <input class="form-control" readonly type="text" id="phone" name="phone"
+                                               placeholder="">
                                     </div>
                                 </div>
 
                                 <div id="userEmail" class="d-none">
                                     <div class="form-group">
                                         <label class="form-label" id="email_label" for="email">Email</label>
-                                        <input class="form-control" readonly type="email" id="email" name="email" placeholder="">
+                                        <input class="form-control" readonly type="email" id="email" name="email"
+                                               placeholder="">
                                     </div>
                                 </div>
 
@@ -125,7 +127,9 @@
                         </div>
                         <div class="col-lg-6 offset-lg-3 mb-3">
                             <div class="d-flex align-items-center">
-                                <button type="button" onclick="cancleHandler()" class="btn btn-outline-secondary form-control text-capitalize me-2">cancel</button>
+                                <button type="button" onclick="cancleHandler()"
+                                        class="btn btn-outline-secondary form-control text-capitalize me-2">cancel
+                                </button>
                                 <button type="submit" class="btn btn-primary form-control text-capitalize">save</button>
                             </div>
                         </div>
@@ -184,25 +188,44 @@
                     </div>
                 </div>
 
-                <div class="tab-pane fade show p-4 {{ ((request()->get('tab')) == "setting") ? "active" : ''}}" id="setting" role="tabpanel">
+                <div class="tab-pane fade show p-4 {{ ((request()->get('tab')) == "setting") ? "active" : ''}}"
+                     id="setting" role="tabpanel">
                     <form action="" class="text-white p-4">
                         <div class="row">
                             <div class="col-lg-6 mb-3">
                                 <div class="form-group">
-                                    <label class="form-label" id="alert_email_label" for="alert_email">Alert By
-                                        Email</label>
-                                    <select id="alert_email" class="form-select">
-                                        <option value="">1</option>
+                                    <label class="form-label" id="alert_email_label" for="alert_email">
+                                        Alert by email in case of a message:
+                                    </label>
+                                    <select
+                                        id="alert_by_email"
+                                        name="alert_by_email"
+                                        class="form-select"
+                                        onchange="profileSettingHandler(this)"
+                                    >
+                                        <option value="week">Once a week</option>
+                                        <option value="month">Once a month</option>
+                                        <option value="everyday">Everyday</option>
                                     </select>
                                 </div>
                             </div>
 
                             <div class="col-lg-6 mb-3">
                                 <div class="form-group">
-                                    <label class="form-label" id="premium_status_label" for="premium_status">Premium
-                                        Status</label>
-                                    <select id="premium_status" class="form-select">
-                                        <option value="">1</option>
+                                    <label class="form-label" id="premium_status_label" for="premium_status">
+                                        Premium status
+                                        <span class="iconify" data-icon="mdi:chess-queen" data-width="20"
+                                              data-height="20"></span>
+                                        :
+                                    </label>
+                                    <select
+                                        id="premium_status"
+                                        name="premium_status"
+                                        class="form-select"
+                                        onchange="profileSettingHandler(this)"
+                                    >
+                                        <option value="hide">Hide my status</option>
+                                        <option value="show">Show everyone</option>
                                     </select>
                                 </div>
                             </div>
@@ -210,30 +233,50 @@
 
                             <div class="col-lg-6 mb-3">
                                 <div class="form-group">
-                                    <label class="form-label" id="premium_status_label" for="premium_status">Reminder
-                                        Message</label>
-                                    <select id="premium_status" class="form-select">
-                                        <option value="">1</option>
+                                    <label class="form-label" id="premium_status_label" for="reminder_message">
+                                        Reminder message after 1 month absence :</label>
+                                    <select
+                                        id="reminder_message"
+                                        name="reminder_message"
+                                        class="form-select"
+                                        onchange="profileSettingHandler(this)"
+                                    >
+                                        <option value="agree">I agree to be connected again by email</option>
+                                        <option value="disagree">I disagree to be connected again by email</option>
                                     </select>
                                 </div>
                             </div>
 
                             <div class="col-lg-6 mb-3">
                                 <div class="form-group">
-                                    <label class="form-label" id="premium_status_label" for="premium_status">Colorblind
-                                        Mode</label>
-                                    <select id="premium_status" class="form-select">
-                                        <option value="">1</option>
+                                    <label class="form-label" id="colorblind_mode_label" for="colorblind_mode">
+                                        Colorblind mode :
+                                    </label>
+                                    <select
+                                        id="colorblind_mode"
+                                        name="colorblind_mode"
+                                        class="form-select"
+                                        onchange="profileSettingHandler(this)"
+                                    >
+                                        <option value="enabled">Enable</option>
+                                        <option value="disabled">Disable</option>
                                     </select>
                                 </div>
                             </div>
 
                             <div class="col-lg-6 mb-3">
                                 <div class="form-group">
-                                    <label class="form-label" id="premium_status_label" for="premium_status">Exhibits
-                                        Notification</label>
-                                    <select id="premium_status" class="form-select">
-                                        <option value="">1</option>
+                                    <label class="form-label" id="premium_status_label" for="exhibits_notification">
+                                        Exhibits notifications in the menu :
+                                    </label>
+                                    <select
+                                        id="exhibits_notification"
+                                        name="exhibits_notification"
+                                        class="form-select"
+                                        onchange="profileSettingHandler(this)"
+                                    >
+                                        <option value="enabled">Enable</option>
+                                        <option value="disabled">Disable</option>
                                     </select>
                                 </div>
                             </div>
@@ -241,46 +284,74 @@
                             <div class="col-lg-6 mb-3">
                                 <div class="form-group">
                                     <label class="form-label" id="premium_status_label"
-                                           for="premium_status">Language</label>
-                                    <select id="premium_status" class="form-select">
-                                        <option value="">1</option>
-                                    </select>
+                                           for="languages">Language :</label>
+                                    <select
+                                        id="languages"
+                                        name="language"
+                                        class="form-select"
+                                        onchange="profileSettingHandler(this)"
+                                    ></select>
                                 </div>
                             </div>
 
                             <div class="col-lg-6 mb-3">
                                 <div class="form-group">
-                                    <label class="form-label" id="premium_status_label" for="premium_status">Sound
-                                        Notification</label>
-                                    <select id="premium_status" class="form-select">
-                                        <option value="">1</option>
+                                    <label
+                                        class="form-label"
+                                        id="premium_status_label"
+                                        for="premium_status"
+
+                                    >
+                                        Sound notifications</label>
+                                    <select
+                                        id="sound_notification"
+                                        name="sound_notification"
+                                        class="form-select"
+                                        onchange="profileSettingHandler(this)"
+                                    >
+                                        <option value="enabled">Enable</option>
+                                        <option value="disabled">Disable</option>
                                     </select>
                                 </div>
                             </div>
 
                             <hr class="my-5">
 
-                            <div class="col-lg-6 offset-lg-3 mb-3">
-                                <div class="d-flex align-items-center">
-                                    <button data-bs-toggle="modal" data-bs-target="#suspendModal"
-                                            class="btn btn-tweeter form-control text-capitalize me-2">Suspend My Account
-                                    </button>
-                                    <button class="btn btn-primary form-control text-capitalize">Delete My Account
-                                    </button>
-                                </div>
-                            </div>
+
                         </div>
 
                     </form>
+                    <div class="col-lg-6 offset-lg-3 mb-3">
+                        <div class="d-flex align-items-center">
+                            <button
+                                data-bs-toggle="modal"
+                                data-bs-target="#suspendModal"
+                                class="btn btn-outline-secondary form-control text-capitalize me-2"
+                            >
+                                Suspend My Account
+                            </button>
+
+                            <button
+
+                                data-bs-toggle="modal"
+                                data-bs-target="#deleteModal"
+                                class="btn btn-primary form-control text-capitalize"
+                            >
+                                Delete My Account
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="tab-pane fade show p-4 {{ ((request()->get('tab')) == "favorite") ? "active" : ''}}" id="favorite" role="tabpanel">
+                <div class="tab-pane fade show p-4 {{ ((request()->get('tab')) == "favorite") ? "active" : ''}}"
+                     id="favorite" role="tabpanel">
                     <div class="row" id="favouriteListShow">
 
                     </div>
 
                 </div>
-                <div class="tab-pane fade show p-4 {{ ((request()->get('tab')) == "blacklist") ? "active" : ''}}" id="blocklist" role="tabpanel">
+                <div class="tab-pane fade show p-4 {{ ((request()->get('tab')) == "blacklist") ? "active" : ''}}"
+                     id="blocklist" role="tabpanel">
                     <div class="row" id="blockListShow">
 
                     </div>
@@ -337,59 +408,177 @@
     </div>
 
 
-    {{--    <div class="modal fade" id="privacyModal" tabindex="-1">--}}
-    {{--        <div class="modal-dialog modal-dialog-centered">--}}
-    {{--            <div class="modal-content">--}}
-    {{--                <div class="modal-body">--}}
+    <div class="modal fade" id="suspendModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header justify-content-center">
+                    <h6 class="">Are you sure you want to suspend?</h6>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center">
+                        <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis, nemo.</span>
 
-    {{--                    <div class="signup-content">--}}
-    {{--                        <h4 class="text-capitalize text-center">Privacy & Save</h4>--}}
-    {{--                        <hr>--}}
-
-    {{--                        <form action="{{url('/api/auth/register')}}" id="registerForm">--}}
-    {{--                            <span class="fw-bold my-2">Privacy</span>--}}
-
-    {{--                            <div class="form-check">--}}
-    {{--                                <input class="form-check-input" type="radio" name="privacy" id="privacy" value="public" checked>--}}
-    {{--                                <label class="form-check-label" for="privacy">--}}
-    {{--                                    Public--}}
-    {{--                                </label>--}}
-    {{--                            </div>--}}
-    {{--                            <div class="form-check">--}}
-    {{--                                <input class="form-check-input" type="radio" name="privacy" id="privacy" value="private" checked>--}}
-    {{--                                <label class="form-check-label" for="privacy">--}}
-    {{--                                    Private--}}
-    {{--                                </label>--}}
-    {{--                            </div>--}}
-
-
-
+                        <div class="my-4">
+                            <button
+                                data-bs-dismiss="modal"
+                                class="btn btn-outline-secondary me-2"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onclick="applySuspendHandler()"
+                                class="btn btn-primary me-2"
+                            >
+                                Submit
+                            </button>
+                        </div>
+                    </div>
 
 
 
-    {{--                            <button type="submit" class="btn btn-primary form-control text-capitalize my-3 rounded-0 py-2">--}}
-    {{--                                register--}}
-    {{--                            </button>--}}
+                </div>
+            </div>
+        </div>
+    </div>
 
-    {{--                        </form>--}}
-    {{--                    </div>--}}
-    {{--                </div>--}}
-    {{--            </div>--}}
-    {{--        </div>--}}
-    {{--    </div>--}}
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header justify-content-center">
+                    <h6 class="">Permanently delete your account</h6>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center">
+                        <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis, nemo.</span>
+
+                        <div class="my-4">
+                            <button
+                                data-bs-dismiss="modal"
+                                class="btn btn-outline-secondary me-2"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onclick="applyDeleteAccountHandler()"
+                                class="btn btn-primary me-2"
+                            >
+                                Submit
+                            </button>
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @push('custom-js')
     <script>
+        let token = localStorage.getItem('accessToken')
 
+        Object.entries(isoLangs).forEach(item => {
+            $('#languages').append(`
+                <option value='${item[1].nativeName}'>${item[1].nativeName}</option>
+            `)
+        })
 
-
-        function cancleHandler(){
-            location.href = window.origin
+        function applySuspendHandler(){
+            $.ajax({
+                url: window.origin + '/api/auth/profile/settings/suspend',
+                type: 'patch',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                    'Authorization': token
+                },
+                success: function (res) {
+                    toastr.success(res.message)
+                    localStorage.removeItem('accessToken')
+                    localStorage.removeItem('user')
+                    setTimeout(function (){
+                        window.location.href = window.origin
+                    } ,1000)
+                },
+                error: function (jqXhr, ajaxOptions, thrownError) {
+                    console.log(jqXhr)
+                }
+            });
         }
 
+        function applyDeleteAccountHandler(){
+            $.ajax({
+                url: window.origin + '/api/auth/profile/settings/delete',
+                type: 'delete',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                    'Authorization': token
+                },
+                success: function (res) {
+                    toastr.success(res.message)
+                    localStorage.removeItem('accessToken')
+                    localStorage.removeItem('user')
 
+                    setTimeout(function (){
+                        window.location.href = window.origin
+                    } ,1000)
+                },
+                error: function (jqXhr, ajaxOptions, thrownError) {
+                    console.log(jqXhr)
+                }
+            });
+        }
 
+        function profileSettingHandler(input) {
+            $.ajax({
+                url: window.origin + '/api/auth/profile/settings',
+                type: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                    'Authorization': token
+                },
+                data: {
+                    [input.name]: input.value
+                },
+                success: function (res) {
+                    toastr.success(res.message)
+                    location.reload()
+                },
+                error: function (jqXhr, ajaxOptions, thrownError) {
+                    console.log(jqXhr)
+                }
+            });
+        }
 
+        $(document).ready(function () {
+            $.ajax({
+                url: window.origin + '/api/auth/profile/settings',
+                type: 'GET',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                    'Authorization': token
+                },
+                success: function (res) {
+
+                    if (res.status === 'success') {
+                        $('#alert_by_email').val(res.data.alert_by_email)
+                        $('#premium_status').val(res.data.premium_status)
+                        $('#colorblind_mode').val(res.data.colorblind_mode)
+                        $('#exhibits_notification').val(res.data.exhibits_notification)
+                        $('#reminder_message').val(res.data.reminder_message)
+                        $('#languages').val(res.data.language)
+                        $('#sound_notification').val(res.data.sound_notification)
+                    }
+                },
+                error: function (jqXhr, ajaxOptions, thrownError) {
+                    console.log(jqXhr)
+                }
+            });
+        })
+
+        function cancleHandler() {
+            location.href = window.origin
+        }
 
         function profileUploader(event) {
             event.preventDefault();
@@ -402,7 +591,7 @@
 
 
             $.ajax({
-                url:  window.origin + '/api/image-uploader',
+                url: window.origin + '/api/image-uploader',
                 type: 'POST',
                 dataType: "json",
                 processData: false,
@@ -413,10 +602,10 @@
                 data: formData,
                 success: function (res) {
                     console.log(res)
-                    $('#showImg').attr('src', )
+                    $('#showImg').attr('src',)
                     formData.append('image', res.data);
                     $.ajax({
-                        url:  window.origin + '/api/auth/profile',
+                        url: window.origin + '/api/auth/profile',
                         type: 'POST',
                         dataType: "json",
                         processData: false,
@@ -456,7 +645,7 @@
             }
 
 
-            function cloneUploadContainer (contentID, step) {
+            function cloneUploadContainer(contentID, step) {
 
                 $('.' + contentID).append(`
            <div class="col-lg-2 col-sm-4 col-12 my-2 ">
@@ -520,8 +709,10 @@
 
     `)
             }
+
             let i = 0
-            function loadMore  () {
+
+            function loadMore() {
                 ++i;
                 cloneUploadContainer('cloneContainer', i)
             }
@@ -561,10 +752,10 @@
             formSubmit("post", form, token);
         })
 
-        $(document).on('click', '#privacy', function (){
+        $(document).on('click', '#privacy', function () {
             let x = $(this).prop('checked')
 
-            if(x=== true){
+            if (x === true) {
                 $('#privacyValue').val('private')
             }
         })
@@ -582,9 +773,9 @@
             let formData = new FormData();
             formData.append('video', constant.videoURL)
             formData.append('image', constant.imageURL)
-            if(constant.privacy === ''){
+            if (constant.privacy === '') {
                 formData.append('privacy', 'public')
-            }else{
+            } else {
                 formData.append('privacy', constant.privacy)
             }
 
@@ -626,7 +817,7 @@
         //     });
         // })
 
-        $(document).ready(function (){
+        $(document).ready(function () {
             let token = localStorage.getItem('accessToken')
             $.ajax({
                 type: 'GET',
@@ -646,7 +837,7 @@
             });
         })
 
-        $(document).ready(function (){
+        $(document).ready(function () {
             let token = localStorage.getItem('accessToken')
             $.ajax({
                 type: 'GET',
@@ -666,8 +857,8 @@
             });
         })
 
-        function favouriteList(res){
-            res.data.forEach(item=>{
+        function favouriteList(res) {
+            res.data.forEach(item => {
 
                 $('#favouriteListShow').append(`
                     <div class="col-lg-6 col-12 col-sm-12 mb-3">
@@ -685,8 +876,8 @@
             })
         }
 
-        function blockList(res){
-            res.data.forEach(item=>{
+        function blockList(res) {
+            res.data.forEach(item => {
                 $('#blockListShow').append(`
                     <div class="col-lg-6 col-12 col-sm-12 mb-3">
                             <div class="d-flex border-bottom p-2">
@@ -704,10 +895,6 @@
         }
 
 
-
-
-
     </script>
-
 
 @endpush

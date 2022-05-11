@@ -125,14 +125,17 @@
                             login
                         </button>
 
-                        <a href="{{url('/auth/twitter')}}"
-                           class="btn btn-tweeter form-control py-3 px-4 rounded-0 my-3 text-capitalize">
-                            tweeter
+                        <a
+                            href="{{url('/auth/twitter')}}"
+                            class="btn btn-tweeter form-control py-3 px-4 rounded-0 my-3 d-flex align-items-center justify-content-center"
+                        >
+                            <span class="iconify me-3" data-icon="akar-icons:twitter-fill" data-width="20" data-height="20"></span>
+                            <span>Connect with Twitter</span>
                         </a>
 
 
                         <h6 class="text-capitalize fw-bold">terms & condition</h6>
-                        <span class="fw-lighter">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus aliquid aperiam consectetur cum deserunt distinctio eaque id ipsum libero maiores minima, molestias natus </span>
+                        <span id="confirmDialogTermsCondition" class="fw-lighter"></span>
 
                         <div class="border-top border-bottom py-2 my-3 text-center">
                             <p class="text-black-50">How to protect your child</p>
@@ -375,6 +378,7 @@
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{{asset('js/app.js')}}"></script>
 <script src="{{asset('js/main.js')}}"></script>
+<script src="{{asset('js/languages.js')}}"></script>
 <script>
 
     $('#alertForm').submit(function (e) {
@@ -593,8 +597,12 @@
                         if (item[0] === "legal_information") {
                             if (item[1]) {
                                 Object.entries(item[1]).forEach(value => {
+                                    console.log('terms', value)
                                     if (value[0] === "'description'") {
                                         $('#footerDescription').text(value[1])
+                                    }
+                                    if (value[0] === "'terms_of_use'") {
+                                        $('#confirmDialogTermsCondition').text(value[1] ? value[1]: '')
                                     }
                                 })
                             }
