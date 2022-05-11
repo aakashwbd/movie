@@ -53,7 +53,7 @@
                     <div class="container">
                         <h4 class="my-3"></h4>
 
-                        <span></span>
+                        <span id="legalInfo"></span>
                         <address></address>
                     </div>
                 </div>

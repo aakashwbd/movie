@@ -3,14 +3,11 @@
     <div class="container content-config">
 
         <div class="bg-primary py-3 px-2 text-center">
-            <span class="text-white fw-bold">Title</span>
+            <span class="text-white fw-bold">About Us</span>
         </div>
         <div class="bg-white p-2">
-            <h6>tile</h6>
-            <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto, asperiores autem commodi corporis dignissimos dolor earum eius, eum harum molestiae nisi numquam placeat quaerat qui quia saepe soluta vel. Accusamus ad blanditiis consequuntur cum delectus, ducimus eos est expedita fugiat impedit in itaque minima, placeat quam quia quis repudiandae tenetur?</span>
+            <article id="aboutUs"></article>
 
-            <h6>tile</h6>
-            <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto, asperiores autem commodi corporis dignissimos dolor earum eius, eum harum molestiae nisi numquam placeat quaerat qui quia saepe soluta vel. Accusamus ad blanditiis consequuntur cum delectus, ducimus eos est expedita fugiat impedit in itaque minima, placeat quam quia quis repudiandae tenetur?</span>
         </div>
 
     </div>

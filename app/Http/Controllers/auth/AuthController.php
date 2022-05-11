@@ -198,6 +198,7 @@ class AuthController extends Controller
 
     public function profileInfo(Request $request)
     {
+//        dd($request->all());
 
         try {
             $userData = User::where('id', auth()->id())->first();
@@ -213,7 +214,8 @@ class AuthController extends Controller
                 if ($userData->update()) {
                     return response([
                         "status" => "success",
-                        "message" => "The profile information has been updated"
+                        "message" => "The profile information has been updated",
+
                     ]);
                 }
             }
@@ -294,6 +296,27 @@ class AuthController extends Controller
         }
     }
 
+
+    public function fetchAllUser(Request $request)
+    {
+
+        try {
+            $user = User::where('user_role_id', 3)
+                ->get();
+
+
+            return response([
+                "status" => "success",
+                "data" => $user
+            ]);
+        } catch (\Exception $e) {
+            return response([
+                'status' => 'serverError',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
     public function searchUser(Request $request)
     {
         try {
@@ -317,7 +340,7 @@ class AuthController extends Controller
                     "data" => $user
                 ]);
             }else if($request->type){
-                $user = User::where('type', 'LIKE', '%' . $request->type . '%')
+                $user = User::where('preference', 'LIKE', '%' . $request->type . '%')
                     ->get();
                 return response([
                     "status" => "success",

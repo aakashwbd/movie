@@ -597,13 +597,19 @@
                         if (item[0] === "legal_information") {
                             if (item[1]) {
                                 Object.entries(item[1]).forEach(value => {
-                                    console.log('terms', value)
                                     if (value[0] === "'description'") {
                                         $('#footerDescription').text(value[1])
                                     }
                                     if (value[0] === "'terms_of_use'") {
                                         $('#confirmDialogTermsCondition').text(value[1] ? value[1]: '')
                                     }
+                                    if (value[0] === "'about'") {
+                                        $('#aboutUs').text(value[1] ? value[1]: '')
+                                    }
+                                    if (value[0] === "'notice'") {
+                                        $('#legalInfo').text(value[1] ? value[1]: '')
+                                    }
+
                                 })
                             }
 

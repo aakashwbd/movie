@@ -55,13 +55,15 @@
             </div>
         </div>
 
-        <div class="py-2 my-5 bg-primary text-white d-flex align-items-center justify-content-center">
-                <span class="iconify me-5 cursor-pointer" data-icon="ant-design:reload-outlined" data-width="20"
-                      data-height="20"></span>
-            <span> from 10 years old to 49 years old- who hosts and/or visits - in New York and around </span>
-            <span class="iconify ms-5 cursor-pointer" data-icon="ep:close" data-width="20" data-height="20"></span>
+        <div id="adsResultDiv" class="d-none py-2 my-5 bg-primary text-white d-flex align-items-center justify-content-center">
+{{--                <span class="iconify me-5 cursor-pointer" data-icon="ant-design:reload-outlined" data-width="20"--}}
+{{--                      data-height="20"></span>--}}
+            <span id="adSearchlistheading"></span>
+{{--            <span class="iconify ms-5 cursor-pointer" data-icon="ep:close" data-width="20" data-height="20"></span>--}}
         </div>
-        <div class="row" id="placeList"></div>
+        <div class="row" id="placeList">
+
+        </div>
 
         <div class="modal" id="placeModal">
             <div class="modal-dialog modal-dialog-centered">
@@ -339,6 +341,17 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                     'Authorization': token
                 }, success: function (response) {
+                    if(response.status === 'success' && response.data.length > 0){
+                        $('#placeList').html('')
+                        $('#adSearchlistheading').text('Result : from ' +  formData.minage + ' years old to ' +  formData.maxage + ' years old - who ' +  ' - in ' + formData.type + " "+  formData.address + ' and around ')
+                        $('#adsResultDiv').removeClass('d-none')
+                        placeItem(response)
+
+                    }else if(response.status === 'success' && response.data.length === 0){
+                        $('#placeList').html('')
+                        $('#adSearchlistheading').text('Result : from ' +  formData.minage + ' years old to ' +  formData.maxage + ' years old - who ' +  ' - in ' + formData.type + " "+  formData.address + ' and around ')
+                        $('#adsResultDiv').removeClass('d-none')
+                    }
                     {{--if (response.status === 'success') {--}}
                     {{--    $('#placeList').html('')--}}
                     {{--    let user = JSON.parse(localStorage.getItem('user'))--}}

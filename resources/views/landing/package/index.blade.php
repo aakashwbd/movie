@@ -86,7 +86,7 @@
                         <span class="d-block text-capitalize">unlimited <span id="unlimited-2"></span> month</span>
                         <span class="d-block text-capitalize">(<span id="limited-2"></span> month free)</span>
                         <span class="d-block text-capitalize">7 month billed a payment of 42</span>
-                        <button class="btn" id="payBtn2">Buy Now</button>
+                        <button class="btn btn-outline-light mt-3" id="payBtn2">Buy Now</button>
                     </div>
                 </div>
 
@@ -132,7 +132,7 @@
                         <span class="d-block text-capitalize">unlimited 6 month</span>
                         <span class="d-block text-capitalize">(3 month free)</span>
                         <span class="d-block text-capitalize">7 month billed a payment of 42</span>
-                        <button class="btn" id="payBtn3">Buy Now</button>
+                        <button class="btn btn-outline-light mt-3" id="payBtn3">Buy Now</button>
                     </div>
                 </div>
 
@@ -177,7 +177,7 @@
                         <span class="d-block text-capitalize">(3 month free)</span>
                         <span class="d-block text-capitalize">7 month billed a payment of 42</span>
 
-                        <button class="btn" id="payBtn4">Buy Now</button>
+                        <button class="btn btn-outline-light mt-3" id="payBtn4">Buy Now</button>
                     </div>
                 </div>
 
@@ -243,8 +243,7 @@
 
 @endsection
 @push('custom-js')
-    <script
-        src="https://www.paypal.com/sdk/js?client-id={{env('PAYPAL_CLIENT_ID')}}&currency={{env('PAYPAL_CURRENCY')}}"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id={{env('PAYPAL_CLIENT_ID')}}&currency={{env('PAYPAL_CURRENCY')}}"></script>
     <script>
         let bronzePrice = null
         let silverPrice = null

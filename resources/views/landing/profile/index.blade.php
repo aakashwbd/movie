@@ -43,7 +43,7 @@ $currentFullRouteName = Route::getFacadeRoot()
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="premium-tab" data-bs-toggle="tab" data-bs-target="#premiumList"
+                    <button class="nav-link {{ ((request()->get('tab')) == "premium") ? "active" : ''}} " id="premium-tab" data-bs-toggle="tab" data-bs-target="#premiumList"
                             type="button" role="tab" aria-controls="contact" aria-selected="false">Premium Access
                     </button>
                 </li>
@@ -113,8 +113,9 @@ $currentFullRouteName = Route::getFacadeRoot()
                                 <div class="form-group">
                                     <label class="form-label" id="preference_label" for="preference">Preference</label>
                                     <select class="form-select" id="preference" name="preference">
-                                        <option value="yes">Yes</option>
-                                        <option value="no">No</option>
+                                        <option value="both">Host and/or Visitor</option>
+                                        <option value="visitor">Visitor</option>
+                                        <option value="host">Host</option>
                                     </select>
                                 </div>
                             </div>
@@ -143,7 +144,7 @@ $currentFullRouteName = Route::getFacadeRoot()
                     <div class="row align-items-center p-2">
                         <div class="col-lg-2">
                             <img id="showImg" style="height: 200px; width: 100%"
-                                 src="{{asset('/asset/image/default.jpg')}}"
+                                 src=""
                                  alt="">
                         </div>
 
@@ -175,17 +176,10 @@ $currentFullRouteName = Route::getFacadeRoot()
 
                     </div>
 
-                    <div class="gallery my-3">
-                        <span class="text-capitalize">private photos/videos (for chat use)</span>
-                        <div class="row ">
-                            <div class="col-lg-2 my-3">
-                                <div class="gallery-item">
-                                    <span class="iconify icon" data-icon="fluent:add-circle-24-filled" data-width="25"
-                                          data-height="25"></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+{{--                    <div class="gallery my-3">--}}
+{{--                        <span class="text-capitalize">private photos/videos (for chat use)</span>--}}
+{{--                        <div class="row cloneContainer"></div>--}}
+{{--                    </div>--}}
                 </div>
 
                 <div class="tab-pane fade show p-4 {{ ((request()->get('tab')) == "setting") ? "active" : ''}}"
@@ -357,49 +351,24 @@ $currentFullRouteName = Route::getFacadeRoot()
                     </div>
                 </div>
 
-                <div class="tab-pane fade show p-4" id="premiumList" role="tabpanel">
+                <div class="tab-pane fade show p-4 {{ ((request()->get('tab')) == "premium") ? "active" : ''}} " id="premiumList" role="tabpanel">
                     <div class="container">
-                        <ul>
-                            <li>
-                                <h6>Payment By Credit</h6>
-                                <span class="text-black-50">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Expedita, nostrum!</span>
-                            </li>
+                        <div class="card">
+                           <div class="card-header">
+                               <h6>Payment By Credit</h6>
+                               <span class="text-black-50">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Expedita, nostrum!</span>
+                           </div>
 
-                            <li class="dropdown-divider"></li>
-
-
-                            <li class="d-flex align-items-center justify-content-between">
-                                <div class="form-check">
-                                    <input class="form-check-input p-0 rounded-circle" type="radio"
-                                           name="flexRadioDefault" id="flexRadioDefault1">
-                                    <label class="form-check-label align-items-center" for="flexRadioDefault1">
-                                        <span class="text-tweeter fw-bold">3$/month</span>
-                                        <span>for</span>
-                                        <span class="fw-bold">2 Years</span>
-                                        <br>
-                                        <span class="fw-lighter text-black-50">Lorem ipsum dolor sit amet.</span>
-                                    </label>
+                            <div class="card-body">
+                                <div id="premiumPackageList"></div>
+                                <div class="text-center">
+                                    <p class="my-2">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fuga, nam.</p>
+                                    <button id="premiumPackageOfferButton" class="btn btn-primary w-25">Submit</button>
                                 </div>
-                                <span class="bg-warning p-2">75% reduction</span>
-                            </li>
-                            <li class="dropdown-divider"></li>
+                            </div>
 
+                        </div>
 
-                            <li class="d-flex align-items-center justify-content-between">
-                                <div class="form-check">
-                                    <input class="form-check-input p-0 rounded-circle" type="radio"
-                                           name="flexRadioDefault" id="flexRadioDefault1">
-                                    <label class="form-check-label align-items-center" for="flexRadioDefault1">
-                                        <span class="text-tweeter fw-bold">3$/month</span>
-                                        <span>for</span>
-                                        <span class="fw-bold">2 Years</span>
-                                        <br>
-                                        <span class="fw-lighter text-black-50">Lorem ipsum dolor sit amet.</span>
-                                    </label>
-                                </div>
-                                <span class="bg-warning p-2">75% reduction</span>
-                            </li>
-                        </ul>
                     </div>
 
                 </div>
@@ -473,8 +442,28 @@ $currentFullRouteName = Route::getFacadeRoot()
             </div>
         </div>
     </div>
+
+
+    <div class="modal fade" id="packageOfferModal" data-bs-keyboard="false" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header justify-content-center">
+                    <h6 class="text-capitalize">Payment: </h6>
+                </div>
+                <div class="modal-body">
+
+                    <span id="modal-package-name4"></span>
+                    <h6 id="modal-package-price4"></h6>
+
+                    <div id="paypal-button-container"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @push('custom-js')
+    <script src="https://www.paypal.com/sdk/js?client-id={{env('PAYPAL_CLIENT_ID')}}&currency={{env('PAYPAL_CURRENCY')}}"></script>
+
     <script>
         let token = localStorage.getItem('accessToken')
 
@@ -600,9 +589,12 @@ $currentFullRouteName = Route::getFacadeRoot()
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                 },
                 data: formData,
+                beforeSend: function () {
+                    $('#preloader').removeClass('d-none');
+                },
                 success: function (res) {
-                    console.log(res)
-                    $('#showImg').attr('src',)
+
+                    $('#showImg').attr('src', res.data)
                     formData.append('image', res.data);
                     $.ajax({
                         url: window.origin + '/api/auth/profile',
@@ -616,7 +608,8 @@ $currentFullRouteName = Route::getFacadeRoot()
                         },
                         data: formData,
                         success: function (res) {
-                            console.log(res)
+                            toastr.success(res.message)
+                            location.reload()
                         },
                         error: function (jqXhr, ajaxOptions, thrownError) {
                             console.log(jqXhr)
@@ -625,6 +618,9 @@ $currentFullRouteName = Route::getFacadeRoot()
                 },
                 error: function (jqXhr, ajaxOptions, thrownError) {
                     console.log(jqXhr)
+                },
+                complete: function (xhr, status) {
+                    $('#preloader').addClass('d-none');
                 }
             });
 
@@ -677,10 +673,10 @@ $currentFullRouteName = Route::getFacadeRoot()
                     </li>
 
 
-                    <li class="dropdown-item border-bottom">
-                        <input id="takeVideo" type="file" hidden>
-                        <label for="takeVideo" class="cursor-pointer">Take a Video</label>
-                    </li>
+<!--                    <li class="dropdown-item border-bottom">-->
+<!--                        <input id="takeVideo" type="file" hidden>-->
+<!--                        <label for="takeVideo" class="cursor-pointer">Take a Video</label>-->
+<!--                    </li>-->
 
 
                     <li class="dropdown-item">
@@ -719,7 +715,6 @@ $currentFullRouteName = Route::getFacadeRoot()
 
             let getUser = localStorage.getItem('user')
             let user = JSON.parse(getUser)
-            // console.log(user)
 
             $('#username').val(user.username)
 
@@ -735,14 +730,38 @@ $currentFullRouteName = Route::getFacadeRoot()
             $('#infoBirthYear').val(user.dob)
             $('#address').val(user.address)
             $('#presentation').val(user.presentation)
-            $('#showImg').attr('src', user.image)
+
+            $('#showImg').attr('src', user.image ? user.image : window.origin + '/asset/image/default.jpg')
         })
 
         $('#informationForm').submit(function (e) {
-            let token = localStorage.getItem('accessToken')
             e.preventDefault();
+            let accessToken = localStorage.getItem('accessToken')
+
             let form = $(this);
-            formSubmit("post", form, token);
+
+            let url = form.attr("action");
+
+            let form_data = JSON.stringify(form.serializeJSON());
+            let formData = JSON.parse(form_data);
+
+            $.ajax({
+                type: 'post',
+                url: url,
+                data: formData,
+
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                    'Authorization': accessToken
+                },
+                success: function (response) {
+                    toastr.success(response.message)
+
+                    location.reload()
+                }, error: function (xhr, resp, text) {
+                    console.log(resp)
+                }
+            });
         })
 
         $('#uploadForm').submit(function (e) {
@@ -895,6 +914,112 @@ $currentFullRouteName = Route::getFacadeRoot()
         }
 
 
+
+        let packageId = null
+        $(document).ready(function (){
+            $.ajax({
+                type: 'GET',
+                url: window.origin + '/api/admin/invite-code/get-by-user',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                    'Authorization': token
+                },
+                success: function (response) {
+
+
+                    if(response.status === 'success' && response.data.length > 0){
+                        response.data.forEach(item=>{
+
+                            $('#premiumPackageList').append(`
+                                 <div class="d-flex align-items-center justify-content-between border-bottom py-3">
+                                    <div class="form-check">
+
+                                        <input class="form-check-input p-0 rounded-circle" type="radio" value='{"price": ${item.price}, "package_id": ${item.package.id}}' name="package_id" id="package${item.id}">
+
+                                        <label class="form-check-label align-items-center" for="flexRadioDefault1">
+                                            <span class="text-tweeter fw-bold">${item.price ? item.price + '$ / ' : ''} ${item.duration ? item.duration + ' month ' : ''}</span>
+                                            <br>
+                                            <span class="fw-lighter text-black-50">${item.package.name ? item.package.name : ''}</span>
+                                        </label>
+                                    </div>
+                                    <span class="bg-warning p-2">${item.reduction ? item.reduction + ' % reduction' : ''}</span>
+                                </div>
+                            `)
+                        })
+                    }
+                }, error: function (xhr, resp, text) {
+                    console.log(xhr)
+                }
+            });
+        })
+
+
+
+        $(document).on('click', '#premiumPackageOfferButton', function (){
+            let value = $("input[name='package_id']:checked").val();
+            let packageInfo = JSON.parse(value);
+            let price = packageInfo.price
+           // console.log(packageInfo.price)
+
+
+           $('#packageOfferModal').modal('show')
+
+            const paypalButtonsComponent = paypal.Buttons({
+                style: {
+                    color: "gold",
+                    shape: "rect",
+                    layout: "vertical"
+                },
+
+                createOrder: (data, actions) => {
+                    const createOrderPayload = {
+                        intent: "CAPTURE",
+                        purchase_units: [
+                            {
+                                reference_id: "REFID-000-1001",
+                                amount: {
+                                    value: price
+                                }
+
+                            }
+                        ],
+                    };
+
+                    return actions.order.create(createOrderPayload);
+                },
+
+                onApprove: (data, actions) => {
+                    const captureOrderHandler = (details) => {
+                        // let token = localStorage.getItem('accessToken')
+                        // let list = JSON.parse(packageList)
+                        // $.ajax({
+                        //     url: window.origin + '/api/checkout',
+                        //     type: 'POST',
+                        //     data: list,
+                        //     headers: {
+                        //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                        //         'Authorization': token
+                        //     },
+                        //     success: function (res) {
+                        //         console.log(res)
+                        //     }, error: function (jqXhr, ajaxOptions, thrownError) {
+                        //         console.log(jqXhr)
+                        //     }
+                        // });
+                    };
+                    return actions.order.capture().then(captureOrderHandler);
+                },
+                onError: (err) => {
+                    console.error('An error prevented the buyer from checking out with PayPal');
+                }
+            });
+
+            paypalButtonsComponent
+                .render("#paypal-button-container")
+                .catch((err) => {
+                    console.error('PayPal Buttons failed to render');
+                });
+        })
     </script>
 
 @endpush

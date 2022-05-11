@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Testimony;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class TestimonyController extends Controller
 {
@@ -14,6 +15,14 @@ class TestimonyController extends Controller
 
     public function store (Request $request){
         try {
+            $validator = Validator::make($request->all(), [
+                "description" => "required",
+            ]);
+
+            if ($validator->fails()) {
+                $errors = $validator->errors()->messages();
+                return validateError($errors);
+            }
             $testimony= new Testimony();
             $testimony->user_id = auth()->id();
             $testimony->testimony_user_id = $request->testimony_user_id;
@@ -23,7 +32,7 @@ class TestimonyController extends Controller
             if ($testimony->save()){
                 return response([
                     "status" => "success",
-                    "message" => "Testimony Successfully Done"
+                    "message" => "Testimony posted"
                 ]);
             }
         }catch (\Exception $e){
@@ -39,13 +48,16 @@ class TestimonyController extends Controller
     public function show ($id){
         try {
             $testimony= Testimony::with('user')
-            ->where('testimony_user_id', $id)
+                ->where('testimony_user_id', $id)
                 ->get();
+
+            $count= Testimony::count();
 
             if ($testimony){
                 return response([
                     "status" => "success",
-                    "data" => $testimony
+                    "data" => $testimony,
+                    "count" => $count
                 ]);
             }
         }catch (\Exception $e){

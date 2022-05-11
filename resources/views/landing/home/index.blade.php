@@ -24,9 +24,9 @@
                             <input type="text" class="form-control" name="maxage" placeholder="49">
                         </div>
                         <select name="type" class="form-select mb-3">
-                            <option value="" selected>Who Hosts and/or Visits</option>
+                            <option value="both" selected>Who Hosts and/or Visits</option>
                             <option value="host">Who Hosts</option>
-                            <option value="visit">Who Visits</option>
+                            <option value="visitor">Who Visits</option>
                         </select>
                         <select name="member" class="form-select mb-3">
                             <option value="" selected>Suggested Members</option>
@@ -49,10 +49,10 @@
 
         <div id="searchList">
             <div class="py-2 my-5 bg-primary text-white d-flex align-items-center justify-content-center">
-                <span class="iconify me-5 cursor-pointer" data-icon="ant-design:reload-outlined" data-width="20"
-                      data-height="20"></span>
-                <span> from 10 years old to 49 years old- who hosts and/or visits - in New York and around  </span>
-                <span class="iconify ms-5 cursor-pointer" data-icon="ep:close" data-width="20" data-height="20"></span>
+{{--                <span class="iconify me-5 cursor-pointer" data-icon="ant-design:reload-outlined" data-width="20"--}}
+{{--                      data-height="20"></span>--}}
+                <span id="searchResultHeading"></span>
+{{--                <span class="iconify ms-5 cursor-pointer" data-icon="ep:close" data-width="20" data-height="20"></span>--}}
             </div>
 
             <ul class="list" id="homeSearchListContainer"></ul>
@@ -97,13 +97,10 @@
             let token = localStorage.getItem('accessToken')
             e.preventDefault();
             let form = $(this);
-            // formSubmit('post', form)
-
             let form_data = JSON.stringify(form.serializeJSON());
             let formData = JSON.parse(form_data);
-
-            // console.log(formData)
             let url = form.attr("action");
+
 
             $.ajax({
                 type: 'post',
@@ -124,9 +121,9 @@
                         }, 100);
                         $("#homeSearchListContainer").html("");
                         userList(response);
-
-
                     }
+
+                    $('#searchResultHeading').text('Result for: from ' + formData.minage +' years old to '+ formData.maxage + ' years old - ' + ' who ' + formData.type + ' in ' + formData.address  + ' and around ')
 
 
 

@@ -70,7 +70,6 @@ class FileController extends Controller
                 ->where('id',$id)
                 ->first();
 
-
                 return response([
                     "status" => "success",
                     "data" => $video
@@ -87,19 +86,30 @@ class FileController extends Controller
     }
 
     public function search (Request $request){
-
 //        dd($request->all());
 
         try {
-            $ad = File::with('user')->where('address', 'LIKE', '%'.$request->address.'%')
-                ->whereHas('user', function ($query) use($request){
-                    $query->whereBetween('age', [$request->minage, $request->maxage]);
-                })
-                ->get();
-            return response([
-                "status" => "success",
-                "data" => $ad
-            ]);
+
+
+                if ($request->minage && $request->maxage){
+                $ad = File::with('user')
+                    ->whereHas('user', function ($query) use($request){
+                        $query->whereBetween('age', [$request->minage, $request->maxage]);
+                    })
+                    ->get();
+                return response([
+                                    "status" => "success",
+                                    "data" => $ad
+                                ]);
+            } else  if($request->filter){
+                $video = File::all()->last();
+
+                return response([
+                                    "status" => "success",
+                                    "data" => $video
+                                ]);
+            }
+
 
 
         }catch (\Exception $e){

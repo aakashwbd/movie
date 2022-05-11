@@ -15,9 +15,12 @@ return new class extends Migration
     {
         Schema::create('invite_codes', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->string('user_type');
-            $table->string('month');
+            $table->string('title')->nullable();
+            $table->bigInteger('user_id')->nullable();
+            $table->bigInteger('package_id')->nullable();
+            $table->string('duration')->nullable();
+            $table->string('reduction')->nullable();
+            $table->string('price')->nullable();
             $table->timestamps();
         });
     }

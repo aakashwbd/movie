@@ -61,7 +61,8 @@
                     <span class="iconify" data-icon="bx:message-rounded" data-width="20" data-height="20"></span>
                 </a>
 
-                <ul class="dropdown-menu dropdown-menu-end">
+                <ul class="dropdown-menu dropdown-menu-end" id="shortMessage">
+
 
                 </ul>
             </li>
@@ -77,9 +78,9 @@
                     <li class="border-bottom py-2">
                         <a href="{{url('profile?tab=information')}}" class="dropdown-item text-capitalize">edit my profile</a>
                     </li>
-                    <li class="border-bottom py-2">
-                        <a href="" class="dropdown-item text-capitalize">show</a>
-                    </li>
+{{--                    <li class="border-bottom py-2">--}}
+{{--                        <a href="" class="dropdown-item text-capitalize">show</a>--}}
+{{--                    </li>--}}
                     <li class="border-bottom py-2">
                         <a href="{{url('profile?tab=photos')}}" class="dropdown-item text-capitalize">photos/videos</a>
                     </li>
@@ -92,12 +93,12 @@
                     <li class="border-bottom py-2">
                         <a href="{{url('profile?tab=blacklist')}}" class="dropdown-item text-capitalize">blacklist</a>
                     </li>
-                    <li class="border-bottom py-2">
+                    <li class=" py-2">
                         <a href="{{url('profile?tab=premium')}}" class="dropdown-item text-capitalize">premium access</a>
                     </li>
-                    <li class="">
-                        <a href="{{url('profile?tab=invisible')}}" class="dropdown-item text-capitalize">become invisible</a>
-                    </li>
+{{--                    <li class="">--}}
+{{--                        <a href="{{url('profile?tab=invisible')}}" class="dropdown-item text-capitalize">become invisible</a>--}}
+{{--                    </li>--}}
                 </ul>
             </li>
 
@@ -167,7 +168,9 @@
                         $('#'+item).addClass('d-none')
                     }else if(item === 'navbarProfileImg'){
                         let img = constant.moreItem.defaultImage
+
                         if(constant.userInfo.image){
+
                             img= constant.userInfo.image
                          }
                         $('#'+item).attr('src', img)
@@ -176,51 +179,53 @@
                     }
                 })
             }
+
+
+            $.ajax({
+                type: 'GET',
+                url: window.origin + '/api/short-messages',
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                    "Authorization": constant.token,
+                },
+                success: function (response) {
+
+                    if(response.status === 'success' && response.data.length > 0){
+                        response.data.forEach(item=>{
+                            console.log(item)
+                            $('#shortMessage').append(`
+                                    <li class="dropdown-item border-bottom py-3">
+                                             <div class="d-flex">
+                                                <img style="width: 20px; height: 20px" class="me-2" src="${item.user.image ?  item.user.image : window.origin + '/asset/image/default.jpg'}"/>
+
+                                                    <div>
+                                                     <p>${item.user.username ? item.user.username : ''}</p>
+                                                     <p class='d-block'>${item.messages}</p>
+                                                    </div>
+
+                                             </div>
+                                    </li>
+                            `)
+                        })
+                    }else{
+                        $('#shortMessage').append(`
+                                <li class="dropdown-item">Please, conversation first</li>
+                        `)
+                    }
+
+
+                },
+                error: function (xhr, resp, text) {
+                    console.log(xhr);
+
+                }
+            });
         })
+
+
     </script>
 @endpush
 
 
-{{--<div class="modal fade" id="authModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">--}}
-{{--    <div class="modal-dialog modal-dialog-centered">--}}
-{{--        <div class="modal-content">--}}
-{{--            <div class="modal-body">--}}
 
-
-
-{{--                <div class="forgot-content">--}}
-{{--                    <h4 class="text-capitalize text-center">password forgotten</h4>--}}
-{{--                    <hr>--}}
-{{--                    <div class="text-center">--}}
-{{--                        <span class="fs-6 text-black-50">Enter your email for reset password</span>--}}
-{{--                    </div>--}}
-
-
-{{--                    <form action="">--}}
-{{--                        <input class="form-control my-3" type="text" placeholder="email">--}}
-{{--                        <div class="text-center">--}}
-{{--                            <button class="btn btn-primary form-control w-75 text-center">submit</button>--}}
-{{--                            <span class="d-block fs-6 text-black-50">Lorem ipsum dolor sit amet!</span>--}}
-{{--                        </div>--}}
-{{--                    </form>--}}
-{{--                </div>--}}
-
-
-{{--                <div class="reset-password-content">--}}
-{{--                    <h4 class="text-capitalize text-center">please define your new passwword</h4>--}}
-{{--                    <hr>--}}
-{{--                    <form action="">--}}
-{{--                        <input class="form-control my-3" type="text" placeholder="password">--}}
-{{--                        <input class="form-control my-3" type="text" placeholder="confirm password">--}}
-{{--                        <div class="text-center">--}}
-{{--                            <button class="btn btn-primary form-control w-75 text-center">submit</button>--}}
-{{--                        </div>--}}
-{{--                    </form>--}}
-{{--                </div>--}}
-
-
-{{--            </div>--}}
-{{--        </div>--}}
-{{--    </div>--}}
-{{--</div>--}}
 

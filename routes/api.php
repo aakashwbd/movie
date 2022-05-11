@@ -39,6 +39,8 @@ Route::post('user/get-all', [AuthController::class, 'getAll']);
 Route::post('user/fetch-all', [AuthController::class, 'getByUnAuth']);
 Route::post('user/send-flash', [\App\Http\Controllers\FlashController::class, 'sendFlash']);
 
+    Route::get('user/all-users', [AuthController::class, 'fetchAllUser']);
+
 Route::get('user/{id}', [AuthController::class, 'show']);
 Route::post('user/{id}', [AuthController::class, 'statusUpdate']);
 
@@ -70,6 +72,7 @@ Route::get('testimony/all', [\App\Http\Controllers\TestimonyController::class, '
 Route::post('send-messages', [\App\Http\Controllers\MessengerController::class, 'store']);
 Route::get('get-message/{id}', [\App\Http\Controllers\MessengerController::class, 'getMessage']);
 Route::get('get-message/all', [\App\Http\Controllers\MessengerController::class, 'getAllMessage']);
+Route::get('short-messages', [\App\Http\Controllers\MessengerController::class, 'getByPersonMessage']);
 
 
 //Route::get('/check', [AuthController::class, 'userOnlineStatus']);
@@ -90,6 +93,7 @@ Route::prefix('admin')->group(function () {
 
 
     Route::get('user/get-all', [AuthController::class, 'index']);
+
     Route::get('user/all-users', [AuthController::class, 'getAllUsers']);
     Route::get('user/suspend', [AuthController::class, 'suspendUser']);
 
@@ -103,7 +107,8 @@ Route::prefix('admin')->group(function () {
     Route::get('category/{id}', [\App\Http\Controllers\CategoryController::class, 'getSingle']);
 
     Route::post('invite-code/store', [\App\Http\Controllers\InviteCodeController::class, 'store']);
-    Route::post('invite-code/get-all', [\App\Http\Controllers\InviteCodeController::class, 'index']);
+    Route::get('invite-code/get-all', [\App\Http\Controllers\InviteCodeController::class, 'index']);
+    Route::get('invite-code/get-by-user', [\App\Http\Controllers\InviteCodeController::class, 'getByUser']);
 
     Route::post('notification/store', [\App\Http\Controllers\NotificationController::class, 'store']);
     Route::get('notification/get-all', [\App\Http\Controllers\NotificationController::class, 'index']);

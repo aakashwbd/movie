@@ -55,6 +55,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                 },
                 success: function (res) {
+                    console.log('video', res)
                     if(res.status === 'success'){
                         $('#videoId').val(res.data.id)
                         $('#videoCard').append(`
@@ -100,7 +101,6 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                 },
                 success: function (res) {
-                    console.log('vidoe co', res)
                     res.data.forEach(item =>{
                         $('#commentBody').append(`
                              <li class="border-bottom">
@@ -109,9 +109,6 @@
                             </li>
                     `)
                     })
-
-
-
 
                 }, error: function (jqXhr, ajaxOptions, thrownError) {
                     console.log(jqXhr)

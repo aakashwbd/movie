@@ -126,13 +126,13 @@
             </a>
         </li>
 
-{{--        <li class="list-item  my-3">--}}
-{{--            <a href="{{url('/admin/invite-code')}}" class="list-link {{$currentControllerName2 == 'invite-code' || '' ? 'active' : '' }}">--}}
-{{--                <span class="iconify me-2" data-icon="ic:sharp-space-dashboard" data-width="20"--}}
-{{--                      data-height="20"></span>--}}
-{{--                Invitation Code--}}
-{{--            </a>--}}
-{{--        </li>--}}
+        <li class="list-item  my-3">
+            <a href="{{url('/admin/invite-code')}}" class="list-link {{$currentControllerName2 == 'invite-code' || '' ? 'active' : '' }}">
+                <span class="iconify me-2" data-icon="ic:sharp-space-dashboard" data-width="20"
+                      data-height="20"></span>
+                Invitation Code
+            </a>
+        </li>
 
         <li class="list-item  my-3">
             <a

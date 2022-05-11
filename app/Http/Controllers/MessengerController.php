@@ -9,7 +9,7 @@ class MessengerController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth:sanctum'], ['only' => ['store', 'index', 'getMessage', 'getAllMessage']]);
+        $this->middleware(['auth:sanctum'], ['only' => ['store', 'index', 'getMessage', 'getAllMessage', 'getByPersonMessage']]);
     }
 
     public function store(Request $request)
@@ -49,16 +49,21 @@ class MessengerController extends Controller
         ]);
     }
 
-    public function getAllMessage()
+    public function getByPersonMessage()
     {
-//        dd($id,auth()->id());
-        $messages = Message::with('user')->where('from_user', auth()->id())->where('to_user')->latest()->first();
-        dd($messages);
+
+        $messages = Message::with('user')
+            ->where("from_user", auth()->id())
+            ->latest()
+//            ->limit(1)
+            ->get();
 
         return response([
             "status" => "success",
-            "data"   => $messages,
+            'data'   => $messages,
         ]);
     }
+
+
 
 }

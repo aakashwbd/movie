@@ -49,8 +49,9 @@
 
                         <div class="form-group mb-3">
                             <a href="{{url('/auth/twitter')}}"
-                               class="btn btn-tweeter form-control text-capitalize">
-                                Login with Twitter
+                               class="btn btn-tweeter form-control d-flex align-items-center justify-content-center">
+                                <span class="iconify me-3" data-icon="akar-icons:twitter-fill" data-width="20" data-height="20"></span>
+                                Connect with Twitter
                             </a>
                         </div>
                     </form>

@@ -27,3 +27,7 @@
 </head>
 <body id="landing-main">
 
+<div id="preloader" class="d-none">
+    <div id="status">
+    </div>
+</div>

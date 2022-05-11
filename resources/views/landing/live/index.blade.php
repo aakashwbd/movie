@@ -4,7 +4,7 @@
 
     <div class="container content-config" style="min-height: 60vh">
         <div class="bg-primary p-4 d-flex align-items-center justify-content-between">
-            <span class="text-white">1 exhib in process</span>
+            <span class="text-white">no exhib in process</span>
 
             <span class="iconify text-white cursor-pointer" data-bs-target="#exhibsModal" data-bs-toggle="modal"
                   data-icon="entypo:info-with-circle" data-width="20" data-height="20"></span>

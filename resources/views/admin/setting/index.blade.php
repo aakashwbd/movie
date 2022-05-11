@@ -384,8 +384,10 @@
                             Object.entries(item).forEach(value => {
                                 $('#' + value[0]).val(value[1]);
 
+                                // console.log(value[0])
 
                                 if (value[0] === 'legal_information') {
+
                                     Object.entries(value[1]).forEach(item => {
                                         let id = item[0].replace(/["']/g, "")
                                         $('#' + id).val(item[1]);
@@ -407,19 +409,22 @@
                                     })
                                 }
                                 if (value[0] === 'image') {
-                                    value[1].forEach(img=>{
-                                        if(img.logo){
-                                            $('#logo').val(img.logo)
-                                            $('#logoImgPreview').removeClass('d-none').attr('src', img.logo)
-                                        }
+                                    if(value[1]){
+                                        value[1].forEach(img=>{
+                                            if(img.logo){
+                                                $('#logo').val(img.logo)
+                                                $('#logoImgPreview').removeClass('d-none').attr('src', img.logo)
+                                            }
 
-                                        if(img.logo_icon){
-                                            $('#logo-icon').val(img.logo_icon)
-                                            $('#logoIconImgPreview').removeClass('d-none').attr('src', img.logo_icon)
-                                        }
+                                            if(img.logo_icon){
+                                                $('#logo-icon').val(img.logo_icon)
+                                                $('#logoIconImgPreview').removeClass('d-none').attr('src', img.logo_icon)
+                                            }
 
 
-                                    })
+                                        })
+                                    }
+
                                 }
 
                                 if (value[0] === 'partner_site') {
@@ -429,12 +434,12 @@
                                                     <div class="col-lg-6 col-12 col-sm-12">
                                                         <div class="form-group mb-3">
                                                             <label for="website-name" class="form-label">Website Name </label>
-                                                            <input type="text" name="partner_site[][name]" id="website-name" value="${item.name}" class="form-control">
+                                                            <input type="text" name="partner_site[][name]" id="website-name" value="${item.name ? item.name : '' }" class="form-control">
                                                         </div>
 
                                                         <div class="form-group mb-3">
                                                             <label for="website-url" class="form-label">Website URL </label>
-                                                            <input type="text" name="partner_site[][url]" id="website-url" value="${item.url}"  class="form-control">
+                                                            <input type="text" name="partner_site[][url]" id="website-url" value="${item.url ? item.url :''}"  class="form-control">
                                                         </div>
                                                     </div>
                                             `)
@@ -448,12 +453,12 @@
                                                     <div class="col-lg-6 col-12 col-sm-12">
                                                         <div class="form-group mb-3">
                                                             <label for="question" class="form-label">Question</label>
-                                                            <input type="text" name="help[][question]" id="question" value="${item.question}" class="form-control">
+                                                            <input type="text" name="help[][question]" id="question" value="${item.question ? item.question : ''}" class="form-control">
                                                         </div>
 
                                                         <div class="form-group mb-3">
                                                             <label for="answer1" class="form-label">Answer</label>
-                                                            <textarea type="text" name="help[][answer]" id="answer"  class="form-control">${item.answer}</textarea>
+                                                            <textarea type="text" name="help[][answer]" id="answer"  class="form-control">${item.answer ? item.answer : ""}</textarea>
                                                         </div>
                                                     </div>
                                             `)

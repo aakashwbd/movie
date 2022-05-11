@@ -110,6 +110,8 @@ $(document).ready(function () {
                 "; expires=" +
                 new Date(86400000 + Date.now()).toUTCString() +
                 ";";
+
+            window.location.href = window.origin;
             $("#locationModal").modal("hide");
         }
     });
@@ -147,7 +149,10 @@ $(document).ready(function () {
                     Authorization: token,
                 },
                 success: function (response) {
-                    userList(response);
+                    if(response.status === 'success' && response.data.length > 0){
+                        userList(response);
+                        $('#searchResultHeading').text('Result for : all people around you ')
+                    }
                 },
                 error: function (xhr, resp, text) {
                     console.log(xhr);
@@ -167,7 +172,11 @@ $(document).ready(function () {
                     ),
                 },
                 success: function (response) {
-                    userList(response);
+                    if(response.status === 'success' && response.data.length > 0){
+                        userList(response);
+                        $('#searchResultHeading').text('Result for : all people around you ')
+                    }
+
                 },
                 error: function (xhr, resp, text) {
                     console.log(xhr);
@@ -187,8 +196,11 @@ $(document).ready(function () {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
             },
             success: function (response) {
-                if (response.status === "success") {
+                if (response.status === "success" && response.data.length > 0) {
                     userList(response);
+                    $('#searchResultHeading').text('Result : People around - '+ searchFormAddress)
+                }else{
+                    $('#searchResultHeading').text('There are no people around - '+ searchFormAddress)
                 }
             },
             error: function (err) {
@@ -288,6 +300,7 @@ formSubmit = function (type, form, token = null) {
             Authorization: token,
         },
         success: function (response) {
+
             if (
                 response.status === "success" &&
                 response.form === "registration"
@@ -359,7 +372,9 @@ formSubmit = function (type, form, token = null) {
                 window.location.href = window.origin + "/admin";
                 location.reload()
             }
-            location.reload()
+
+            toastr.success(response.message);
+            // location.reload()
         },
         error: function (xhr, resp, text) {
             console.log(xhr);
@@ -421,6 +436,7 @@ uploader = function (
         },
         data: formData,
         beforeSend: function () {
+            $('#preloader').removeClass('d-none');
             $("#" + waitMsg).removeClass("d-none");
         },
         success: function (res) {
@@ -436,6 +452,7 @@ uploader = function (
         },
         complete: function (xhr, status) {
             $("#" + waitMsg).addClass("d-none");
+            $('#preloader').addClass('d-none');
         },
     });
 };
