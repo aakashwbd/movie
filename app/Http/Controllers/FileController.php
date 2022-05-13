@@ -12,24 +12,18 @@ class FileController extends Controller
         $this->middleware(['auth:sanctum'], ['only' => ['store']]);
     }
     public function store (Request $request){
-//dd($request->all());
-
         try {
             $file = new File();
             $file->user_id = auth()->id();
             $file->video = $request->video;
             $file->image = $request->image;
             $file->privacy = $request->privacy;
-
-
             if ($file->save()){
                 return response([
                     "status" => "success",
-                    "message" => "File Successfully Save"
+                    "message" => "The file has been uploaded."
                 ]);
             }
-
-
         }catch (\Exception $e){
             return response([
                 'status' => 'serverError',
@@ -39,21 +33,15 @@ class FileController extends Controller
     }
 
     public function getVideo (Request $request){
-
-
         try {
             $video =  File::with('user')
                 ->where('privacy','public')
                 ->get();
 
-
-
                 return response([
                     "status" => "success",
                     "data" => $video
                 ]);
-
-
 
         }catch (\Exception $e){
             return response([
@@ -86,23 +74,19 @@ class FileController extends Controller
     }
 
     public function search (Request $request){
-//        dd($request->all());
-
         try {
-
-
                 if ($request->minage && $request->maxage){
-                $ad = File::with('user')
-                    ->whereHas('user', function ($query) use($request){
-                        $query->whereBetween('age', [$request->minage, $request->maxage]);
-                    })
+                    $video = File::with('user')
+                        ->whereHas('user', function ($query) use($request){
+                            $query->whereBetween('age', [$request->minage, $request->maxage]);
+                        })
                     ->get();
                 return response([
                                     "status" => "success",
-                                    "data" => $ad
+                                    "data" => $video
                                 ]);
             } else  if($request->filter){
-                $video = File::all()->last();
+                $video = File::with('user')->get();
 
                 return response([
                                     "status" => "success",

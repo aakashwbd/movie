@@ -16,9 +16,9 @@ window.onscroll = function () {
     }
 };
 
-$("#siteNav").on("click", function () {
-    $("#siteNav-list").toggleClass("nav-show");
-});
+// $("#siteNav").on("click", function () {
+//     $("#siteNav-list").toggleClass("nav-show");
+// });
 
 var swiper = new Swiper(".partnerSwiper", {
     slidesPerView: 3,
@@ -539,7 +539,7 @@ userList = function (res) {
             <div class="messenger d-none" id="messenger${item.id}">
                 <div class="header">
                     <img style="width: 40px; height: 40px;" src="${img}" alt="">
-                    <span class="messenger-username text-white">${item.username}</span>
+                    <span class="messenger-username text-white">${item.username ? item.username : ""}</span>
                     <span class="iconify cursor-pointer" onclick="closeMessenger()" data-icon="ep:close-bold" data-width="20" data-height="20"></span>
                 </div>
 

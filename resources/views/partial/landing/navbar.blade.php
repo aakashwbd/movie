@@ -11,7 +11,7 @@
             <img id="navLogo" class="logo" src="{{asset('images\default.png')}}" alt="logo">
         </a>
 
-        <span class="iconify cursor-pointer nav-toggler" data-icon="gg:menu" data-width="25" data-height="25"></span>
+        <span class="iconify cursor-pointer nav-toggler" id="navbar-toggler-btn" data-icon="gg:menu" data-width="25" data-height="25"></span>
 
         <ul id="siteNav-list" class="list">
             <li class="list-item">
@@ -47,7 +47,7 @@
             </li>
 
             <li class="list-item" id="connectionNavItem">
-                <a href="javaScript:void(0)" data-bs-toggle="modal" data-bs-target="#loginModal" class="list-link {{ $currentControllerName == 'ads' || '' ? 'active' : '' }}">connections</a>
+                <a href="javaScript:void(0)" data-bs-toggle="modal" data-bs-target="#loginModal" class="list-link">connections</a>
             </li>
 
             <li class="list-item d-none" id="graph">
@@ -140,9 +140,16 @@
 
 @push('custom-js')
     <script>
-        $(document).on('click','#navbarToggler', function (){
-            $('#topNavigation').toggleClass('show')
-        })
+        // $(document).on('click','#navbarToggler', function (){
+        //     $('#topNavigation').toggleClass('show')
+        // })
+
+        // $("#siteNav").on("click", function () {
+        //     $("#siteNav-list").toggleClass("nav-show");
+        // });
+        $("#navbar-toggler-btn").on("click", function () {
+            $("#siteNav-list").toggleClass("nav-show");
+        });
 
         $(document).ready(function (){
             let constant = {

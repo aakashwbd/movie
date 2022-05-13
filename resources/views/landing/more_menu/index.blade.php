@@ -21,6 +21,12 @@
                             aria-controls="contact" aria-selected="false">Legal Notice
                     </button>
                 </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link {{ ((request()->get('tab')) == "refund") ? "active" : ''}}" id="setting-tab"
+                            data-bs-toggle="tab" data-bs-target="#refund" type="button" role="tab"
+                            aria-controls="contact" aria-selected="false">Refund Policy
+                    </button>
+                </li>
             </ul>
             <div class="tab-content bg-white" id="profileNavContent">
                 <div class="tab-pane fade show  p-4 {{ ((request()->get('tab')) == "faq") ? "active" : ''}}"
@@ -45,7 +51,7 @@
 
                     </div>
                 </div>
-                <div class="tab-pane fade show p-4" id="photos" role="tabpanel">
+                <div class="tab-pane fade show p-4 {{ ((request()->get('tab')) == "terms") ? "active" : ''}}" id="photos" role="tabpanel">
                     <div id="terms"></div>
                 </div>
                 <div class="tab-pane fade show p-4 {{ ((request()->get('tab')) == "legal") ? "active" : ''}}"
@@ -54,6 +60,16 @@
                         <h4 class="my-3"></h4>
 
                         <span id="legalInfo"></span>
+                        <address></address>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade show p-4 {{ ((request()->get('tab')) == "refund") ? "active" : ''}}"
+                     id="refund" role="tabpanel">
+                    <div class="container">
+                        <h4 class="my-3"></h4>
+
+                        <span id="refundInfo"></span>
                         <address></address>
                     </div>
                 </div>
@@ -78,7 +94,7 @@
             success: function (res) {
 
                 if (res.status === 'success' && res.data.length) {
-                    console.log(res)
+                    // console.log(res)
 
                     Object.entries(res.data[0]).forEach(item => {
 
@@ -86,19 +102,18 @@
                             if (item[1]) {
                                 item[1].forEach((value, index) => {
                                     $("#accordionExample").append(`
-                                   <div class="accordion-item">
-                                        <h2 class="accordion-header" id="headingOne${index}">
-                                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                                ${value.question}
-                                            </button>
-                                        </h2>
-                                        <div id="collapseOne${index}" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                                            <div class="accordion-body">
-                                                <strong>${value.answer}</strong>
+                                       <div class="accordion-item">
+                                            <h2 class="accordion-header" id="headingOne${index}">
+                                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                                    ${value.question}
+                                                </button>
+                                            </h2>
+                                            <div id="collapseOne${index}" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                                <div class="accordion-body">
+                                                    <strong>${value.answer}</strong>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-
                                    `)
 
                                 })
@@ -107,9 +122,14 @@
                         }
 
                         if (item[0] === "legal_information") {
-                            Object.keys(item[1]).forEach(item => {
-                                if (item === "'terms_of_use'") {
-                                    $('#terms').text(item)
+
+                            Object.entries(item[1]).forEach(value=>{
+
+                                if(value[0] === "'terms_of_use'"){
+                                    $('#terms').text(value[1])
+                                }
+                                if(value[0] === "'refund_policy'"){
+                                    $('#refundInfo').text(value[1])
                                 }
                             })
                         }

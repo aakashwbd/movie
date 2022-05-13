@@ -111,23 +111,14 @@
                     Authorization: token,
                 },
                 success: function (response) {
-                    if (
-                        response.status === "success" &&
-                        response.action === "search-user"
-                    ) {
-
+                    if (response.status === "success" && response.action === "search-user") {
                         $('html, body').animate({
                             scrollTop: $("#searchList").offset().top
                         }, 100);
                         $("#homeSearchListContainer").html("");
                         userList(response);
                     }
-
                     $('#searchResultHeading').text('Result for: from ' + formData.minage +' years old to '+ formData.maxage + ' years old - ' + ' who ' + formData.type + ' in ' + formData.address  + ' and around ')
-
-
-
-                    // location.reload()
                 },
                 error: function (xhr, resp, text) {
                     console.log(xhr);

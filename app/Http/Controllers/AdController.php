@@ -146,17 +146,55 @@ class AdController extends Controller
 
     public function search (Request $request){
         try {
-           if($request->address){
-                $ad = Ad::with('user')->where('address', 'LIKE', '%'.$request->address.'%')
-                    ->whereHas('user', function ($query) use($request){
-                        $query->whereBetween('age', [$request->minage, $request->maxage]);
-                    })
-                    ->get();
+//                $ad = Ad::with('user')->where('address', 'LIKE', '%'.$request->address.'%')
+//                    ->whereHas('user', function ($query) use($request){
+//                        $query->whereBetween('age', [$request->minage, $request->maxage]);
+//                    })
+//                    ->get();
+//               dd($request->all());
+               $target    = Ad::leftJoin('users', 'users.id', 'ads.user_id');
+//               dd($target);
+
+               //begin filtering
+               $address = $request->address;
+               if (!empty($address)) {
+                   $target->where(function ($query) use ($address) {
+                       $query->where('ads.address', 'LIKE', '%' . $address . '%');
+                   });
+               }
+
+               $preference = $request->preference;
+               if (!empty($preference)) {
+                   $target->where('users.preference', $preference);
+               }
+
+               $maxAge = $request->max_age;
+               if (!empty($maxAge)) {
+                   $target->where('users.age', '<=', (int)$maxAge);
+               }
+
+               $minAge = $request->min_age;
+               if (!empty($minAge)) {
+                   $target->where('users.age', '>=', (int)$minAge);
+               }
+//            $target->whereBetween('users.age', [$request->min_age , $request->max_age]);
+
+
+               $presentation = $request->presentation;
+               if (!empty($presentation)) {
+                   $target->where(function ($query) use ($presentation) {
+                       $query->where('users.presentation', 'LIKE', '%' . $presentation . '%');
+                   });
+               }
+               //end filtering
+
+               $target = $target->with(['user'])
+                   ->get();
+
                 return response([
                     "status" => "success",
-                    "data" => $ad
+                    "data" => $target
                 ]);
-            }
         }catch (\Exception $e){
             return response([
                 'status' => 'serverError',

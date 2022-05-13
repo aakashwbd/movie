@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\VideoComment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class VideoCommentController extends Controller
 {
@@ -13,6 +14,15 @@ class VideoCommentController extends Controller
     }
     public function store (Request $request){
         try {
+            $validator = Validator::make($request->all(), [
+                "comment" => "required",
+            ]);
+
+            if ($validator->fails()) {
+                $errors = $validator->errors()->messages();
+                return validateError($errors);
+            }
+
             $comments = new VideoComment();
             $comments->user_id = auth()->id();
             $comments->video_id = $request->video_id;

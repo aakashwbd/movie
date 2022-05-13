@@ -108,22 +108,18 @@ if (sizeof($explode) === 3) {
                 res.data.forEach(item => {
                     $('#blogList').append(`
                             <div class="col-lg-6 col-sm-12 col-12 my-5">
-                                <div class='card border'>
-
-                                    <img class="card-img-top" src="${item.image}" alt="">
-                                    <div class='card-body'>
-                                         <h6 class="my-3">${item.title}</h6>
-                                        <span class="text-black-50 fst-italic text-capitalize"></span>
-                                        <a href="{{url('/blogs?tab=comments')}}/${item.id}">
+                                <a href="{{url('/blogs?tab=comments')}}/${item.id}">
+                                    <div class='card border'>
+                                        <img class="card-img-top" src="${item.image}" alt="">
+                                        <div class='card-body'>
+                                             <h6 class="my-3">${item.title}</h6>
+                                            <span class="text-black-50 fst-italic text-capitalize"></span>
                                             <article class="text-black-50 blog-short-description my-2">
                                                 ${item.description}
                                             </article>
-                                        </a>
+                                        </div>
                                     </div>
-
-
-                                </div>
-
+                                </a>
                             </div>
                     `)
                 })
@@ -144,20 +140,37 @@ if (sizeof($explode) === 3) {
         function singleBlog(res){
             let token = localStorage.getItem('accessToken')
             $('#singleBlog').append(`
-                    <img style='width: 100%; height: 500px' class='mb-3' src="${res.data.image}" alt="">
+
+                    <div class='card border'>
+
+                        <div class='card-body'>
+                            ${res.data.image ?
+                (`
+                             <img style='width: 100%; height: 300px' class='mb-3' src="${res.data.image}" alt="">
+
+                            `) :
+
+                ''
+            }
+
                     <h6>${res.data.title}</h6>
                     <article>${res.data.description}</article>
+                        </div>
+
+
+                    </div>
+
 
                     ${token ? (`
-                     <form action="{{url('/api/blog/comment')}}" class="d-flex mt-5" id="blogCommentForm">
-                             <div class='w-100'>
-                                <input type="hidden" id="blog_id" name="blog_id" value="${res.data.id}">
-                                <input type="text" id='comment_text' name="comment_text" class="form-control me-3 comment_text" placeholder="write your comment" onchange="clearError(this)">
-                                <span id='comment_text_error' class='text-danger comment_text_error'></span>
-                            </div>
+                         <form action="{{url('/api/blog/comment')}}" class="d-flex mt-5" id="blogCommentForm">
+                                 <div class='w-100'>
+                                    <input type="hidden" id="blog_id" name="blog_id" value="${res.data.id}">
+                                    <input type="text" id='comment_text' name="comment_text" class="form-control me-3 comment_text" placeholder="write your comment" onchange="clearError(this)">
+                                    <span id='comment_text_error' class='text-danger comment_text_error'></span>
+                                </div>
 
-                            <button class="btn btn-primary ms-2">Send</button>
-                        </form>
+                                <button class="btn btn-primary ms-2">Send</button>
+                         </form>
 
                     `) : ''}
             `)

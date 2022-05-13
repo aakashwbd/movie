@@ -340,8 +340,7 @@ class AuthController extends Controller
                     "data" => $user
                 ]);
             }else if($request->type){
-                $user = User::where('preference', 'LIKE', '%' . $request->type . '%')
-                    ->get();
+                $user = User::where('preference', 'LIKE', '%' . $request->type . '%')->get();
                 return response([
                     "status" => "success",
                     "action" => "search-user",
@@ -373,6 +372,15 @@ class AuthController extends Controller
                     "action" => "search-user",
                     "data" => $user
                 ]);
+            }else{
+                dd($request->all());
+                $user = User::query()
+                    ->get();
+                return response([
+                                    "status" => "success",
+                                    "action" => "search-user",
+                                    "data" => $user
+                                ]);
             }
 
         } catch (\Exception $e) {

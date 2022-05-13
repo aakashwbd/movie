@@ -15,21 +15,21 @@
                                                placeholder="Search Location">
                                     </div>
                                     <div class="col-lg-12">
-                                        <select name="type" class="form-select mb-3">
-                                            <option value="all" selected>Who Hosts and/or Visits</option>
+                                        <select name="preference" class="form-select mb-3">
+                                            <option value="both" selected>Who Hosts and/or Visits</option>
                                             <option value="host">Who Hosts</option>
-                                            <option value="visit">Who Visits</option>
+                                            <option value="visitor">Who Visits</option>
                                         </select>
                                     </div>
                                     <div class="col-lg-12">
                                         <div class="d-flex align-items-center justify-content-center mb-3">
-                                            <input type="text" class="form-control" name="minage" placeholder="10">
+                                            <input type="text" class="form-control" name="min_age" placeholder="10">
                                             <label class="text-capitalize mx-3 text-white">to</label>
-                                            <input type="text" class="form-control" name="maxage" placeholder="49">
+                                            <input type="text" class="form-control" name="max_age" placeholder="49">
                                         </div>
                                     </div>
                                     <div class="col-lg-12">
-                                        <input type="text" name="keyword" class="form-control mb-3"
+                                        <input type="text" name="presentation" class="form-control mb-3"
                                                placeholder="keyword">
                                     </div>
 
@@ -341,6 +341,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                     'Authorization': token
                 }, success: function (response) {
+                    // console.log(response)
                     if(response.status === 'success' && response.data.length > 0){
                         $('#placeList').html('')
                         $('#adSearchlistheading').text('Result : from ' +  formData.minage + ' years old to ' +  formData.maxage + ' years old - who ' +  ' - in ' + formData.type + " "+  formData.address + ' and around ')
@@ -349,123 +350,10 @@
 
                     }else if(response.status === 'success' && response.data.length === 0){
                         $('#placeList').html('')
-                        $('#adSearchlistheading').text('Result : from ' +  formData.minage + ' years old to ' +  formData.maxage + ' years old - who ' +  ' - in ' + formData.type + " "+  formData.address + ' and around ')
+                        $('#adSearchlistheading').text('Result : from ' +  formData.min_age + ' years old to ' +  formData.max_age + ' years old - who ' +  ' - in ' + formData.preference + " "+  formData.address + ' and around ')
                         $('#adsResultDiv').removeClass('d-none')
                     }
-                    {{--if (response.status === 'success') {--}}
-                    {{--    $('#placeList').html('')--}}
-                    {{--    let user = JSON.parse(localStorage.getItem('user'))--}}
-                    {{--    response.data.forEach((item, index) => {--}}
 
-
-                    {{--        $('#placeList').append(`--}}
-                    {{--            <div class="col-lg-4">--}}
-                    {{--                <div class="card">--}}
-                    {{--                    <div class="card-body">--}}
-                    {{--                        <div class="row">--}}
-                    {{--                            <div class="col-lg-8">--}}
-                    {{--                                <h6>${item.title}</h6>--}}
-                    {{--                                <p>${item.description}</p>--}}
-                    {{--                            </div>--}}
-                    {{--                            <div class="col-lg-4">--}}
-                    {{--                                <img id="adsImage" class="" style="width: 100px; height: 100px;" src="${item.image}" alt="">--}}
-                    {{--                            </div>--}}
-                    {{--                            <div class="col-lg-6">--}}
-                    {{--                                <h6>${item.address}</h6>--}}
-                    {{--                                <span>${item.user.username}</span>--}}
-                    {{--                            </div>--}}
-                    {{--                        </div>--}}
-                    {{--                    </div>--}}
-                    {{--                     <div id='postAction${item.id}' class="d-none card-action text-center p-2 border-top">--}}
-                    {{--                         <span data-bs-target="#editplaceModal${item.id}" data-bs-toggle='modal' class="iconify me-3 cursor-pointer" data-icon="bxs:edit" data-width="20" data-height="20"></span>--}}
-                    {{--                           <span class="iconify cursor-pointer" data-icon="ep:delete" data-width="20" data-height="20"></span>--}}
-                    {{--                       </div>--}}
-
-                    {{--                </div>--}}
-                    {{--            </div>--}}
-
-
-                    {{--            <div class="modal" id="editplaceModal${item.id}">--}}
-                    {{--                <div class="modal-dialog modal-dialog-centered">--}}
-                    {{--                    <div class="modal-content">--}}
-                    {{--                        <div class="modal-header border-bottom justify-content-center">--}}
-                    {{--                            <h4>Edit Place Ad</h4>--}}
-                    {{--                        </div>--}}
-                    {{--                        <div class="modal-body">--}}
-                    {{--                            <form action="{{'/api/place/update'}}" id="editPlaceForm${item.id}">--}}
-                    {{--                            <input type='hidden' name='ad_id' value='${item.id}'/>--}}
-                    {{--                                <div class="text-center">--}}
-                    {{--                                    <span>your ad will expired</span>--}}
-
-                    {{--                                    <div class="d-flex align-items-center justify-content-center my-2">--}}
-                    {{--                                        <div class="form-check me-3">--}}
-                    {{--                                            <input class="form-check-input" type="radio" value="1 month" name="duration" id="month">--}}
-                    {{--                                            <label class="form-check-label" for="month">--}}
-                    {{--                                                1 month--}}
-                    {{--                                            </label>--}}
-                    {{--                                        </div>--}}
-
-                    {{--                                        <div class="form-check me-3">--}}
-                    {{--                                            <input class="form-check-input" type="radio" value="1 week" name="duration" id="week">--}}
-                    {{--                                            <label class="form-check-label" for="week">--}}
-                    {{--                                                1 week--}}
-                    {{--                                            </label>--}}
-                    {{--                                        </div>--}}
-
-                    {{--                                        <div class="form-check me-3">--}}
-                    {{--                                            <input class="form-check-input" type="radio" value="24 hour" name="duration" id="hour">--}}
-                    {{--                                            <label class="form-check-label" for="hour">--}}
-                    {{--                                                24 hours--}}
-                    {{--                                            </label>--}}
-                    {{--                                        </div>--}}
-                    {{--                                    </div>--}}
-                    {{--                                </div>--}}
-
-                    {{--                                <input type="text" value='${item.title}' name="title" class="form-control mb-3" placeholder="Message Title">--}}
-                    {{--                                <input type="text" value='${item.address}' name="address" class="form-control mb-3" placeholder="Location">--}}
-                    {{--                                <textarea name="description" placeholder="message" class="form-control mb-3">${item.description}</textarea>--}}
-
-                    {{--                                <div class="row">--}}
-                    {{--                                    <div class="col-lg-6">--}}
-                    {{--                                        <img class="avatar-sm me-3 d-none" id="placeImagePreview" src="" alt="">--}}
-                    {{--                                        <input type="hidden" name="image" id="placeImageURL">--}}
-                    {{--                                        <input type="file" id="file-uploader" hidden name="image" onchange="placeImgUpload(event)"/>--}}
-                    {{--                                        <label for="file-uploader"--}}
-                    {{--                                               class="d-flex align-items-center cursor-pointer">--}}
-                    {{--                                            <span class="iconify me-3" data-icon="fa-solid:camera" data-width="20"--}}
-                    {{--                                                  data-height="20"></span>--}}
-                    {{--                                            Upload Ad Image--}}
-                    {{--                                        </label>--}}
-                    {{--                                    </div>--}}
-
-                    {{--                                    <div class="col-lg-6">--}}
-                    {{--                                        <button type="submit" class="btn btn-primary">Submit</button>--}}
-                    {{--                                    </div>--}}
-                    {{--                                </div>--}}
-                    {{--                            </form>--}}
-
-                    {{--                        </div>--}}
-                    {{--                    </div>--}}
-                    {{--                </div>--}}
-                    {{--            </div>--}}
-
-
-                    {{--        `)--}}
-                    {{--        if (user) {--}}
-                    {{--            if (user.id === item.user.id) {--}}
-                    {{--                // console.log('user:', typeof(user.id) , "item User id:", typeof(item.user.id) )--}}
-                    {{--                $('#postAction' + item.id).removeClass('d-none')--}}
-                    {{--            }--}}
-                    {{--        }--}}
-
-                    {{--        $('#editPlaceForm' + item.id).submit(function (e) {--}}
-                    {{--            e.preventDefault();--}}
-                    {{--            let form = $(this);--}}
-                    {{--            let token = localStorage.getItem('accessToken')--}}
-                    {{--            formSubmit("post", form, token);--}}
-                    {{--        })--}}
-                    {{--    })--}}
-                    {{--}--}}
                 }, error: function (xhr, resp, text) {
                     console.log(xhr)
                 }

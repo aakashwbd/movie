@@ -23,7 +23,7 @@
                                    placeholder="Email or Phone" onchange="clearError(this)">
                             <span class="text-danger phone_error email_error" id="emailorphone_error"></span>
 
-                            <span class="text-danger d-none" id="loginEmptyEmailPhone">The email or phone filed is required</span>
+                            <span class="text-danger d-none" id="loginEmptyEmailPhoneError">The email or phone filed is required</span>
 
                             <span class="text-danger d-none" id="validateEmailPhone">Please, Enter the valid email or phone.</span>
                         </div>
@@ -33,7 +33,9 @@
                             {{--                            <input class="form-control password" type="password" id="password" name="password" placeholder="*******">--}}
                             <input type="password" name="password" id="password" class="form-control password"
                                    placeholder="*****" onchange="clearError(this)">
-                            <span class="text-danger password_error" id="password_error"></span>
+
+                            <span class="text-danger password_error " id="password_error"></span>
+
                             <div class="text-end">
                                 <a href="#" class="text-decoration-underline" data-bs-target="#forgotModal"
                                    data-bs-toggle="modal">forget password?</a>
@@ -94,7 +96,7 @@
                 }
 
             } else {
-                $('#loginEmptyEmailPhone').removeClass('d-none')
+                $('#loginEmptyEmailPhoneError').removeClass('d-none')
                 $('.emptyEmailPhone').addClass("is-invalid")
                 $('.loginEmptyEmailPhone_label').addClass("text-danger")
             }
@@ -158,7 +160,7 @@
             $('#' + input.id + '_icon').removeClass('text-danger');
             $('#' + input.id + '_icon_border').removeClass('field-error');
             $('#' + input.id + '_error').html('');
-            $('#loginEmptyEmailPhone').addClass('d-none')
+            $('#loginEmptyEmailPhoneError').addClass('d-none')
             $("#validateEmailPhone").addClass('d-none')
         }
 

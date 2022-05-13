@@ -53,10 +53,48 @@
         </div>
 
 
+        <div class="modal fade" id="singleVideoModal">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header justify-content-center">
+                        <h6 id="singleVideoTitle"></h6>
+                    </div>
+                    <div class="modal-body">
+                        <div id="videoItem"></div>
+
+
+                        <div class="card border my-3">
+                            <div class="card-header" id="videoCard">
+                                <div class="text-center">
+                                    <h6>Comments</h6>
+                                </div>
+                            </div>
+
+                            <div class="card-body">
+                                <ul id="commentBody"></ul>
+                            </div>
+
+                            <div class="card-action p-2 border-top d-none" id="commentAction">
+                                <div class="text-center">
+                                    <div id="rater"></div>
+                                    <p>Grade</p>
+                                </div>
+                                <form id="commentForm">
+                                    <input type="hidden" id="videoId" name="video_id">
+                                    <textarea name="comment" id="comment" placeholder="Write your comment" class="form-control comment" onchange="clearError(this)"></textarea>
+                                    <span id="comment_error" class="text-danger comment_error"></span>
+                                    <button type="submit" class="btn btn-primary d-block my-2">Comment</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 
         <div class="">
-            <div class="row bg-white" id="allVideoList"></div>
+            <div class="row bg-white p-2" id="allVideoList"></div>
         </div>
     </div>
 
@@ -64,80 +102,216 @@
 @endsection
 @push('custom-js')
     <script>
-        let constant = {
-            allVideoListURL:  '/api/file/video',
-        }
+        $(document).ready(function () {
+            let   token = localStorage.getItem('accessToken')
+            const api = {
+                fetch_all: '/api/file/video',
+                fetch_single: '/api/file/video/:id',
+                comment: '/api/video/comment/:id',
 
-        function fetch (url){
-            $.ajax({
-                url: window.origin + url,
-                type: 'GET',
-                dataType: "json",
-                processData: false,
-                contentType: false,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                },
-                success: function (res) {
-                    // console.log(res)
-                    getVideoContent(res)
+            }
 
-                }, error: function (jqXhr, ajaxOptions, thrownError) {
-                    console.log(jqXhr)
-                }
-            });
-        }
+            if(token){
+                $('#commentAction').removeClass('d-none')
+                $('.video-blur').removeClass('img-blur')
+                $('.userImg').removeClass('img-blur')
+            }
 
-        function getVideoContent(res) {
-            res.data.forEach(item => {
-                $('#allVideoList').append(`
-                    <div class="col-lg-4 col-sm-12 col-12 mb-3">
-                        <a href="{{url('videos/${item.id}')}}">
-                        <video width="320" height="240">
-                          <source src="${item.video}" type="video/mp4">
-                        Your browser does not support the video tag.
-                        </video>
-                        </a>
-                        <div class='d-flex'>
-                            <img style='width: 80px; height: 80px;' src='${item.user.image ? item.user.image : window.origin + '/asset/image/default.png'}'/>
-
-                            <div class="ms-2">
-                                    <div class="d-flex align-items-center">
-                                        <span class="iconify text-warning me-2" data-icon="bxs:star" data-width="20" data-height="20"></span>
-                                       <span id='rating-count' class='text-white'></span>
-                                    </div>
-
-                                   <h6 class=''>${item.user.username}</h6>
-                                    <span class=''>${item.user.address}</span>
-                            </div>
-                        </div>
-                    <div>
-                `)
-
+            function fetch(url, fetch) {
                 $.ajax({
-                    url: window.origin + '/api/rating/count/'+item.id,
+                    url: window.origin + url,
                     type: 'GET',
-                    dataType: "json",
-                    processData: false,
-                    contentType: false,
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                     },
                     success: function (res) {
-                        $('#rating-count').text(res.data)
-
-
+                        fetch(res)
                     }, error: function (jqXhr, ajaxOptions, thrownError) {
                         console.log(jqXhr)
                     }
                 });
+            }
+
+
+            //fetch all videos
+            fetch(api.fetch_all, videoList)
+
+
+            function videoList(res) {
+                if(res.status === 'success' && res.data.length > 0){
+                    res.data.forEach(item => {
+                        $('#allVideoList').append(`
+                        <div class="col-lg-4 col-sm-12 col-12 mb-3 ">
+                            <div class="card cursor-pointer " onclick="playVideo(${item.id})">
+                                <div class="card-body">
+                                     <video width="320" height="240" class=" video-blur">
+                                        <source src="${item.video}" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                     </video>
+
+                                    <div class='d-flex'>
+                                        <img style='width: 80px; height: 80px;' class=" userImg" id="" src='${item.user.image ? item.user.image : window.origin + '/asset/image/default.png'}' alt=""/>
+
+                                        <div class="ms-2">
+                                            <div class="d-flex align-items-center">
+                                                <span class="iconify text-warning me-2" data-icon="bxs:star" data-width="20" data-height="20"></span>
+                                               <span id='rating-count' class='text-white'></span>
+                                            </div>
+                                           <h6 class=''>${item.user.username}</h6>
+                                           <span class=''>${item.user.address}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <div>
+                    `)
+                    })
+                }else{
+                    $('#allVideoList').append(`
+                        <div class="alert alert-warning"> No one posted any video yet.</div>
+                    `)
+                }
+
+            }
+
+
+            let video_id = null
+            playVideo = function (id) {
+                if(token){
+                    $('#singleVideoModal').modal('show')
+                    fetch(api.fetch_single.replace(':id', id), singleVideo)
+                    fetch(api.comment.replace(':id', id), videoComment)
+                    video_id = id
+                }else{
+                    $('#loginModal').modal('show')
+                }
+
+
+            }
+
+
+
+            function singleVideo(res) {
+                $('#singleVideoTitle').text(res.data.user.username)
+                $('#videoId').val(res.data.id)
+                $('#videoItem').append(`
+                    <video
+                        id="my-video"
+                        class="video-js"
+                        controls
+                         style="width: 100%; height: 50%"
+                        preload="auto"
+                        data-setup="{}"
+                      >
+                        <source src="${res.data.video}" type="video/mp4" />
+                        <p class="vjs-no-js">
+                          To view this video please enable JavaScript, and consider upgrading to a
+                          web browser that
+                          <a href="https://videojs.com/html5-video-support/" target="_blank"
+                            >supports HTML5 video</a
+                          >
+                        </p>
+                      </video>
+                `)
+            }
+
+
+            function videoComment(res){
+                res.data.forEach(item =>{
+                    $('#commentBody').append(`
+                         <li class="border-bottom d-flex py-1">
+                            ${item.user.image ? (`
+                                    <img style="width: 80px; height: 80px;" class="border" src="${item.user.image}" alt="">
+                            `) : ''}
+                            <div class="ms-3">
+                                <h6>${item.user.username}</h6>
+                                <span>${item.comment}</span>
+                            </div>
+                        </li>
+                    `)
+                })
+            }
+
+            let myRating = raterJs( {
+                element:document.querySelector("#rater"),
+                rateCallback:function rateCallback(rating, done) {
+                    this.setRating(rating);
+                    done();
+                },
+                showToolTip: true,
+                max: 5,
+            });
+
+            $(document).on('click', '#rater', function (){
+                let rate = $(this).attr('data-rating')
+                videoRating(video_id, rate)
             })
+        })
+        videoRating = function (videoId, rating){
+            let token = localStorage.getItem('accessToken')
+            $.ajax({
+                type: 'post',
+                url: window.origin + '/api/rating/store',
+                data: {
+                    'video_id':videoId,
+                    'rating': rating
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                    'Authorization': token
+                }, success: function (response) {
+                    toastr.success(response.message)
+
+                }, error: function (xhr, resp, text) {
+                    console.log(xhr)
+                }
+            });
+
         }
 
-        $(document).ready(function (){
-            fetch(constant.allVideoListURL)
+
+
+        $('#commentForm').submit(function (e) {
+            e.preventDefault();
+            let token = localStorage.getItem('accessToken')
+            let form = $(this);
+            let form_data = JSON.stringify(form.serializeJSON());
+            let formData = JSON.parse(form_data)
+
+            $.ajax({
+                type: 'post',
+                url: window.origin + '/api/video/comment',
+                data: formData,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                    'Authorization': token
+                }, success: function (response) {
+                    toastr.success(response.message)
+                    $('#comment').val('')
+
+                }, error: function (xhr, resp, text) {
+                    if (xhr && xhr.responseJSON) {
+                        let response = xhr.responseJSON;
+                        if (response.status && response.status === "validate_error") {
+                            $.each(response.message, function (index, message) {
+                                $("." + message.field).addClass("is-invalid");
+                                $("." + message.field + "_label").addClass( "text-danger");
+                                $("." + message.field + "_error").html(message.error);
+                            });
+                        }
+                    }
+                }
+            });
         })
 
+        function clearError(input) {
+            $('#' + input.id).removeClass('is-invalid');
+            $('#' + input.id + '_label').removeClass('text-danger');
+            $('#' + input.id + '_icon').removeClass('text-danger');
+            $('#' + input.id + '_icon_border').removeClass('field-error');
+            $('#' + input.id + '_error').html('');
+            $('#' + input.id + '_register_error').html('');
+        }
 
 
 
@@ -157,14 +331,41 @@
                     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
                 },
                 success: function (response) {
+
                     $('#videoModal').modal('hide')
                     $(".modal-backdrop").remove();
 
                     $('#videoResultHeading').text('Result: from'+ formData.minage +' years old to'+ formData.maxage +' years old ')
 
                     $('#allVideoList').html('')
+                    response.data.forEach(item => {
+                        $(".modal-backdrop").add();
+                        $('#allVideoList').append(`
+                            <div class="col-lg-4 col-sm-12 col-12 mb-3 ">
+                                <div class="card cursor-pointer " onclick="playVideo(${item.id})">
+                                    <div class="card-body">
+                                         <video width="320" height="240" class=" video-blur">
+                                            <source src="${item.video}" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                         </video>
 
-                    getVideoContent(response)
+                                        <div class='d-flex'>
+                                            <img style='width: 80px; height: 80px;' class=" userImg" id="" src='${item.user.image ? item.user.image : window.origin + '/asset/image/default.png'}' alt=""/>
+
+                                            <div class="ms-2">
+                                                <div class="d-flex align-items-center">
+                                                    <span class="iconify text-warning me-2" data-icon="bxs:star" data-width="20" data-height="20"></span>
+                                                   <span id='rating-count' class='text-white'></span>
+                                                </div>
+                                               <h6 class=''>${item.user.username}</h6>
+                                               <span class=''>${item.user.address}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <div>
+                        `)
+                    })
                 },
                 error: function (xhr, resp, text) {
                     console.log(xhr);
@@ -172,8 +373,6 @@
                 }
             });
         })
-
-
 
 
 

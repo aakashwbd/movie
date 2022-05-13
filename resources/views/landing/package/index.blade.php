@@ -5,7 +5,7 @@
         <div class="container bg-white my-5 py-3">
 
             <div class="row" id="packageList">
-                <div class="col-lg-2 col-sm-12 col-12">
+                <div class="col-lg-3 col-sm-12 col-12 mb-3">
                     <div class="package-item" id="free">
                         <h6 class="package-title" id="package-title-1"></h6>
 
@@ -45,7 +45,7 @@
                     </div>
                 </div>
 
-                <div class="col-lg-2 col-sm-12 col-12">
+                <div class="col-lg-3 col-sm-12 col-12 mb-3">
                     <div class="package-item bronze" id="bronze">
                         <h6 class="package-title" id="package-title-2"></h6>
 
@@ -90,7 +90,7 @@
                     </div>
                 </div>
 
-                <div class="col-lg-2 col-sm-12 col-12">
+                <div class="col-lg-3 col-sm-12 col-12 mb-3">
                     <div class="package-item silver">
                         <h6 class="package-title" id="package-title-3"></h6>
                         <span>popular plan</span>
@@ -136,7 +136,7 @@
                     </div>
                 </div>
 
-                <div class="col-lg-2 col-sm-12 col-12">
+                <div class="col-lg-3 col-sm-12 col-12 mb-3">
                     <div class="package-item plus">
                         <h6 class="package-title" id="package-title-4"></h6>
                         <ul class="package-list">
@@ -181,11 +181,11 @@
                     </div>
                 </div>
 
-                <div class="col-lg-2 col-sm-12 col-12">
-                    <div class="private-room">
-                        <span>Top Room Private</span>
-                    </div>
-                </div>
+{{--                <div class="col-lg-2 col-sm-12 col-12 mb-3">--}}
+{{--                    <div class="private-room">--}}
+{{--                        <span>Top Room Private</span>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
             </div>
         </div>
     </div>

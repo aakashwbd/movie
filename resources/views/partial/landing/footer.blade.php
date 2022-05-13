@@ -55,7 +55,7 @@
                                    class="list-link text-capitalize">Contact</a>
                             </li>
                             <li class="list-item">
-                                <a href="" class="list-link text-capitalize">Refund Policy</a>
+                                <a href="{{url('/information?tab=refund')}}" class="list-link text-capitalize">Refund Policy</a>
                             </li>
                         </ul>
                     </div>

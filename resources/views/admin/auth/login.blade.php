@@ -83,6 +83,21 @@
             });
         })
 
+
+        function clearError(input) {
+            $('#' + input.id).removeClass('is-invalid');
+            $('#emailorphone').removeClass('is-invalid');
+            $('#' + input.id + '_label').removeClass('text-danger');
+            $('.loginEmptyEmailPhone_label').removeClass('text-danger');
+            $('.emptyEmailPhone').removeClass("is-invalid")
+            $('#password').removeClass("is-invalid")
+            $('#' + input.id + '_icon').removeClass('text-danger');
+            $('#' + input.id + '_icon_border').removeClass('field-error');
+            $('#' + input.id + '_error').html('');
+            $('#loginEmptyEmailPhone').addClass('d-none')
+            $("#validateEmailPhone").addClass('d-none')
+        }
+
     </script>
 @endpush
 

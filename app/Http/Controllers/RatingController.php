@@ -23,7 +23,7 @@ class RatingController extends Controller
             if ($rating->save()){
                 return response([
                                     "status" => "success",
-                                    "message" => "Comment Successfully Done"
+                                    "message" => "You rated this video " . $request->rating
                                 ]);
             }
         }catch (\Exception $e){
