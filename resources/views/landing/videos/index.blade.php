@@ -102,6 +102,14 @@
 @endsection
 @push('custom-js')
     <script>
+
+        /**
+         * Change the current page title
+         * */
+        window.location.pathname === '/videos'? document.title = 'Videos' : ''
+
+
+
         $(document).ready(function () {
             let   token = localStorage.getItem('accessToken')
             const api = {

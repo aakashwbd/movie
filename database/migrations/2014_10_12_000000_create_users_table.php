@@ -30,6 +30,8 @@ return new class extends Migration
             $table->string('test')->nullable();
             $table->string('provider_id')->nullable();
             $table->string('provider')->nullable();
+            $table->string('last_seen')->nullable();
+            $table->boolean('online_status')->default(false);
             $table->enum('status', ['active', 'pending', 'suspend', 'inactive'])->default('active');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

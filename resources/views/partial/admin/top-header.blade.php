@@ -9,18 +9,21 @@
             <img id="adminImage" src="" class="avatar-sm rounded-circle cursor-pointer" data-bs-toggle="dropdown" alt="">
             <ul class="dropdown-menu dropdown-menu-end align-items-center">
                 <li>
-                    <a class="dropdown-item" href="">
+                    <a class="dropdown-item" href="{{url('/admin/profile')}}">
                         <span class="iconify" data-icon="carbon:user-avatar" style="color: black;" data-width="20"
                               data-height="20"></span>
                         Profile
                     </a>
                 </li>
                 <li>
-                    <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#password-modal">
+                    <a href="{{url('/admin/change-password')}}">
+                        <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#password-modal">
                         <span class="iconify" data-icon="fluent:key-32-regular" style="color: black;" data-width="20"
                               data-height="20"></span>
-                        Change Password
-                    </button>
+                            Change Password
+                        </button>
+                    </a>
+
                 </li>
 
                 <li>

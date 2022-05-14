@@ -583,16 +583,15 @@
 
                     Object.entries(res.data[0]).forEach(item => {
                         if (item[0] === 'image') {
-                            if (item[1]) {
-                                Object.entries(item[1]).forEach(value => {
-                                    if (value[0] === "logo") {
-                                        $('#footerLogo').attr('src', value[1])
-                                        $('#navLogo').attr('src', value[1])
+
+                            if(item[1]){
+                                item[1].forEach(img=>{
+                                    if(img.logo){
+                                        $('#footerLogo').attr('src',img.logo)
+                                        $('#navLogo').attr('src', img.logo)
                                     }
                                 })
                             }
-
-
                         }
                         if (item[0] === "legal_information") {
                             if (item[1]) {
@@ -638,6 +637,28 @@
         })
     })
 
+    $(function(){
+        var userActivity = localStorage.getItem('accessToken')
+        if(userActivity){
+            $.ajax({
+                url: "{{url('/api/user-activity-check')}}",
+                method: "patch",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                    "Authorization":userActivity
+                },
+                success:function (res){
+                    console.log(res)
+                },
+                error:function(err){
+                    console.log(err)
+                }
+
+            })
+        }
+
+
+    })
 
 </script>
 

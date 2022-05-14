@@ -86,6 +86,12 @@
 @push('custom-js')
     <script>
 
+        /**
+         * Change the current page title
+         * */
+        window.location.pathname === '/admin/blog'? document.title = 'Dashboard | Blog' : ''
+
+
         function imageUploader(event) {
             event.preventDefault();
             let file = event.target.files[0];
@@ -166,7 +172,7 @@
         function deleteHandler(url) {
             Swal.fire({
                 title: 'Are you sure?',
-                text: "You are going to permanently delete the category. You won't be able to revert the action.",
+                text: "You are going to permanently delete the blog. You won't be able to revert the action.",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -216,6 +222,7 @@
                         if (response.data.image) {
                             image = response.data.image
                         }
+                        $('#editBlogContent').html('')
                         $('#editBlogContent').append(`
                             <form action="{{url('api/admin/blog/${response.data.id}')}}" id="editBlogForm">
                                 <label for="editBlogImg" class="form-label">Blog Image</label>
@@ -366,9 +373,9 @@
                                 image = item.image
                             }
                             $('#blogList').append(`
-                            <div class="col-lg-6 col-12 mb-3">
+                            <div class="col-lg-4 col-12 mb-3">
                                 <div class="card">
-                                    <img class="card-img-top border-bottom" style="width: 100%; height: 220px; object-fit: cover" src="${image}" alt="">
+                                    <img class="card-img-top border-bottom" style="width: 100%; height: 220px;" src="${image}" alt="">
                                     <div class='card-img-overlay'>
                                         <button class="btn bg-white" onclick="editHandler('/api/admin/blog/${item.id}')">
                                             <span class="iconify" data-icon="bxs:edit" data-width="20" data-height="20"></span>

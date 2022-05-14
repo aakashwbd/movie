@@ -23,6 +23,13 @@
 
 @push('custom-js')
     <script>
+        /**
+         * Change the current page title
+         * */
+        window.location.pathname === '/admin/banned-users'? document.title = 'Dashboard | Banned Users' : ''
+
+
+
         $(function () {
             $.ajaxSetup({
                 headers: {

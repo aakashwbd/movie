@@ -46,6 +46,11 @@
 
 @push('custom-js')
     <script>
+        /**
+         * Change the current page title
+         * */
+        window.location.pathname === '/admin/smtp'? document.title = 'Dashboard | SMTP' : ''
+
         $('#smtpForm').submit(function (e) {
             e.preventDefault();
             let form = $(this);

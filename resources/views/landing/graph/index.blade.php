@@ -40,6 +40,15 @@
 @endsection
 @push('custom-js')
     <script>
+        /**
+         * Change the current page title
+         * */
+        let currentPath = window.location.pathname
+        currentPath === '/graph'? document.title = 'Graph' : ''
+
+
+
+
         // function hello(){
         //     $.ajax({
         //         url: window.origin + '/api/profile/visitors',
@@ -74,20 +83,26 @@
                     'Authorization': token
                 },
                 success: function (res) {
-                    console.log('vis', res)
-                    res.data.forEach(item=>{
+                    if(res.status === 'success' && res.data.length > 0){
+                        res.data.forEach(item=>{
+                            $('#visitorList').append(`
+                                <li class="border-bottom d-flex p-2">
+                                    <img style="width: 80px; height: 80px"  src="${item.user.image}" alt="">
+                                    <div class="ms-3">
+                                        <h6>${item.user.username}</h6>
+                                        <h6>${item.user.address}</h6>
+                                    </div>
+                                </li>
+                            `)
+                        })
+                    }else{
                         $('#visitorList').append(`
-
-                        <li class="border-bottom d-flex p-2">
-                            <img style="width: 80px; height: 80px"  src="${item.user.image}" alt="">
-
-                            <div class="ms-3">
-                                <h6>${item.user.username}</h6>
-                                <h6>${item.user.address}</h6>
+                            <div class="alert alert-warning">
+                                No one visited in your profile.
                             </div>
-                        </li>
                         `)
-                    })
+                    }
+
                     // toastr.success(res.message)
                 }, error: function (jqXhr, ajaxOptions, thrownError) {
                     console.log(jqXhr)

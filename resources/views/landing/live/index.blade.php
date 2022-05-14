@@ -50,3 +50,13 @@
 
 {{--    <Broadcast />--}}
 @endsection
+
+@push('custom-js')
+    <script>
+        /**
+         * Change the current page title
+         * */
+        window.location.pathname === '/live'? document.title = 'Live' : ''
+
+    </script>
+@endpush

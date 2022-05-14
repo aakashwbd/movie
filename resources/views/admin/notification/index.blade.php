@@ -171,6 +171,12 @@
 
 @push('custom-js')
     <script>
+        /**
+         * Change the current page title
+         * */
+        window.location.pathname === '/admin/notification'? document.title = 'Dashboard | Notification' : ''
+
+
         function clearError(input) {
             $('#' + input.id).removeClass('is-invalid');
             $('#' + input.id + '_label').removeClass('text-danger');

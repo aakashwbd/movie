@@ -1,8 +1,8 @@
 <?php
-$currentControllerName = Request::segment(1);
-$currentFullRouteName = Route::getFacadeRoot()
-    ->current()
-    ->uri();
+    $currentControllerName = Request::segment(1);
+    $currentFullRouteName = Route::getFacadeRoot()
+        ->current()
+        ->uri();
 ?>
 
 
@@ -39,11 +39,12 @@ $currentFullRouteName = Route::getFacadeRoot()
                 <li class="nav-item" role="presentation">
                     <button class="nav-link {{ ((request()->get('tab')) == "blacklist") ? "active" : ''}}"
                             id="blacklist-tab" data-bs-toggle="tab" data-bs-target="#blocklist"
-                            type="button" role="tab" aria-controls="profile" aria-selected="false">Blacklist
+                            type="button" role="tab" aria-controls="profile" aria-selected="false">Block List
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link {{ ((request()->get('tab')) == "premium") ? "active" : ''}} " id="premium-tab" data-bs-toggle="tab" data-bs-target="#premiumList"
+                    <button class="nav-link {{ ((request()->get('tab')) == "premium") ? "active" : ''}} "
+                            id="premium-tab" data-bs-toggle="tab" data-bs-target="#premiumList"
                             type="button" role="tab" aria-controls="contact" aria-selected="false">Premium Access
                     </button>
                 </li>
@@ -176,10 +177,10 @@ $currentFullRouteName = Route::getFacadeRoot()
 
                     </div>
 
-{{--                    <div class="gallery my-3">--}}
-{{--                        <span class="text-capitalize">private photos/videos (for chat use)</span>--}}
-{{--                        <div class="row cloneContainer"></div>--}}
-{{--                    </div>--}}
+                    {{--                    <div class="gallery my-3">--}}
+                    {{--                        <span class="text-capitalize">private photos/videos (for chat use)</span>--}}
+                    {{--                        <div class="row cloneContainer"></div>--}}
+                    {{--                    </div>--}}
                 </div>
 
                 <div class="tab-pane fade show p-4 {{ ((request()->get('tab')) == "setting") ? "active" : ''}}"
@@ -351,18 +352,20 @@ $currentFullRouteName = Route::getFacadeRoot()
                     </div>
                 </div>
 
-                <div class="tab-pane fade show p-4 {{ ((request()->get('tab')) == "premium") ? "active" : ''}} " id="premiumList" role="tabpanel">
+                <div class="tab-pane fade show p-4 {{ ((request()->get('tab')) == "premium") ? "active" : ''}} "
+                     id="premiumList" role="tabpanel">
                     <div class="container">
                         <div class="card">
-                           <div class="card-header">
-                               <h6>Payment By Credit</h6>
-                               <span class="text-black-50">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Expedita, nostrum!</span>
-                           </div>
+                            <div class="card-header">
+                                <h6>Payment By Credit</h6>
+                                <span class="text-black-50">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Expedita, nostrum!</span>
+                            </div>
 
                             <div class="card-body">
                                 <div id="premiumPackageList"></div>
                                 <div class="text-center">
-                                    <p class="my-2">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fuga, nam.</p>
+                                    <p class="my-2">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fuga,
+                                        nam.</p>
                                     <button id="premiumPackageOfferButton" class="btn btn-primary w-25">Submit</button>
                                 </div>
                             </div>
@@ -404,7 +407,6 @@ $currentFullRouteName = Route::getFacadeRoot()
                     </div>
 
 
-
                 </div>
             </div>
         </div>
@@ -437,7 +439,6 @@ $currentFullRouteName = Route::getFacadeRoot()
                     </div>
 
 
-
                 </div>
             </div>
         </div>
@@ -462,18 +463,26 @@ $currentFullRouteName = Route::getFacadeRoot()
     </div>
 @endsection
 @push('custom-js')
-    <script src="https://www.paypal.com/sdk/js?client-id={{env('PAYPAL_CLIENT_ID')}}&currency={{env('PAYPAL_CURRENCY')}}"></script>
+    <script
+        src="https://www.paypal.com/sdk/js?client-id={{env('PAYPAL_CLIENT_ID')}}&currency={{env('PAYPAL_CURRENCY')}}"></script>
 
     <script>
         let token = localStorage.getItem('accessToken')
 
+
+        /***
+         * Fetch all languages for user can change his languages
+         */
         Object.entries(isoLangs).forEach(item => {
             $('#languages').append(`
                 <option value='${item[1].nativeName}'>${item[1].nativeName}</option>
             `)
         })
 
-        function applySuspendHandler(){
+        /***
+         * The function is active when user want to his account in suspend mode
+         */
+        function applySuspendHandler() {
             $.ajax({
                 url: window.origin + '/api/auth/profile/settings/suspend',
                 type: 'patch',
@@ -485,9 +494,9 @@ $currentFullRouteName = Route::getFacadeRoot()
                     toastr.success(res.message)
                     localStorage.removeItem('accessToken')
                     localStorage.removeItem('user')
-                    setTimeout(function (){
+                    setTimeout(function () {
                         window.location.href = window.origin
-                    } ,1000)
+                    }, 1000)
                 },
                 error: function (jqXhr, ajaxOptions, thrownError) {
                     console.log(jqXhr)
@@ -495,7 +504,10 @@ $currentFullRouteName = Route::getFacadeRoot()
             });
         }
 
-        function applyDeleteAccountHandler(){
+        /***
+         * The function is active when user want to permanently delete his account
+         */
+        function applyDeleteAccountHandler() {
             $.ajax({
                 url: window.origin + '/api/auth/profile/settings/delete',
                 type: 'delete',
@@ -508,9 +520,9 @@ $currentFullRouteName = Route::getFacadeRoot()
                     localStorage.removeItem('accessToken')
                     localStorage.removeItem('user')
 
-                    setTimeout(function (){
+                    setTimeout(function () {
                         window.location.href = window.origin
-                    } ,1000)
+                    }, 1000)
                 },
                 error: function (jqXhr, ajaxOptions, thrownError) {
                     console.log(jqXhr)
@@ -518,6 +530,9 @@ $currentFullRouteName = Route::getFacadeRoot()
             });
         }
 
+        /***
+         * The function is active when user want to change his profile settings
+         */
         function profileSettingHandler(input) {
             $.ajax({
                 url: window.origin + '/api/auth/profile/settings',
@@ -610,6 +625,12 @@ $currentFullRouteName = Route::getFacadeRoot()
                         success: function (res) {
                             toastr.success(res.message)
                             location.reload()
+
+                            localStorage.removeItem("user")
+                            localStorage.setItem(
+                                "user",
+                                JSON.stringify(res.user)
+                            );
                         },
                         error: function (jqXhr, ajaxOptions, thrownError) {
                             console.log(jqXhr)
@@ -623,11 +644,9 @@ $currentFullRouteName = Route::getFacadeRoot()
                     $('#preloader').addClass('d-none');
                 }
             });
-
-
         }
 
-        let text = "";
+
         $(document).ready(function () {
             for (let step = 1; step <= 5; step++) {
                 cloneUploadContainer('cloneContainer', step)
@@ -642,76 +661,110 @@ $currentFullRouteName = Route::getFacadeRoot()
 
 
             function cloneUploadContainer(contentID, step) {
-
                 $('.' + contentID).append(`
-           <div class="col-lg-2 col-sm-4 col-12 my-2 ">
-              <div class="gallery-item">
-                    <div class="text-center">
-                        <span class="text-white fw-bold d-none" id="waitMsg${step}">wait few moment</span>
+                    <div class="col-lg-2 col-sm-4 col-12 my-2 ">
+                      <div class="gallery-item">
+                          <video style="width: 100%; height: 100%" class="d-none"  id="videoPriview${step}" src=""></video>
+
+                           <img class="d-none imagePreview" id="imagePriview${step}" src="" alt="">
+
+                           <span class="iconify icon dropdown" data-bs-toggle="dropdown"
+                                    data-icon="fluent:add-circle-24-filled" data-width="25"
+                                    data-height="25"></span>
+
+                          <ul class="dropdown-menu dropdown-menu-end">
+                            <li class="dropdown-item border-bottom">
+                                <input id="image-uploader${step}" type="file" hidden
+                                       onchange="fileUploadHandler(event, 'image', 'imageURL${step}', 'imagePriview${step}', 'uploadForm${step}', 'image_previewer${step}')">
+                                <label for="image-uploader${step}" class="cursor-pointer">Upload a Photo</label>
+                            </li>
+
+                            <li class="dropdown-item border-bottom">
+                                <input id="video-uploader${step}" type="file" hidden
+                                       onchange="fileUploadHandler(event, 'video','videoURL${step}', 'videoPriview${step}', 'uploadForm${step}', 'video_previewer${step}')">
+                                <label for="video-uploader${step}" class="cursor-pointer">Upload a
+                                    Video</label>
+                            </li>
+                            <li class="dropdown-item">
+                                <span class="cursor-pointer">Cancel</span>
+                            </li>
+                        </ul>
+                       </div>
+                        <form id="uploadForm${step}" onsubmit="fileUploadForm(event, ${step})" class="uploadForm d-none my-2">
+                            <input type="hidden" id="videoURL${step}" class="videoURL" name="video">
+                            <input type="hidden" id="imageURL${step}" class="imageURL" name="image">
+
+
+                            <input type="hidden" id="image_previewer${step}" class="image_previewer" >
+                            <input type="hidden" id="video_previewer${step}" class="video_previewer" >
+
+                            <input type="hidden" id="privacyValue"  name="privacy">
+
+                            <div class="form-check mb-3">
+                              <input class="form-check-input p-0" type="checkbox" value="" id="privacy">
+                              <label class="form-check-label" for="privacy">
+                                Make Private
+                              </label>
+                            </div>
+                            <button type="submit" class="btn btn-primary form-control p-1 rounded">save</button>
+                        </form>
                     </div>
+                `)
 
-                  <video style="width: 100%; height: 100%" class="d-none"  id="videoPriview${step}" src=""></video>
-                   <img class="d-none imagePreview" id="imagePriview${step}" src="" alt="">
+                let i = 0
 
-                   <span class="iconify icon dropdown" data-bs-toggle="dropdown"
-                            data-icon="fluent:add-circle-24-filled" data-width="25"
-                            data-height="25"></span>
-
-                  <ul class="dropdown-menu dropdown-menu-end">
-                    <li class="dropdown-item border-bottom">
-                        <input id="image-uploader${step}" type="file" hidden
-                               onchange="uploader(event, 'image','', 'imageURL${step}', 'imagePriview${step}', 'uploadForm${step}', 'waitMsg${step}')">
-                        <label for="image-uploader${step}" class="cursor-pointer">Upload a
-                            Photo</label>
-                    </li>
-
-                    <li class="dropdown-item border-bottom">
-                        <input id="video-uploader${step}" type="file" hidden
-                               onchange="uploader(event, 'video','', 'videoURL${step}', 'videoPriview${step}', 'uploadForm${step}', 'waitMsg${step}')">
-                        <label for="video-uploader${step}" class="cursor-pointer">Upload a
-                            Video</label>
-                    </li>
+                loadMore = function () {
+                    ++i;
+                    cloneUploadContainer('cloneContainer', i)
+                }
 
 
-<!--                    <li class="dropdown-item border-bottom">-->
-<!--                        <input id="takeVideo" type="file" hidden>-->
-<!--                        <label for="takeVideo" class="cursor-pointer">Take a Video</label>-->
-<!--                    </li>-->
+                fileUploadHandler = function (event, filetype, fileUrl, filePreviewer, submitForm, formFileViewer){
+                    // console.log(event, filetype, fileUrl, filePreviewer, submitForm)
+                    event.preventDefault();
+                    let file = event.target.files[0];
 
+                    let formData = new FormData();
+                    formData.append("file", file);
+                    formData.append("folder", filetype);
 
-                    <li class="dropdown-item">
-                        <span class="cursor-pointer">Cancel</span>
-                    </li>
-                </ul>
-               </div>
+                    $.ajax({
+                        url: window.origin + "/api/image-uploader",
+                        type: "POST",
+                        dataType: "json",
+                        processData: false,
+                        contentType: false,
+                        headers: {
+                            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                        },
+                        data: formData,
+                        beforeSend: function () {
+                            $('#preloader').removeClass('d-none');
+                        },
+                        success: function (res) {
 
+                            $("#" + fileUrl).val(res.data);
 
+                            $("#" + formFileViewer).val(filePreviewer);
 
-          <form id="uploadForm${step}" onsubmit="fileUploadForm(event)" class="uploadForm d-none my-2">
-            <input type="hidden" id="videoURL${step}" class="videoURL" name="video">
-            <input type="hidden" id="imageURL${step}" class="imageURL" name="image">
-            <input type="hidden" id="privacyValue"  name="privacy">
+                            $("#" + filePreviewer).removeClass("d-none").attr("src", res.data);
 
-            <div class="form-check mb-3">
-              <input class="form-check-input p-0" type="checkbox" value="" id="privacy">
-              <label class="form-check-label" for="privacy">
-                Make Private
-              </label>
-            </div>
-            <button type="submit" class="btn btn-primary form-control p-1 rounded">save</button>
-        </form>
+                            $("#" + submitForm).removeClass("d-none");
 
-        </div>
+                            toastr.success("File Upload successfully");
 
-    `)
+                        },
+                        error: function (jqXhr, ajaxOptions, thrownError) {
+                            console.log(jqXhr);
+                        },
+                        complete: function (xhr, status) {
+                            $('#preloader').addClass('d-none');
+                        },
+                    });
+
+                }
             }
 
-            let i = 0
-
-            function loadMore() {
-                ++i;
-                cloneUploadContainer('cloneContainer', i)
-            }
 
             let getUser = localStorage.getItem('user')
             let user = JSON.parse(getUser)
@@ -756,8 +809,9 @@ $currentFullRouteName = Route::getFacadeRoot()
                 },
                 success: function (response) {
                     toastr.success(response.message)
-
                     location.reload()
+                    localStorage.removeItem('user')
+                    localStorage.setItem('user', JSON.stringify(response.user))
                 }, error: function (xhr, resp, text) {
                     console.log(resp)
                 }
@@ -780,61 +834,100 @@ $currentFullRouteName = Route::getFacadeRoot()
         })
 
 
-        function fileUploadForm(event) {
+        function fileUploadForm(event, step) {
             event.preventDefault()
-            let constant = {
-                token: localStorage.getItem('accessToken'),
-                videoURL: document.querySelector('.videoURL').value,
-                imageURL: document.querySelector('.imageURL').value,
-                privacy: document.querySelector('#privacyValue').value,
-                fileUploadURL: '/api/file/store',
-            }
+
+            let videoURL = $('#videoURL'+step).val()
+            let imageURL = $('#imageURL'+step).val()
+            let videoPreviewer = $('#video_previewer'+step).val()
+            let imagePreviewer = $('#image_previewer'+step).val()
+            let privacy = $('#privacyValue').val()
+
+
+
+            // let constant = {
+            //     token: localStorage.getItem('accessToken'),
+            //     videoURL: document.querySelector('.videoURL').value,
+            //     imageURL: document.querySelector('.imageURL').value,
+            //     imagePreviewer: document.querySelector('.image_previewer').value,
+            //     videoPreviewer: document.querySelector('.video_previewer').value,
+            //     privacy: document.querySelector('#privacyValue').value,
+            //     fileUploadURL: '/api/file/store',
+            // }
+            //
             let formData = new FormData();
-            formData.append('video', constant.videoURL)
-            formData.append('image', constant.imageURL)
-            if (constant.privacy === '') {
+
+            if(videoURL){
+                formData.append('video', videoURL)
+            }
+            if(imageURL){
+                formData.append('image', imageURL)
+            }
+            if(videoPreviewer){
+                formData.append('video_previewer', videoPreviewer)
+            }
+            if(imagePreviewer){
+                formData.append('image_previewer', imagePreviewer)
+            }
+            if (privacy === '') {
                 formData.append('privacy', 'public')
             } else {
-                formData.append('privacy', constant.privacy)
+                formData.append('privacy', privacy)
             }
 
             $.ajax({
                 type: 'POST',
-                url: window.origin + constant.fileUploadURL,
+                url: window.origin + '/api/file/store',
                 data: formData,
                 dataType: "json",
                 processData: false,
                 contentType: false,
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                    'Authorization': constant.token
+                    'Authorization': token
                 },
                 success: function (response) {
                     toastr.success(response.message)
-                    location.reload()
+                    // location.reload()
                 }, error: function (xhr, resp, text) {
                     console.log(xhr)
                 }
             });
         }
 
-        // $(document).ready(function (){
-        //     $.ajax({
-        //         type: 'GET',
-        //         url: window.origin + constant.fileFetchURL,
-        //         dataType: "json",
-        //         processData: false,
-        //         contentType: false,
-        //         headers: {
-        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-        //         },
-        //         success: function (response) {
-        //            console.log(response)
-        //         }, error: function (xhr, resp, text) {
-        //             console.log(xhr)
-        //         }
-        //     });
-        // })
+        $(document).ready(function (){
+            $.ajax({
+                type: 'GET',
+                url: window.origin + '/api/file/fetch-all',
+                dataType: "json",
+                processData: false,
+                contentType: false,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                },
+                success: function (response) {
+                    if(response.status === 'success' && response.data.length > 0){
+                        response.data.forEach(item =>{
+                           // console.log(item)
+
+                            if(item.image && item.image_preview){
+                                $('#' + item.image_preview).removeClass('d-none').attr('src', item.image)
+                            }
+
+                            if(item.video && item.video_preview){
+                                $('#' + item.video_preview).removeClass('d-none').attr('src', item.video)
+                            }
+
+
+                        })
+                    }
+
+                   console.log(response)
+                }, error: function (xhr, resp, text) {
+                    console.log(xhr)
+                }
+            });
+        })
 
         $(document).ready(function () {
             let token = localStorage.getItem('accessToken')
@@ -914,9 +1007,8 @@ $currentFullRouteName = Route::getFacadeRoot()
         }
 
 
-
         let packageId = null
-        $(document).ready(function (){
+        $(document).ready(function () {
             $.ajax({
                 type: 'GET',
                 url: window.origin + '/api/admin/invite-code/get-by-user',
@@ -927,8 +1019,8 @@ $currentFullRouteName = Route::getFacadeRoot()
                 success: function (response) {
 
 
-                    if(response.status === 'success' && response.data.length > 0){
-                        response.data.forEach(item=>{
+                    if (response.status === 'success' && response.data.length > 0) {
+                        response.data.forEach(item => {
 
                             $('#premiumPackageList').append(`
                                  <div class="d-flex align-items-center justify-content-between border-bottom py-3">
@@ -954,15 +1046,14 @@ $currentFullRouteName = Route::getFacadeRoot()
         })
 
 
-
-        $(document).on('click', '#premiumPackageOfferButton', function (){
+        $(document).on('click', '#premiumPackageOfferButton', function () {
             let value = $("input[name='package_id']:checked").val();
             let packageInfo = JSON.parse(value);
             let price = packageInfo.price
-           // console.log(packageInfo.price)
+            // console.log(packageInfo.price)
 
 
-           $('#packageOfferModal').modal('show')
+            $('#packageOfferModal').modal('show')
 
             const paypalButtonsComponent = paypal.Buttons({
                 style: {
@@ -1020,6 +1111,20 @@ $currentFullRouteName = Route::getFacadeRoot()
                     console.error('PayPal Buttons failed to render');
                 });
         })
+
+
+        /**
+         * Change the current page title
+         * */
+        let currentPath = window.location.search
+
+        currentPath === '?tab=information' ? document.title = 'Profile | Information' : ''
+        currentPath === '?tab=photos' ? document.title = 'Profile | Gallery' : ''
+        currentPath === '?tab=setting' ? document.title = 'Profile | Settings' : ''
+        currentPath === '?tab=favorite' ? document.title = 'Profile | Favourites' : ''
+        currentPath === '?tab=blacklist' ? document.title = 'Profile | Blacklists' : ''
+        currentPath === '?tab=premium' ? document.title = 'Profile | Premium Status' : ''
+
     </script>
 
 @endpush

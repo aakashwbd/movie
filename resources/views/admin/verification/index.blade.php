@@ -23,6 +23,13 @@
 
 @push('custom-js')
     <script>
+        /**
+         * Change the current page title
+         * */
+        window.location.pathname === '/admin/verification'? document.title = 'Dashboard | Verification' : ''
+
+
+
         $(function () {
             $.ajaxSetup({
                 headers: {

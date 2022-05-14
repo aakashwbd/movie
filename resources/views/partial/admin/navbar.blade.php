@@ -16,7 +16,7 @@
     </div>
 
     <div class="d-flex justify-content-center align-items-center">
-        <img src="{{asset('asset/image/default.jpg')}}" class="logo-lg avatar-sm-2 rounded-circle" alt="logo-lg">
+        <img id="adminPanelLogo" src="{{asset('asset/image/default.jpg')}}" class="logo-lg avatar-sm-2 rounded-circle" alt="logo-lg">
     </div>
 
     <ul class="list">
@@ -98,6 +98,9 @@
             </a>
         </li>
 
+
+
+
         <li class="list-item  my-3">
             <a data-bs-toggle="tooltip"
                data-bs-placement="top"
@@ -125,14 +128,26 @@
 
             </a>
         </li>
-
         <li class="list-item  my-3">
-            <a href="{{url('/admin/invite-code')}}" class="list-link {{$currentControllerName2 == 'invite-code' || '' ? 'active' : '' }}">
-                <span class="iconify me-2" data-icon="ic:sharp-space-dashboard" data-width="20"
+            <a data-bs-toggle="tooltip"
+               data-bs-placement="top"
+               title="Verification"
+               href="{{url('/admin/invite-code')}}" class="list-link {{$currentControllerName2 == 'invite-code' || '' ? 'active' : '' }}">
+                <span class="iconify me-2 list-icon"data-icon="ic:sharp-space-dashboard" data-width="20"
                       data-height="20"></span>
-                Invitation Code
+                <span class="list-title">
+                                  Invitation Code
+                </span>
             </a>
         </li>
+
+{{--        <li class="list-item  my-3">--}}
+{{--            <a href="{{url('/admin/invite-code')}}" class="list-link {{$currentControllerName2 == 'invite-code' || '' ? 'active' : '' }}">--}}
+{{--                <span class="iconify me-2" data-icon="ic:sharp-space-dashboard" data-width="20"--}}
+{{--                      data-height="20"></span>--}}
+{{--                Invitation Code--}}
+{{--            </a>--}}
+{{--        </li>--}}
 
         <li class="list-item  my-3">
             <a
@@ -272,7 +287,6 @@
         }
 
         if(variables.body){
-
             if(variables.siteBar){
                 variables.siteBar.addEventListener('click', ()=>{
                     variables.body.classList.toggle('compact')

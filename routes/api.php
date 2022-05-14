@@ -21,6 +21,7 @@ Route::prefix('auth')->group(function () {
     Route::post('login', [AuthController::class, "login"]);
 
     Route::middleware('auth:sanctum')->group(function () {
+
         Route::post('profile', [AuthController::class, "profileInfo"]);
         Route::post('profile/settings', [\App\Http\Controllers\ProfileSetting::class, "store"]);
         Route::get('profile/settings', [\App\Http\Controllers\ProfileSetting::class, "getProfile"]);
@@ -80,7 +81,11 @@ Route::get('short-messages', [\App\Http\Controllers\MessengerController::class, 
 
 Route::prefix('admin')->group(function () {
 
+
     Route::get('/all', [\App\Http\Controllers\AdminController::class, 'index']);
+    Route::patch('/update-password', [\App\Http\Controllers\AdminController::class, 'updatePassword']);
+    Route::patch('/profile-update', [\App\Http\Controllers\AdminController::class, 'profileUpdate']);
+
     Route::delete('/{id}', [\App\Http\Controllers\AdminController::class, 'delete']);
     Route::get('dashboard/total-count', [\App\Http\Controllers\DashboardCountController::class, 'totalCount']);
 
@@ -162,6 +167,7 @@ Route::post('file/store', [\App\Http\Controllers\FileController::class, 'store']
 Route::get('file/video', [\App\Http\Controllers\FileController::class, 'getVideo']);
 Route::get('file/video/{id}', [\App\Http\Controllers\FileController::class, 'singleVideo']);
 Route::post('file/video/search', [\App\Http\Controllers\FileController::class, 'search']);
+Route::get('file/fetch-all', [\App\Http\Controllers\FileController::class, 'fetchAll']);
 
 Route::post('video/search', [\App\Http\Controllers\VideoController::class, 'search']);
 Route::post('place/store', [\App\Http\Controllers\AdController::class, 'store']);
@@ -178,7 +184,6 @@ Route::get('subscriber/all-list', [\App\Http\Controllers\CheckoutController::cla
 Route::post('image-uploader', [UploaderController::class, 'imgUploader']);
 Route::post('set-location', [\App\Http\Controllers\LocationController::class, 'store']);
 Route::get('get-location', [\App\Http\Controllers\LocationController::class, 'getall']);
+Route::patch('user-activity-check', [\App\Http\Controllers\auth\AuthController::class, 'userOnlineStatus']);
 
-//Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//    return $request->user();
-//});
+

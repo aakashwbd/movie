@@ -25,6 +25,11 @@
 
 @push('custom-js')
     <script>
+        /**
+         * Change the current page title
+         * */
+        window.location.pathname === '/admin/recent-payment'? document.title = 'Dashboard | Payment' : ''
+
 
         $(function () {
             $.ajaxSetup({

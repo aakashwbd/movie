@@ -127,13 +127,13 @@
                     <div class="col-lg-6 col-12 col-sm-12">
                         <div class="form-group mb-3">
                             <label for="min-age" class="form-label">Minimum</label>
-                            <input type="text" name="age[min-age]" id="min-age" class="form-control">
+                            <input type="text" name="age[min_age]" id="min-age" class="form-control">
                         </div>
                     </div>
                     <div class="col-lg-6 col-12 col-sm-12">
                         <div class="form-group mb-3">
                             <label for="max-age" class="form-label">Maximum</label>
-                            <input type="text" name="age[max-age]" id="max-age" class="form-control">
+                            <input type="text" name="age[max_age]" id="max-age" class="form-control">
                         </div>
                     </div>
                 </div>
@@ -209,6 +209,14 @@
 
 @push('custom-js')
     <script>
+        /**
+         * Change the current page title
+         * */
+        window.location.pathname === '/admin/settings'? document.title = 'Dashboard | Settings' : ''
+
+
+
+
         function logoUploader(event) {
             event.preventDefault();
             let file = event.target.files[0];
@@ -396,10 +404,10 @@
                                 }
 
                                 if (value[0] === 'age') {
-                                    Object.entries(value[1]).forEach(item => {
-                                        let id = item[0].replace(/["']/g, "")
-                                        $('#' + id).val(item[1]);
-                                    })
+                                    if(value[1]){
+                                        $('#min-age').val(value[1].min_age)
+                                        $('#max-age').val(value[1].max_age)
+                                    }
                                 }
 
                                 if (value[0] === 'social') {
@@ -412,6 +420,7 @@
                                     if(value[1]){
                                         value[1].forEach(img=>{
                                             if(img.logo){
+                                                $('#adminPanelLogo').attr('src', img.logo)
                                                 $('#logo').val(img.logo)
                                                 $('#logoImgPreview').removeClass('d-none').attr('src', img.logo)
                                             }

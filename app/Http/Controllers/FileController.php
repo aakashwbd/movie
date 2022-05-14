@@ -12,11 +12,14 @@ class FileController extends Controller
         $this->middleware(['auth:sanctum'], ['only' => ['store']]);
     }
     public function store (Request $request){
+
         try {
             $file = new File();
             $file->user_id = auth()->id();
             $file->video = $request->video;
             $file->image = $request->image;
+            $file->image_preview = $request->image_previewer;
+            $file->video_preview = $request->video_previewer;
             $file->privacy = $request->privacy;
             if ($file->save()){
                 return response([
@@ -41,6 +44,24 @@ class FileController extends Controller
                 return response([
                     "status" => "success",
                     "data" => $video
+                ]);
+
+        }catch (\Exception $e){
+            return response([
+                'status' => 'serverError',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function fetchAll (Request $request){
+        try {
+            $all_file=  File::with('user')
+                ->get();
+
+                return response([
+                    "status" => "success",
+                    "data" => $all_file
                 ]);
 
         }catch (\Exception $e){

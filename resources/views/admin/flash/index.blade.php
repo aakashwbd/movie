@@ -67,6 +67,12 @@
 
 @push('custom-js')
     <script>
+        /**
+         * Change the current page title
+         * */
+        window.location.pathname === '/admin/flash'? document.title = 'Dashboard | Flash' : ''
+
+
         function clearError(input) {
             $('#' + input.id).removeClass('is-invalid');
             $('#' + input.id + '_label').removeClass('text-danger');

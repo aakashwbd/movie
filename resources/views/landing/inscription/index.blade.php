@@ -97,6 +97,13 @@
 
 @push('custom-js')
     <script>
+        /**
+         * Change the current page title
+         * */
+        window.location.pathname === '/inscription'? document.title = 'Inscription' : ''
+
+
+
         $('#inscriptionForm').submit(function (e) {
             e.preventDefault();
             let form = $(this);
@@ -151,7 +158,10 @@
                         response.form === "registration"
                     ) {
                         toastr.success(response.message);
-                        location.reload();
+
+                        $('#loginModal').modal('show')
+
+                        // location.href = window.origin
                     }
 
                 },

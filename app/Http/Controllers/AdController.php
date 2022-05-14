@@ -16,8 +16,14 @@ class AdController extends Controller
         $this->middleware(['auth:sanctum'], ['only' => ['store']]);
     }
 
+
+
     public function store (Request $request){
         try {
+
+//            $user_id = request()->user('sanctum')["id"];
+
+
             $validator = Validator::make($request->all(), [
                 "title" => "required",
                 "address" => "required",

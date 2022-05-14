@@ -91,7 +91,7 @@
                         <a href="{{url('profile?tab=favorite')}}" class="dropdown-item text-capitalize">favorite</a>
                     </li>
                     <li class="border-bottom py-2">
-                        <a href="{{url('profile?tab=blacklist')}}" class="dropdown-item text-capitalize">blacklist</a>
+                        <a href="{{url('profile?tab=blacklist')}}" class="dropdown-item text-capitalize">block list</a>
                     </li>
                     <li class=" py-2">
                         <a href="{{url('profile?tab=premium')}}" class="dropdown-item text-capitalize">premium access</a>

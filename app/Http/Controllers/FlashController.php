@@ -10,6 +10,12 @@ use Yajra\DataTables\Facades\DataTables;
 
 class FlashController extends Controller
 {
+
+
+    public function __construct()
+    {
+        $this->middleware(['auth:sanctum'], ['only' => ['sendFlash']]);
+    }
     public function store (Request $request){
 
         try {
@@ -45,11 +51,13 @@ class FlashController extends Controller
 
     public function sendFlash (Request $request){
 
+
+
         try {
             $flash = new UserFlash();
             $flash->sender_id = auth()->id();
             $flash->receiver_id = $request->receiver_id;
-            $flash->flash_id = $request->flash_id;
+            $flash->flash_id = $request->flash;
 
             if ($flash->save()){
                 return response([

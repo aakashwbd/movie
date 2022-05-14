@@ -188,6 +188,12 @@
         })
 
 
+        /**
+         * Change the current page title
+         * */
+        window.location.pathname === '/'? document.title = 'Member' : ''
+
+
     </script>
 @endpush
 

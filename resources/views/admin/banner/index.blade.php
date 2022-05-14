@@ -76,6 +76,12 @@
 
 @push('custom-js')
     <script>
+        /**
+         * Change the current page title
+         * */
+        window.location.pathname === '/admin/banner-image'? document.title = 'Dashboard | Banner' : ''
+
+
 
         function bannerImgUpload(event) {
             event.preventDefault();
@@ -311,7 +317,7 @@
         function bannerDeleteHandler(url) {
             Swal.fire({
                 title: 'Are you sure?',
-                text: "You are going to permanently delete the category. You won't be able to revert the action.",
+                text: "You are going to permanently delete the banner image. You won't be able to revert the action.",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',

@@ -137,6 +137,12 @@
 @push('custom-js')
     <script>
 
+        /**
+         * Change the current page title
+         * */
+        window.location.pathname === '/admin/invite-code'? document.title = 'Dashboard | Invite Code' : ''
+
+
         function fetchData (url, fetchList){
             $.ajax({
                 type: "GET",

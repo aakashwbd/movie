@@ -26,6 +26,14 @@
 
 @push('custom-js')
     <script>
+        /**
+         * Change the current page title
+         * */
+        window.location.pathname === '/admin/report'? document.title = 'Dashboard | Reports' : ''
+
+
+
+
         $(function () {
             $.ajaxSetup({
                 headers: {

@@ -230,6 +230,14 @@
 
 @push('custom-js')
     <script>
+
+        /**
+         * Change the current page title
+         * */
+        window.location.pathname === '/admin/manage-admin'? document.title = 'Dashboard | Manage Admin' : ''
+
+
+
         function adminEditHandler(id) {
 
         }

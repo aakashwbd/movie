@@ -91,6 +91,14 @@
 
 @push('custom-js')
     <script>
+        /**
+         * Change the current page title
+         * */
+        window.location.pathname === '/admin/category'? document.title = 'Dashboard | Category' : ''
+
+
+
+
         $('#categoryForm').submit(function (e) {
             e.preventDefault();
             let form = $(this);

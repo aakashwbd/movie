@@ -19,7 +19,7 @@ class AuthController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth:sanctum'], ['only' => ['getAll', 'profileInfo']]);
+        $this->middleware(['auth:sanctum'], ['only' => ['getAll', 'profileInfo','userOnlineStatus']]);
     }
 
     public function register(Request $request)
@@ -54,6 +54,15 @@ class AuthController extends Controller
             if ($user->user_role_id === 3) {
                 $user->status = 'pending';
             }
+            if ($request->user_role_id) {
+                return response([
+                                    "status" => "success",
+                                    "form" => 'registration',
+                                    "message" => "A new admin has been created."
+                                ]);
+            }
+
+
             if ($user->save()) {
                 return response([
                     "status" => "success",
@@ -184,16 +193,17 @@ class AuthController extends Controller
 
     }
 
-    public function userOnlineStatus()
+    public function userOnlineStatus(Request $request)
     {
-        $users = User::all();
 
-        foreach ($users as $user) {
-            if (Cache::has('user-is-online-' . $user->id))
-                echo "User " . $user->name . " is online.";
-            else
-                echo "User " . $user->name . " is offline.";
+        $user = User::where('id',auth()->id())->first();
+        if ($request->status){
+            $user->online_status = false;
+        }else{
+            $user->online_status = true;
         }
+        $user->update();
+
     }
 
     public function profileInfo(Request $request)
@@ -215,6 +225,7 @@ class AuthController extends Controller
                     return response([
                         "status" => "success",
                         "message" => "The profile information has been updated",
+                        "user"=>$userData
 
                     ]);
                 }

@@ -35,9 +35,9 @@
                                            class="form-control">
                                 </div>
 
-                                <div class="form-group mb-3">
-                                    <label for="price" class="form-label">Price</label>
-                                    <input type="text" class="form-control" name="price" id="price">
+                                <div class="form-group mb-3" id="freePrice">
+{{--                                    <label for="price" class="form-label">Price</label>--}}
+{{--                                    <input type="text" class="form-control" name="price" id="price">--}}
                                 </div>
 
                                 <div class="row">
@@ -90,6 +90,12 @@
 
 @push('custom-js')
     <script>
+
+        /**
+         * Change the current page title
+         * */
+        window.location.pathname === '/admin/package'? document.title = 'Dashboard | Package' : ''
+
         let constantData = {
             getPackageUrl: '/api/admin/package',
             getSinglePackageUrl: '/api/admin/package/id',
@@ -106,6 +112,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                 },
                 success: function (res) {
+                    // $('.modal-body').html('')
                     if (res.status === 'success') {
                         $('#package_name').val(res.data.name)
                         $('#package_id').val(res.data.id)
@@ -118,7 +125,13 @@
                         }
 
                         if (res.data.name === 'Free') {
-                            $('#price').val('Free').prop("readonly", true)
+                            $('#freePrice').html('')
+                        }else{
+                            $('#freePrice').html(`
+                                <label for="price" class="form-label">Price</label>
+                                    <input type="text" class="form-control" name="price" id="price">
+
+                            `)
                         }
                     }
                 }, error: function (jqXhr, ajaxOptions, thrownError) {

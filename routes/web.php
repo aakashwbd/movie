@@ -53,7 +53,8 @@ Route::prefix('admin')->group(function () {
     Route::view('/flash', 'admin.flash.index');
     Route::view('/report', 'admin.report.index');
     Route::view('/smtp', 'admin.smtp.index');
-    Route::view('/change-password', 'admin.auth.passowrd');
+    Route::view('/change-password', 'admin.auth.password');
+    Route::view('/profile', 'admin.auth.profile');
 
     Route::prefix('auth')->group(function () {
         Route::view('/login', 'admin.auth.login');

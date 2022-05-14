@@ -16,6 +16,13 @@
 @endsection
 @push('custom-js')
     <script>
+
+        /**
+         * Change the current page title
+         * */
+        window.location.pathname === '/maps'? document.title = 'Maps' : ''
+
+
         let token = localStorage.getItem('accessToken')
 
         let button = document.getElementById('locationButton')

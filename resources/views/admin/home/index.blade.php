@@ -87,6 +87,13 @@
 
 @push('custom-js')
     <script>
+        /**
+         * Change the current page title
+         * */
+        window.location.pathname === '/admin'? document.title = 'Dashboard' : ''
+
+
+
         $(document).ready(function (){
             authRestrictionHandler()
 

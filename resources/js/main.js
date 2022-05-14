@@ -55,6 +55,41 @@ let constants = {
  * STARTUP ACTION
  ***/
 $(document).ready(function () {
+
+    var getAge =[]
+
+
+
+    $.ajax({
+        url: window.origin + '/api/admin/setting/get-all',
+        type: 'GET',
+        dataType: "json",
+        processData: false,
+        contentType: false,
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+        },
+
+        success: function (res) {
+            if (res.status === 'success' && res.data.length) {
+
+                Object.entries(res.data[0]).forEach(value => {
+                    if (value[0] === 'age') {
+                        var max_age = parseInt(value[1].max_age)
+                        var min_age = parseInt(value[1].min_age)
+                        // alert(min_age)
+                        getAge.push(20)
+                    }
+                })
+
+            }
+
+        }, error: function (jqXhr, ajaxOptions, thrownError) {
+            console.log(jqXhr)
+        }
+    })
+
+    console.log('dd', getAge)
     const age = {
         defaultYear: "Birth Year",
         minAge: 10,
@@ -402,9 +437,36 @@ clearError = function (input) {
     $("#" + input.id + "_error").html("");
 };
 $("#signOut").click(function () {
+
+    var userActivity = localStorage.getItem('accessToken')
+
+    if(userActivity){
+        $.ajax({
+            url: window.origin+"/api/user-activity-check",
+            method: "patch",
+            data:{
+              "status":false
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                "Authorization":userActivity
+            },
+            success:function (res){
+                console.log(res)
+            },
+            error:function(err){
+                console.log(err)
+            }
+
+        })
+    }
     localStorage.removeItem("accessToken");
     localStorage.removeItem("user");
     location.href = window.origin
+
+
+
+
 });
 
 
@@ -415,7 +477,7 @@ uploader = function (
     inputHidden = null,
     previewImg = null,
     privacyForm = null,
-    waitMsg = null
+    waitMsg = null,
 ) {
     event.preventDefault();
     var file = event.target.files[0];
@@ -524,8 +586,6 @@ userList = function (res) {
 
 
     res.data.forEach((item) => {
-
-
         let img = window.origin + '/images/Default_Image_Thumbnail.png'
         if (item.image) {
             img = item.image
@@ -586,8 +646,11 @@ userList = function (res) {
                             </div>
 
                             <div class="d-flex align-items-center">
+
+                               <span class="iconify ${item.online_status ? 'text-success' : 'text-warning'} me-3" data-icon="carbon:dot-mark" data-width="20" data-height="20"></span>
+
+
                                 ${item.username ? (`
-<!--                                    <span class="iconify text-success me-3" data-icon="ci:dot-03-m" data-width="30" data-height="30"></span>-->
                                     <span id="user-name" class="me-3">${item.username}</span>
                                 `) : ''}
 
@@ -595,7 +658,7 @@ userList = function (res) {
                                     <span class="me-3">${item.age}y.o</span>
                                 `) : ''}
 
-<!--                                <span>host/visit</span>-->
+
                             </div>
 
                         </div>
@@ -618,10 +681,12 @@ userList = function (res) {
                                     <span
                                         id="flashIcon${item.id}"
                                         data-event="flash"
+                                        data-user-id = ${item.id}
                                         class="iconify cursor-pointer extra-list-link  flashIcon"
                                         data-icon="carbon:flash-filled"
                                         data-width="30"
-                                        data-height="30"></span>
+                                        data-height="30"
+                                        ></span>
                                 </li>
 
                                 <li class="extra-list-item dropdown">
@@ -809,6 +874,7 @@ alertHandler = function (alerted_user_id) {
     if (token) {
         $('#alertModal').modal('show')
         $('#reported_user_id').val(alerted_user_id)
+
         // let formData = new FormData();
         // formData.append("alert_user_id", userId);
         // $.ajax({
@@ -844,12 +910,18 @@ authAction = function (image, flashIcon, moreIcon) {
             item.classList.remove("img-blur");
         }
     });
+
     flashIcon.forEach((item) => {
+
         let div = item.getAttribute("id");
         let flashId = "#" + div;
+        let user_id = item.getAttribute('data-user-id')
+
+
 
         $(document).on("click", flashId, function () {
             if (token) {
+                $('#receiver_id').val(user_id)
                 $("#loginModal").modal("hide");
                 $("#flashModal").modal("show");
             } else {

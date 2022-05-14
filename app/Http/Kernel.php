@@ -58,8 +58,7 @@ class Kernel extends HttpKernel
             ShareErrorsFromSession::class,
             VerifyCsrfToken::class,
             SubstituteBindings::class,
-            \App\Http\Middleware\LastUserActivity::class,
-        ],
+            \App\Http\Middleware\LastSeenUserActivity::class,        ],
 
         'api' => [
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,

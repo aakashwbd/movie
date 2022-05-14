@@ -77,6 +77,12 @@
 @push('custom-js')
     <script>
 
+        /**
+         * Change the current page title
+         * */
+        window.location.pathname === '/admin/video'? document.title = 'Dashboard | Video' : ''
+
+
         function videoUploader (event) {
             event.preventDefault();
             let file = event.target.files[0];

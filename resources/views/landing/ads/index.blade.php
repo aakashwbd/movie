@@ -600,6 +600,12 @@
             })
         }
 
+        /**
+         * Change the current page title
+         * */
+        window.location.pathname === '/ads'? document.title = 'Advertisement' : ''
+
+
     </script>
 @endpush
 

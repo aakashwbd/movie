@@ -297,6 +297,11 @@ if (sizeof($explode) === 3) {
             })
 
         }
+        /**
+         * Change the current page title
+         * */
+        window.location.pathname === '/blogs'? document.title = 'Blog' : ''
+
 
 
     </script>

@@ -22,6 +22,11 @@
 
 @push('custom-js')
     <script>
+        /**
+         * Change the current page title
+         * */
+        window.location.pathname === '/admin/manage-users'? document.title = 'Dashboard | Users' : ''
+
         $(function () {
             $.ajaxSetup({
                 headers: {

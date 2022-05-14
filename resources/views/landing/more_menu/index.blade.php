@@ -81,6 +81,19 @@
 @endsection
 @push('custom-js')
     <script>
+
+        /**
+         * Change the current page title
+         * */
+        let currentPath = window.location.search
+
+        currentPath === '?tab=legal'? document.title = 'Legal Notice' : ''
+        currentPath === '?tab=faq'? document.title = 'Help' : ''
+        currentPath === '?tab=refund'? document.title = 'Refund Policies' : ''
+        currentPath === '?tab=terms'? document.title = 'Terms of use' : ''
+
+
+
         $.ajax({
             url: window.origin + '/api/admin/setting/get-all',
             type: 'GET',

@@ -245,6 +245,13 @@
 @push('custom-js')
     <script src="https://www.paypal.com/sdk/js?client-id={{env('PAYPAL_CLIENT_ID')}}&currency={{env('PAYPAL_CURRENCY')}}"></script>
     <script>
+        /**
+         * Change the current page title
+         * */
+        window.location.pathname === '/package'? document.title = 'Packages' : ''
+
+
+
         let bronzePrice = null
         let silverPrice = null
         let plusPrice = null
