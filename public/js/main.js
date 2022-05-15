@@ -34421,7 +34421,8 @@ formSubmit = function formSubmit(type, form) {
     url: url,
     data: formData,
     headers: {
-      Authorization: token
+      "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+      "Authorization": token
     },
     success: function success(response) {
       if (response.status === "success" && response.form === "registration") {
@@ -34474,7 +34475,8 @@ formSubmit = function formSubmit(type, form) {
         location.reload();
       }
 
-      toastr.success(response.message); // location.reload()
+      toastr.success(response.message);
+      location.reload();
     },
     error: function error(xhr, resp, text) {
       console.log(xhr);

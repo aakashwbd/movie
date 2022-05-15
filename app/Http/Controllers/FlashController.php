@@ -14,7 +14,7 @@ class FlashController extends Controller
 
     public function __construct()
     {
-        $this->middleware(['auth:sanctum'], ['only' => ['sendFlash']]);
+        $this->middleware(['auth:sanctum'], ['only' => ['sendFlash', 'getUserFlash']]);
     }
     public function store (Request $request){
 
@@ -119,6 +119,25 @@ class FlashController extends Controller
                     "data" => $flash
                 ]);
             }
+
+        }catch (\Exception $e){
+            return response([
+                'status' => 'serverError',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function getUserFlash (){
+        try {
+            $flash = UserFlash::with('sender')
+                ->where('receiver_id', auth()->id())
+                ->get();
+
+            return response([
+                "status" => "success",
+                "data" => $flash
+            ]);
 
         }catch (\Exception $e){
             return response([

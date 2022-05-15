@@ -4,6 +4,35 @@
   box-sizing: border-box;
 }
 
+.graph_section {
+  margin-top: 100px;
+  min-height: 100vh;
+}
+.graph_section #graphTab .nav-item .nav-link {
+  color: white;
+  text-transform: capitalize;
+}
+.graph_section #graphTab .nav-item .nav-link.active {
+  background: none;
+  border: none;
+  color: white;
+  text-transform: capitalize;
+  font-weight: bold;
+  position: relative;
+}
+.graph_section #graphTab .nav-item .nav-link.active:before {
+  content: "";
+  bottom: -1px;
+  left: 50%;
+  transform: translate(-50%);
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 10px 10px 10px;
+  border-color: transparent transparent white transparent;
+}
+
 /*-------------------------------------------
 ----- GENERAL STYLES -----*/
 ul, li, a {

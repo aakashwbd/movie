@@ -71,14 +71,12 @@
                     <div class="login-content">
                         <h6 class="text-capitalize text-center">send a flash</h6>
                         <hr>
-
-
                         <div class="row">
                             <div class="col-lg-10 offset-lg-1" id="flashForm">
                                 <form action="{{url('/api/user/send-flash')}}" id="sendFlashForm">
                                     <input type="hidden" id="receiver_id" name="receiver_id" value="">
                                     <div class="row row-cols-2" id="flashList"></div>
-                                    <button type="submit" class="btn btn-primary">Send</button>
+                                    <button type="submit" id="submit-button" class="btn btn-primary">Send</button>
                                 </form>
 
                             </div>
@@ -139,7 +137,32 @@
             e.preventDefault();
             let token = localStorage.getItem('accessToken')
             let form = $(this);
-            formSubmit('post', form, token)
+            let form_data = JSON.stringify(form.serializeJSON());
+            let formData = JSON.parse(form_data);
+            let url = form.attr("action");
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                    "Authorization": token
+                },
+                beforeSend: function () {
+                    $('#submit-button').prop('disabled', true);
+                    $('#preloader').removeClass('d-none');
+                },
+                success: function (res) {
+                    toastr.success(res. message)
+                    location.reload()
+                }, error: function (jqXhr, ajaxOptions, thrownError) {
+                    console.log(jqXhr)
+                }, complete: function (xhr, status) {
+                    $('#submit-button').prop('disabled', false);
+                    $('#preloader').addClass('d-none');
+                }
+            });
         })
 
 
@@ -172,9 +195,9 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                 },
                 success: function (res) {
-
-                    res.data.forEach(item => {
-                        $('#flashList').append(`
+                    if(res.status === 'success' && res.data.length > 0){
+                        res.data.forEach(item => {
+                            $('#flashList').append(`
                             <div class="col mb-2">
                                     <div class="form-check">
                                         <input class="form-check-input" name="flash" type="radio" value="${item.id}"
@@ -185,8 +208,17 @@
                                     </div>
                                 </div>
 
-                            `)
-                    })
+                         `)
+                        })
+                    }else{
+                        $('#submit-button').hide()
+                        $('#flashList').append(`
+                            <div class="alert alert-warning">Please create a couple of flash to view the list.</div>
+                        `)
+                    }
+
+
+
 
 
                 }, error: function (jqXhr, ajaxOptions, thrownError) {

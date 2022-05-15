@@ -134,7 +134,7 @@
 
                             <div class="d-flex align-items-center">
 
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" id="submit-button" class="btn btn-primary">
                                     Save
                                 </button>
                                 <button type="button" class="btn btn-outline-secondary ms-2" data-bs-dismiss="modal">
@@ -151,80 +151,50 @@
 
 
 
-{{--        <div class="modal fade" id="editAdminModal" tabindex="-1">--}}
-{{--            <div class="modal-dialog">--}}
-{{--                <div class="modal-content">--}}
-{{--                    <div class="modal-header justify-content-center">--}}
-{{--                        <h6 class="">Update admin information--}}
-{{--                        </h6>--}}
-{{--                    </div>--}}
-{{--                    <div class="modal-body">--}}
-{{--                        <form action="{{url('api/auth/register')}}" id="adminForm">--}}
+        <div class="modal fade" id="editAdminModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header justify-content-center">
+                        <h6 class="">Update admin information
+                        </h6>
+                    </div>
+                    <div class="modal-body" id="updateAdminModal">
+                        <form action="" id="editAdminForm">
 
-{{--                            <div class="form-group mb-2">--}}
-{{--                                <label for="role" class="form-label role_label" id="role_label">Role</label>--}}
-{{--                                <select name="user_role_id" id="role" class="form-select py-2 rounded-0">--}}
-{{--                                    <option value="2">Admin</option>--}}
-{{--                                    <option value="1">Super Admin</option>--}}
-{{--                                </select>--}}
-{{--                            </div>--}}
+                            <div class="form-group mb-2">
+                                <label for="role" class="form-label role_label" id="role_label">Role</label>
+                                <select name="user_role_id" id="editRole" class="form-select py-2 rounded-0">
+                                    <option value="2">Admin</option>
+                                    <option value="1">Super Admin</option>
+                                </select>
+                            </div>
 
-{{--                            <div class="form-group mb-2">--}}
-{{--                                <label for="name" class="form-label name_label" id="name_label">Name</label>--}}
-{{--                                <input type="text" class="form-control py-2 rounded-0" id="name" name="name"--}}
-{{--                                       placeholder="John Doe">--}}
-{{--                                <span class="text-danger name_error" id="name_error"></span>--}}
-{{--                            </div>--}}
+                            <div class="form-group mb-2">
+                                <label for="name" class="form-label name_label" id="name_label">Name</label>
+                                <input type="text" class="form-control py-2 rounded-0" id="editName" name="name"
+                                       placeholder="John Doe">
+                                <span class="text-danger name_error" id="name_error"></span>
+                            </div>
 
 
-{{--                            <div class="form-group mb-2">--}}
-{{--                                <label for="email" class="form-label email_label" id="email_label">Email</label>--}}
-{{--                                <input type="email" class="form-control py-2 rounded-0" id="email" name='email'--}}
-{{--                                       placeholder="example@example.com">--}}
-{{--                                <span class="text-danger email_error" id="email_error"></span>--}}
-{{--                            </div>--}}
 
-{{--                            <div class="form-group mb-2">--}}
-{{--                                <label for="phone" class="form-label phone_label" id="phone_label">Phone</label>--}}
-{{--                                <input type="text" class="form-control py-2 rounded-0" name="phone" id="phone"--}}
-{{--                                       placeholder="">--}}
-{{--                            </div>--}}
 
-{{--                            <div class="form-group mb-2">--}}
-{{--                                <label for="password" class="form-label password_label"--}}
-{{--                                       id="password_label">Password</label>--}}
 
-{{--                                <div class="input-group">--}}
-{{--                                    <input type="password" class="form-control py-2 rounded-0" id="password"--}}
-{{--                                           name="password"--}}
-{{--                                           placeholder="******">--}}
-{{--                                    <span class="input-group-text rounded-0 cursor-pointer toggle-password"--}}
-{{--                                          onclick="togglePassword();">--}}
-{{--                                        <span class="iconify showIcon" data-icon="codicon:eye" data-width="20"--}}
-{{--                                              data-height="20"></span>--}}
-{{--                                        <span class="iconify d-none hideIcon" data-icon="codicon:eye-closed"--}}
-{{--                                              data-width="20" data-height="20"></span>--}}
-{{--                                    </span>--}}
-{{--                                </div>--}}
+                            <div class="d-flex align-items-center">
 
-{{--                                <span class="text-danger password_error" id="password_error"></span>--}}
-{{--                            </div>--}}
+                                <button type="submit" id="update-button" class="btn btn-primary">
+                                    Update
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary ms-2" data-bs-dismiss="modal">
+                                    Cancel
+                                </button>
+                            </div>
 
-{{--                            <div class="d-flex align-items-center">--}}
-
-{{--                                <button type="submit" class="btn btn-primary">--}}
-{{--                                    Save--}}
-{{--                                </button>--}}
-{{--                                <button type="button" class="btn btn-outline-secondary ms-2" data-bs-dismiss="modal">--}}
-{{--                                    Cancel--}}
-{{--                                </button>--}}
-{{--                            </div>--}}
-
-{{--                        </form>--}}
-{{--                    </div>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-{{--        </div>--}}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 @endsection
 
@@ -239,8 +209,71 @@
 
 
         function adminEditHandler(id) {
+            $('#editAdminModal').modal('show')
+            $.ajax({
+                type: 'get',
+                url: window.origin + '/api/admin/'+id,
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                },
+                success: function (response) {
+                    $('#editRole').val(response.data.user_role_id)
+                    $('#editName').val(response.data.name)
+
+                    $('#editAdminForm').attr('action', window.origin + '/api/admin/'+response.data.id)
+
+
+
+                },
+                error: function (xhr, resp, text) {
+                    console.log(xhr)
+                }
+            });
+
 
         }
+
+        $('#editAdminForm').submit(function (e) {
+            e.preventDefault();
+            let form = $(this);
+            let form_data = JSON.stringify(form.serializeJSON());
+            let formData = JSON.parse(form_data);
+            let url = form.attr("action");
+
+            $.ajax({
+                type: 'patch',
+                url: url,
+                data: formData,
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                },
+                success: function (response) {
+                    toastr.success(response.message)
+                    location.reload()
+                },
+                beforeSend: function () {
+                    $('#update-button').prop('disabled', true);
+                    $('#preloader').removeClass('d-none');
+                },
+                error: function (xhr, resp, text) {
+                    if (xhr && xhr.responseJSON) {
+                        let response = xhr.responseJSON;
+                        if (response.status && response.status === "validate_error") {
+                            $.each(response.message, function (index, message) {
+                                $("." + message.field).addClass("is-invalid");
+                                $("." + message.field + "_label").addClass(
+                                    "text-danger"
+                                );
+                                $("." + message.field + "_error").html(message.error);
+                            });
+                        }
+                    }
+                }, complete: function (xhr, status) {
+                    $('#update-button').prop('disabled', false);
+                    $('#preloader').addClass('d-none');
+                }
+            });
+        })
 
         function adminDeleteHandler(id) {
             Swal.fire({
@@ -289,9 +322,13 @@
                 headers: {
                     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
                 },
+                beforeSend: function () {
+                    $('#submit-button').prop('disabled', true);
+                    $('#preloader').removeClass('d-none');
+                },
                 success: function (response) {
                     toastr.success(response.message)
-                    location.reload()
+                    // location.reload()
                 },
                 error: function (xhr, resp, text) {
                     if (xhr && xhr.responseJSON) {
@@ -306,9 +343,14 @@
                             });
                         }
                     }
+                },complete: function (xhr, status) {
+                    $('#submit-button').prop('disabled', false);
+                    $('#preloader').addClass('d-none');
                 }
             });
         })
+
+
 
 
         function togglePassword() {

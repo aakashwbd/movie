@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class UserFlash extends Model
 {
     use HasFactory;
+
+    protected $guarded=[];
+
+    public function sender(){
+        return $this->belongsTo(User::class);
+    }
 }

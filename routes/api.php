@@ -39,6 +39,7 @@ Route::post('search-user', [AuthController::class, 'searchUser']);
 Route::post('user/get-all', [AuthController::class, 'getAll']);
 Route::post('user/fetch-all', [AuthController::class, 'getByUnAuth']);
 Route::post('user/send-flash', [\App\Http\Controllers\FlashController::class, 'sendFlash']);
+Route::get('user/get-flash', [\App\Http\Controllers\FlashController::class, 'getUserFlash']);
 
 Route::get('user/all-users', [AuthController::class, 'fetchAllUser']);
 
@@ -87,6 +88,9 @@ Route::prefix('admin')->group(function () {
     Route::patch('/profile-update', [\App\Http\Controllers\AdminController::class, 'profileUpdate']);
 
     Route::delete('/{id}', [\App\Http\Controllers\AdminController::class, 'delete']);
+    Route::get('/{id}', [\App\Http\Controllers\AdminController::class, 'getSingle']);
+    Route::patch('/{id}', [\App\Http\Controllers\AdminController::class, 'update']);
+
     Route::get('dashboard/total-count', [\App\Http\Controllers\DashboardCountController::class, 'totalCount']);
 
 

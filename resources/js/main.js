@@ -370,7 +370,8 @@ formSubmit = function (type, form, token = null) {
         url: url,
         data: formData,
         headers: {
-            Authorization: token,
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            "Authorization": token,
         },
         success: function (response) {
 
@@ -447,7 +448,7 @@ formSubmit = function (type, form, token = null) {
             }
 
             toastr.success(response.message);
-            // location.reload()
+            location.reload()
         },
         error: function (xhr, resp, text) {
             console.log(xhr);

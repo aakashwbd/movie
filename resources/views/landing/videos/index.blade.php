@@ -2,7 +2,7 @@
 @section('content')
     <div class="container content-config">
         <div class="p-3 my-3 bg-primary d-flex justify-content-between text-white">
-            <span id="videoResultHeading"> Result: from 10 years old to 49 years old- who hosts and/or visits - in New York and around </span>
+            <span id="videoResultHeading"></span>
             <span class="iconify cursor-pointer" data-bs-toggle="modal" data-bs-target="#videoModal"
                   data-icon="ri:equalizer-line" data-width="20" data-height="20"></span>
         </div>
@@ -12,6 +12,7 @@
                 <div class="modal-content">
                     <div class="modal-header justify-content-center">
                         <h6 class="text-capitalize">Sort Video By</h6>
+
                     </div>
                     <div class="modal-body">
                         <form action="{{url('/api/file/video/search')}}" id="filterForm">
@@ -42,8 +43,9 @@
                                     </div>
                                 </div>
 
-                                <div class="col-lg-6 col-12 offset-lg-3">
-                                    <button class="btn btn-primary form-control">Send</button>
+                                <div class="col-lg-12">
+                                    <button type="submit" id="submit-button" class="btn btn-primary">Filter</button>
+                                    <button type="button" data-bs-dismiss="modal" class="btn btn-outline-secondary">Cancel</button>
                                 </div>
                             </div>
                         </form>
@@ -77,7 +79,7 @@
                             <div class="card-action p-2 border-top d-none" id="commentAction">
                                 <div class="text-center">
                                     <div id="rater"></div>
-                                    <p>Grade</p>
+                                    <p>Grade this video</p>
                                 </div>
                                 <form id="commentForm">
                                     <input type="hidden" id="videoId" name="video_id">
@@ -94,7 +96,7 @@
         </div>
 
 
-        <div class="">
+        <div class="p-3">
             <div class="row bg-white p-2" id="allVideoList"></div>
         </div>
     </div>
@@ -117,7 +119,6 @@
                 fetch_all: '/api/file/video',
                 fetch_single: '/api/file/video/:id',
                 comment: '/api/video/comment/:id',
-
             }
 
             if(token){
@@ -146,39 +147,50 @@
             fetch(api.fetch_all, videoList)
 
 
+
+
             function videoList(res) {
                 if(res.status === 'success' && res.data.length > 0){
+                    $('#videoResultHeading').text('you can filter the video here.')
                     res.data.forEach(item => {
                         $('#allVideoList').append(`
-                        <div class="col-lg-4 col-sm-12 col-12 mb-3 ">
-                            <div class="card cursor-pointer " onclick="playVideo(${item.id})">
-                                <div class="card-body">
-                                     <video width="320" height="240" class=" video-blur">
-                                        <source src="${item.video}" type="video/mp4">
-                                        Your browser does not support the video tag.
-                                     </video>
+                            <div class="col-lg-4 col-sm-12 col-12 mb-3 ">
+                                <div class="card cursor-pointer " onclick="playVideo(${item.id})">
+                                    <div class="card-body">
+                                         <video width="320" height="240" class=" video-blur">
+                                            <source src="${item.video}" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                         </video>
 
-                                    <div class='d-flex'>
-                                        <img style='width: 80px; height: 80px;' class=" userImg" id="" src='${item.user.image ? item.user.image : window.origin + '/asset/image/default.png'}' alt=""/>
+                                        <div class='d-flex'>
+                                            <img style='width: 80px; height: 80px;' class=" userImg" id="" src='${item.user.image ? item.user.image : window.origin + '/asset/image/default.png'}' alt=""/>
 
-                                        <div class="ms-2">
-                                            <div class="d-flex align-items-center">
-                                                <span class="iconify text-warning me-2" data-icon="bxs:star" data-width="20" data-height="20"></span>
-                                               <span id='rating-count' class='text-white'></span>
+                                            <div class="ms-2">
+                                                <div class="d-flex align-items-center">
+                                                   <span class="iconify text-warning me-2" data-icon="bxs:star" data-width="20" data-height="20"></span>
+                                                   <span id='rating-count' class=''></span>
+                                                </div>
+                                               <h6 class=''>${item.user.username}</h6>
+                                               <span class=''>${item.user.address}</span>
                                             </div>
-                                           <h6 class=''>${item.user.username}</h6>
-                                           <span class=''>${item.user.address}</span>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        <div>
-                    `)
+                            <div>
+                        `)
+
+                        fetch('/api/rating/count/'+item.id, ratingCount)
+
+                        function ratingCount(res){
+                            $('#rating-count').text(res.data)
+                            console.log('count', res.data)
+                        }
                     })
+
+
                 }else{
-                    $('#allVideoList').append(`
-                        <div class="alert alert-warning"> No one posted any video yet.</div>
-                    `)
+                    $('#videoResultHeading').text('No one posted any video yet.')
+                    $('#allVideoList').hide()
                 }
 
             }
@@ -187,6 +199,8 @@
             let video_id = null
             playVideo = function (id) {
                 if(token){
+                    // window.location.href = window.origin + '/videos?modal/id='+id;
+
                     $('#singleVideoModal').modal('show')
                     fetch(api.fetch_single.replace(':id', id), singleVideo)
                     fetch(api.comment.replace(':id', id), videoComment)
@@ -226,8 +240,9 @@
 
 
             function videoComment(res){
-                res.data.forEach(item =>{
-                    $('#commentBody').append(`
+                if(res.status === 'success' && res.data.length > 0){
+                    res.data.forEach(item =>{
+                        $('#commentBody').append(`
                          <li class="border-bottom d-flex py-1">
                             ${item.user.image ? (`
                                     <img style="width: 80px; height: 80px;" class="border" src="${item.user.image}" alt="">
@@ -238,7 +253,14 @@
                             </div>
                         </li>
                     `)
-                })
+                    })
+                }else{
+                    $('#commentBody').append(`
+                        <div class="alert alert-warning text-center">No one commented in this video.</div>
+
+                    `)
+                }
+
             }
 
             let myRating = raterJs( {
@@ -311,6 +333,7 @@
                 success: function (response) {
                     toastr.success(response.message)
                     $('#comment').val('')
+                    location.reload()
 
                 }, error: function (xhr, resp, text) {
                     if (xhr && xhr.responseJSON) {
@@ -357,12 +380,16 @@
                 headers: {
                     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
                 },
+                beforeSend: function () {
+                    $('#submit-button').prop('disabled', true);
+                    $('#preloader').removeClass('d-none');
+                },
                 success: function (response) {
 
                     $('#videoModal').modal('hide')
                     $(".modal-backdrop").remove();
 
-                    $('#videoResultHeading').text('Result: from'+ formData.minage +' years old to'+ formData.maxage +' years old ')
+                    // $('#videoResultHeading').text('Result: from'+ formData.minage +' years old to'+ formData.maxage +' years old ')
 
                     $('#allVideoList').html('')
                     response.data.forEach(item => {
@@ -397,6 +424,9 @@
                 error: function (xhr, resp, text) {
                     console.log(xhr);
 
+                }, complete: function (xhr, status) {
+                    $('#submit-button').prop('disabled', false);
+                    $('#preloader').addClass('d-none');
                 }
             });
         })

@@ -16,9 +16,7 @@
 
         public function index(Request $request) {
             $user = User::query()
-                ->where('user_role_id', 1)
-                ->orWhere('user_role_id', 2)
-                ->latest()
+                ->where('user_role_id', '!=', 3)
                 ->get();
 
             if ($request->ajax()) {
@@ -29,8 +27,8 @@
                         return $formatedDate;
                     })
                     ->addColumn('action', function ($row) {
-                        //                    $button = '<button class="btn btn-primary btn-sm" onclick="adminEditHandler('.$row->id.')" data-id="'.$row->id.'">Edit</button>';
-                        $button = '<button class="btn btn-outline-secondary btn-sm ms-3" onclick="adminDeleteHandler(' . $row->id . ')" data-id="' . $row->id . '">Delete</button>';
+                                            $button = '<button class="btn btn-primary btn-sm" onclick="adminEditHandler('.$row->id.')" data-id="'.$row->id.'">Edit</button>';
+                        $button =$button. '<button class="btn btn-outline-secondary btn-sm ms-3" onclick="adminDeleteHandler(' . $row->id . ')" data-id="' . $row->id . '">Delete</button>';
                         return $button;
                     })
                     ->rawColumns(['action'])
@@ -49,6 +47,45 @@
                                     "status" => "success",
                                     "message" => 'Admin Delete Successfully Done'
                                 ]);
+            } catch (\Exception $e) {
+                return response([
+                                    'status' => 'serverError',
+                                    'message' => $e->getMessage(),
+                                ], 500);
+            }
+        }
+
+        public function getSingle($id) {
+            try {
+                $admin = User::where('id', $id)->first();
+                return response([
+                                    "status" => "success",
+                                    "data" => $admin
+                                ]);
+            } catch (\Exception $e) {
+                return response([
+                                    'status' => 'serverError',
+                                    'message' => $e->getMessage(),
+                                ], 500);
+            }
+        }
+
+        public function update(Request $request,$id) {
+
+
+            try {
+                $data = User::where('id', $id)->first();
+
+                if($data->update()){
+                    $data->name = $request->name ?? $data->name;
+                    $data->user_role_id = $request->user_role_id ?? $data->user_role_id;
+
+                    return response([
+                        "status" => "success",
+                        "message" => 'Admin information has been updated.'
+                    ]);
+                }
+
             } catch (\Exception $e) {
                 return response([
                                     'status' => 'serverError',

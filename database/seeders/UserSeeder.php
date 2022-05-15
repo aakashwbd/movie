@@ -25,7 +25,26 @@ class UserSeeder extends Seeder
                          'image'=>  "https://www.dallalii.com/img/admin/logo.png",
                          'password'=> Hash::make('admin123456')
                      ]);
+        User::create([
+             'username'=> 'test user 1',
+             'user_role_id'=> 3,
+             'email'=> 'test1@user.com',
+             'dob'=>1980,
+             'address'=>'Dhaka, Bangladesh',
+             'image'=>  "https://www.dallalii.com/img/admin/logo.png",
+             'password'=> Hash::make('123456')
+        ]);
 
-        User::factory()->count(50)->create();
+        User::create([
+             'username'=> 'test user 2',
+             'user_role_id'=> 3,
+             'email'=> 'test2@user.com',
+             'dob'=>1980,
+            'address'=>'Dhaka, Bangladesh',
+             'image'=>  "https://www.dallalii.com/img/admin/logo.png",
+             'password'=> Hash::make('123456')
+        ]);
+
+        User::factory()->count(10)->create();
     }
 }

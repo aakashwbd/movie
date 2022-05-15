@@ -51,7 +51,7 @@
             </li>
 
             <li class="list-item d-none" id="graph">
-                <a href="{{url('/graph')}}" class="list-link {{ $currentControllerName == 'graph' || '' ? 'active' : '' }}">
+                <a href="{{url('/graph?tab=visitor')}}" class="list-link {{ $currentControllerName == 'graph' || '' ? 'active' : '' }}">
                     <span class="iconify" data-icon="bi:flag" data-width="20" data-height="20"></span>
                 </a>
             </li>
