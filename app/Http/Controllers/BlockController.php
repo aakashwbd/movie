@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BlockList;
+use App\Models\favourite;
 use Illuminate\Http\Request;
 
 class BlockController extends Controller
@@ -14,6 +15,16 @@ class BlockController extends Controller
 
     public function store (Request $request){
         try {
+//            dd($request->all());
+            $user = favourite::where('favourite_user_id', $request->block_user_id)
+                ->where('user_id', auth()->id())->first();
+
+
+            if($user){
+
+                $user = favourite::find($user->id)->delete();
+            }
+
             $block = new BlockList();
             $block->user_id = auth()->id();
             $block->block_user_id = $request->block_user_id;
@@ -22,7 +33,7 @@ class BlockController extends Controller
             if ($block->save()){
                 return response([
                                     "status" => "success",
-                                    "message" => "Block Successfully Done"
+                                    "message" => "User blocked"
                                 ]);
             }
         }catch (\Exception $e){

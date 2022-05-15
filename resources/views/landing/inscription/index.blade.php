@@ -97,10 +97,20 @@
 
 @push('custom-js')
     <script>
+
+
         /**
          * Change the current page title
          * */
         window.location.pathname === '/inscription'? document.title = 'Inscription' : ''
+
+        let userToken = localStorage.getItem('accessToken')
+
+        $(document).ready(function (){
+            if(userToken){
+                location.href = window.origin
+            }
+        })
 
 
 
@@ -159,9 +169,9 @@
                     ) {
                         toastr.success(response.message);
 
-                        $('#loginModal').modal('show')
+                        location.href = window.origin+'?modal=login'
 
-                        // location.href = window.origin
+                        // $('#loginModal').modal('show')
                     }
 
                 },

@@ -20,13 +20,16 @@ if (sizeof($explode) === 3) {
             <div class="nav nav-tabs justify-content-center border-0" id="nav-tab" role="tablist">
 
                 <button
+                    onclick='tabChangerHandler("recent")'
                     class="nav-link bg-transparent border-0 {{ ((request()->get('tab')) === "blogs") ? "active" : ''}}  text-white"
                     id="nav-recent-tab" data-bs-toggle="tab" data-bs-target="#nav-recent"
                     type="button" role="tab">Recent
+
                 </button>
 
 
                 <button
+                    disabled
                     class="nav-link bg-transparent border-0 {{ ((request()->get('tab')) === "comments/$comment_id") ? "active" : ''}}  text-white"
                     id="nav-comment-tab" data-bs-toggle="tab" data-bs-target="#nav-comment"
                     type="button" role="tab">Comment
@@ -92,6 +95,14 @@ if (sizeof($explode) === 3) {
 
 @push('custom-js')
     <script>
+
+        tabChangerHandler = function (tab){
+            if(tab === 'recent'){
+                location.href = window.origin + '/blogs?tab=blogs'
+            }
+
+
+        }
 
 
         let constant = {

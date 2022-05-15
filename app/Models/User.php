@@ -58,6 +58,9 @@ class User extends Authenticatable
         }
     }
 
+    public function ad(){
+        return $this->hasMany(Ad::class);
+    }
 
 
     public function getIsBlockedAttribute(){

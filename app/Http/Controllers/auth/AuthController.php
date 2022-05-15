@@ -199,10 +199,16 @@ class AuthController extends Controller
         $user = User::where('id',auth()->id())->first();
         if ($request->status){
             $user->online_status = false;
+
+
         }else{
             $user->online_status = true;
+
         }
+
         $user->update();
+
+
 
     }
 
@@ -271,8 +277,11 @@ class AuthController extends Controller
 
     public function getAll(Request $request)
     {
+
+//        dd(auth()->id());
         try {
             $user = User::where('user_role_id', 3)
+                ->where('id','!=', auth()->id())
                 ->get();
 
             return response([
@@ -384,7 +393,7 @@ class AuthController extends Controller
                     "data" => $user
                 ]);
             }else{
-                dd($request->all());
+
                 $user = User::query()
                     ->get();
                 return response([

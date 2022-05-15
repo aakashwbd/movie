@@ -93,6 +93,14 @@
 @endsection
 @push('custom-js')
     <script>
+        let currentPath = window.location.search
+
+        $(document).ready(function (){
+            if(currentPath === "?modal=login"){
+                $('#loginModal').modal('show')
+            }
+        })
+
         $('#searchForm').submit(function (e) {
             let token = localStorage.getItem('accessToken')
             e.preventDefault();

@@ -40,7 +40,7 @@ Route::post('user/get-all', [AuthController::class, 'getAll']);
 Route::post('user/fetch-all', [AuthController::class, 'getByUnAuth']);
 Route::post('user/send-flash', [\App\Http\Controllers\FlashController::class, 'sendFlash']);
 
-    Route::get('user/all-users', [AuthController::class, 'fetchAllUser']);
+Route::get('user/all-users', [AuthController::class, 'fetchAllUser']);
 
 Route::get('user/{id}', [AuthController::class, 'show']);
 Route::post('user/{id}', [AuthController::class, 'statusUpdate']);

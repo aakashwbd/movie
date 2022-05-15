@@ -152,6 +152,7 @@ class AdController extends Controller
 
     public function search (Request $request){
         try {
+//            dd($request->all());
 //                $ad = Ad::with('user')->where('address', 'LIKE', '%'.$request->address.'%')
 //                    ->whereHas('user', function ($query) use($request){
 //                        $query->whereBetween('age', [$request->minage, $request->maxage]);
@@ -192,15 +193,40 @@ class AdController extends Controller
                        $query->where('users.presentation', 'LIKE', '%' . $presentation . '%');
                    });
                }
+
+               $online = 1;
+               if($request->member === 'online'){
+                   $ad = Ad::with('user')
+                    ->whereHas('user', function ($query) use($online){
+                        $query->where('online_status', $online);
+                    })
+                    ->get();
+                   return response([
+                       "status" => "success",
+                       "data" => $ad
+                   ]);
+               }else if($request->member === 'recent'){
+                   $ad = Ad::with('user')
+                       ->whereHas('user', function ($query) {
+                           $query->limit(5);
+                       })
+                       ->get();
+                   return response([
+                       "status" => "success",
+                       "data" => $ad
+                   ]);
+               }
+
+
                //end filtering
 
-               $target = $target->with(['user'])
-                   ->get();
-
-                return response([
-                    "status" => "success",
-                    "data" => $target
-                ]);
+//               $target = $target->with(['user'])
+//                   ->get();
+//
+//                return response([
+//                    "status" => "success",
+//                    "data" => $target
+//                ]);
         }catch (\Exception $e){
             return response([
                 'status' => 'serverError',

@@ -53,7 +53,7 @@ class MessengerController extends Controller
     {
 
         $messages = Message::with('user')
-            ->where("from_user", auth()->id())
+            ->where("to_user", auth()->id())
             ->latest()
 //            ->limit(1)
             ->get();

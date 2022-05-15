@@ -42,7 +42,7 @@
                             <li class="list-item">
                                 <a href="{{url('/inscription')}}" class="list-link text-capitalize">Inscription</a>
                             </li>
-                            <li class="list-item">
+                            <li class="list-item" id="footerConnectionButton">
                                 <a href="#" data-bs-target="#loginModal" data-bs-toggle="modal"
                                    class="list-link text-capitalize">Connection</a>
                             </li>
@@ -380,6 +380,13 @@
 <script src="{{asset('js/main.js')}}"></script>
 <script src="{{asset('js/languages.js')}}"></script>
 <script>
+    let userTokens = localStorage.getItem('accessToken')
+
+    if(userTokens){
+        $('#footerConnectionButton').hide()
+    }else{
+        $('#footerConnectionButton').show()
+    }
 
     $('#alertForm').submit(function (e) {
         e.preventDefault();
@@ -617,9 +624,12 @@
                             if (item[1]) {
                                 item[1].forEach(site => {
                                     $('#partnerList').append(`
+                                ${site.name ? (`
                                     <li class="col-lg-6 list-item">
                                         <a href="${site.url}" class="list-link">${site.name}</a>
                                     </li>
+                                `) : ''}
+
                                 `)
                                 })
                             }
@@ -648,7 +658,7 @@
                     "Authorization":userActivity
                 },
                 success:function (res){
-                    console.log(res)
+                    console.log('useractive', res)
                 },
                 error:function(err){
                     console.log(err)

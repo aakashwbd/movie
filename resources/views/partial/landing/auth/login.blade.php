@@ -127,7 +127,7 @@
                             JSON.stringify(response.data.user)
                         );
                         $("#loginModal").modal("hide");
-                        location.reload();
+                        location.href = window.origin
                     }
 
                 },

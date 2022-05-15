@@ -54,12 +54,8 @@ let constants = {
 /***
  * STARTUP ACTION
  ***/
+// var getAge = []
 $(document).ready(function () {
-
-    var getAge =[]
-
-
-
     $.ajax({
         url: window.origin + '/api/admin/setting/get-all',
         type: 'GET',
@@ -69,16 +65,17 @@ $(document).ready(function () {
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
         },
-
         success: function (res) {
             if (res.status === 'success' && res.data.length) {
 
                 Object.entries(res.data[0]).forEach(value => {
                     if (value[0] === 'age') {
-                        var max_age = parseInt(value[1].max_age)
-                        var min_age = parseInt(value[1].min_age)
-                        // alert(min_age)
-                        getAge.push(20)
+
+                        if(value[1]) {
+                            var max_age = parseInt(value[1].max_age)
+                            var min_age = parseInt(value[1].min_age)
+                        }
+                        getAge(max_age,min_age)
                     }
                 })
 
@@ -89,23 +86,49 @@ $(document).ready(function () {
         }
     })
 
-    console.log('dd', getAge)
-    const age = {
-        defaultYear: "Birth Year",
-        minAge: 10,
-        maxAge: 100,
-    };
+    getAge = function (max, min){
+        var maximumAge = max ? max : 100
+        var minimumAge = min ? min : 10
 
-    setBirthYear("#dobyear", age.defaultYear, age.minAge, age.maxAge);
-    setBirthYear("#infoBirthYear", age.defaultYear, age.minAge, age.maxAge);
+        const age = {
+            defaultYear: "Birth Year",
+            minAge: minimumAge  ,
+            maxAge: maximumAge ,
+        };
 
-    if (getCookie("COOKIE_AGE") || constants.getToken) {
-        $.year = getCookie("COOKIE_AGE");
-        setBirthYear("#inscriptionBirthYear", $.year, age.minAge, age.maxAge);
-        $("#confirmModal").modal("hide");
-    } else {
-        $("#confirmModal").modal("show");
+        setBirthYear("#dobyear", age.defaultYear, age.minAge, age.maxAge);
+        setBirthYear("#infoBirthYear", age.defaultYear, age.minAge, age.maxAge);
+
+        if (getCookie("COOKIE_AGE") || constants.getToken) {
+            $.year = getCookie("COOKIE_AGE");
+            setBirthYear("#inscriptionBirthYear", $.year, age.minAge, age.maxAge);
+            $("#confirmModal").modal("hide");
+        } else {
+            $("#confirmModal").modal("show");
+        }
     }
+
+
+
+
+
+
+    // const age = {
+    //     defaultYear: "Birth Year",
+    //     minAge: 10,
+    //     maxAge: 100,
+    // };
+    //
+    // setBirthYear("#dobyear", age.defaultYear, age.minAge, age.maxAge);
+    // setBirthYear("#infoBirthYear", age.defaultYear, age.minAge, age.maxAge);
+    //
+    // if (getCookie("COOKIE_AGE") || constants.getToken) {
+    //     $.year = getCookie("COOKIE_AGE");
+    //     setBirthYear("#inscriptionBirthYear", $.year, age.minAge, age.maxAge);
+    //     $("#confirmModal").modal("hide");
+    // } else {
+    //     $("#confirmModal").modal("show");
+    // }
 
     /**
      * AGE RESTRICTION
@@ -181,7 +204,7 @@ $(document).ready(function () {
                     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
                         "content"
                     ),
-                    Authorization: token,
+                    "Authorization": token,
                 },
                 success: function (response) {
                     if(response.status === 'success' && response.data.length > 0){
