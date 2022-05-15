@@ -82,7 +82,7 @@
                             </div>
 
                             <div class="col-lg-6 offset-lg-3 mb-4">
-                                <button type="submit" class="btn btn-primary form-control text-capitalize">submit
+                                <button type="submit" id="submit-button" class="btn btn-primary form-control text-capitalize">submit
                                 </button>
                             </div>
                         </div>
@@ -171,7 +171,7 @@
 
                         location.href = window.origin+'?modal=login'
 
-                        // $('#loginModal').modal('show')
+
                     }
 
                 },

@@ -31,27 +31,30 @@
                                 <input type="hidden" id="package_id" name="package_id">
                                 <div class="form-group mb-3">
                                     <label for="package_name" class="form-label">Package Name</label>
-                                    <input readonly type="text" name="package_name" id="package_name"
+                                    <input type="text" name="package_name" id="package_name"
                                            class="form-control">
                                 </div>
 
                                 <div class="form-group mb-3" id="freePrice">
-{{--                                    <label for="price" class="form-label">Price</label>--}}
-{{--                                    <input type="text" class="form-control" name="price" id="price">--}}
+                                    <label for="price" class="form-label price_label" id="price_label">Price</label>
+                                    <input onchange="clearError(this)" type="text" class="form-control price" name="price" id="price">
+                                    <span class="text-danger price_error" id="price_error"></span>
                                 </div>
 
                                 <div class="row">
                                     <div class="col-lg-6 col-sm-12 col-12">
                                         <div class="form-group mb-3">
-                                            <label for="price" class="form-label">Duration (unlimited)</label>
-                                            <input type="text" class="form-control" name="unlimited" id="durationUnlimited">
+                                            <label for="unlimited" class="form-label unlimited_label" id="unlimited_label">Duration (unlimited)</label>
+                                            <input onchange="clearError(this)" type="number" class="form-control unlimited" name="unlimited" id="unlimited">
+                                            <span class="text-danger unlimited_error" id="unlimited_error"></span>
                                         </div>
                                     </div>
 
                                     <div class="col-lg-6 col-sm-12 col-12">
                                         <div class="form-group mb-3">
-                                            <label for="price" class="form-label">Duration (free)</label>
-                                            <input type="text" class="form-control" name="limited" id="durationLimited">
+                                            <label for="limited" class="form-label limited_label" id="limited_label">Duration (free)</label>
+                                            <input onchange="clearError(this)" type="text" class="form-control limited" name="limited" id="limited">
+                                            <span class="text-danger limited_error" id="limited_error"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -72,7 +75,7 @@
                                     <input type="text" class="form-control" id="list3">
                                 </div>
 
-                                <button type="submit" class="btn btn-primary">Update</button>
+                                <button type="submit" id="update-button" class="btn btn-primary">Update</button>
                                 <button type="button" data-bs-dismiss="modal" class="btn btn-outline-secondary">Cancel
                                 </button>
                             </form>
@@ -101,6 +104,14 @@
             getSinglePackageUrl: '/api/admin/package/id',
         }
 
+        function clearError(input) {
+            $('#' + input.id).removeClass('is-invalid');
+            $('#' + input.id + '_label').removeClass('text-danger');
+            $('#' + input.id + '_icon').removeClass('text-danger');
+            $('#' + input.id + '_icon_border').removeClass('field-error');
+            $('#' + input.id + '_error').html('');
+        }
+
         function packageHandler(id) {
             $.ajax({
                 url: window.origin + constantData.getSinglePackageUrl.replace('id', id),
@@ -111,12 +122,18 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                 },
+                beforeSend: function () {
+                    $('#preloader').removeClass('d-none');
+                },
+
                 success: function (res) {
                     // $('.modal-body').html('')
                     if (res.status === 'success') {
                         $('#package_name').val(res.data.name)
                         $('#package_id').val(res.data.id)
                         $('#price').val(res.data.price)
+                        $('#limited').val(res.data.limited)
+                        $('#unlimited').val(res.data.unlimited)
 
                         if (res.data.list) {
                             $('#list1').val(res.data.list[0])
@@ -124,18 +141,21 @@
                             $('#list3').val(res.data.list[2])
                         }
 
-                        if (res.data.name === 'Free') {
-                            $('#freePrice').html('')
-                        }else{
-                            $('#freePrice').html(`
-                                <label for="price" class="form-label">Price</label>
-                                    <input type="text" class="form-control" name="price" id="price">
-
-                            `)
-                        }
+                        // if (res.data.name === 'Free') {
+                        //     $('#freePrice').html('')
+                        // }else{
+                        //     $('#freePrice').html(`
+                        //         <label for="price" class="form-label price_label" id="price_label">Price</label>
+                        //         <input onchange="clearError(this)" type="text" class="form-control price" name="price" id="price">
+                        //         <span class="text-danger price_error" id="price_error"></span>
+                        //
+                        //     `)
+                        // }
                     }
                 }, error: function (jqXhr, ajaxOptions, thrownError) {
                     console.log(jqXhr)
+                }, complete: function (xhr, status) {
+                    $('#preloader').addClass('d-none');
                 }
             });
         }
@@ -188,27 +208,7 @@
                 listArr.push(list3)
             }
 
-            // let durationArr = []
-            //
-            // let unlimited = $('#durationUnlimited').val()
-            // let limited = $('#durationLimited').val()
-            //
-            // if (unlimited) {
-            //     durationArr.push({
-            //             'unlimited': unlimited
-            //         }
-            //     )
-            // }
-            // if (limited) {
-            //     durationArr.push({
-            //             'limited': limited
-            //         }
-            //     )
-            // }
-
-
             formData.list = listArr
-            // formData.duration = durationArr
 
             let url = form.attr('action');
 
@@ -219,6 +219,10 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                     'Authorization': token
+                },
+                beforeSend: function () {
+                    $('#update-button').prop('disabled', true);
+                    $('#preloader').removeClass('d-none');
                 },
                 success: function (response) {
                     toastr.success(response.message)
@@ -236,6 +240,9 @@
                             });
                         }
                     }
+                }, complete: function (xhr, status) {
+                    $('#update-button').prop('disabled', false);
+                    $('#preloader').addClass('d-none');
                 }
             });
         })

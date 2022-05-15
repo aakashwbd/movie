@@ -21,7 +21,7 @@ class FavouriteController extends Controller
 
                 return response([
                                     "status" => "success",
-                                    "message" => "Favourite Successfully Delete"
+                                    "message" => "User marked as unfavorite."
                                 ]);
             }else{
                 $favourite = new favourite();
@@ -32,7 +32,7 @@ class FavouriteController extends Controller
                 if ($favourite->save()){
                     return response([
                                         "status" => "success",
-                                        "message" => "Favourite Successfully Done"
+                                        "message" => "User marked as favorite."
                                     ]);
                 }
             }

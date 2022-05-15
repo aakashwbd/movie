@@ -83,7 +83,8 @@
                                     <input type="hidden" id="videoId" name="video_id">
                                     <textarea name="comment" id="comment" placeholder="Write your comment" class="form-control comment" onchange="clearError(this)"></textarea>
                                     <span id="comment_error" class="text-danger comment_error"></span>
-                                    <button type="submit" class="btn btn-primary d-block my-2">Comment</button>
+                                    <button type="submit" id="comment-submit-button" class="btn btn-primary  my-2">Comment</button>
+                                    <button type="button" data-bs-dismiss="modal" class="btn btn-outline-secondary my-2">Cancel</button>
                                 </form>
                             </div>
                         </div>
@@ -264,6 +265,11 @@
                     'video_id':videoId,
                     'rating': rating
                 },
+                beforeSend: function () {
+                    $('#comment-submit-button').prop('disabled', true);
+                    $('#preloader').removeClass('d-none');
+                },
+
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                     'Authorization': token
@@ -272,6 +278,10 @@
 
                 }, error: function (xhr, resp, text) {
                     console.log(xhr)
+                },
+                complete: function (xhr, status) {
+                    $('#comment-submit-button').prop('disabled', false);
+                    $('#preloader').addClass('d-none');
                 }
             });
 
@@ -293,7 +303,12 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                     'Authorization': token
-                }, success: function (response) {
+                },
+                beforeSend: function () {
+                    $('#comment-submit-button').prop('disabled', true);
+                    $('#preloader').removeClass('d-none');
+                },
+                success: function (response) {
                     toastr.success(response.message)
                     $('#comment').val('')
 
@@ -308,6 +323,10 @@
                             });
                         }
                     }
+                },
+                complete: function (xhr, status) {
+                    $('#comment-submit-button').prop('disabled', false);
+                    $('#preloader').addClass('d-none');
                 }
             });
         })

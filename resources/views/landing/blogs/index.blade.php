@@ -173,14 +173,14 @@ if (sizeof($explode) === 3) {
 
 
                     ${token ? (`
-                         <form action="{{url('/api/blog/comment')}}" class="d-flex mt-5" id="blogCommentForm">
+                         <form action="{{url('/api/blog/comment')}}" class=" mt-5" id="blogCommentForm">
                                  <div class='w-100'>
                                     <input type="hidden" id="blog_id" name="blog_id" value="${res.data.id}">
                                     <input type="text" id='comment_text' name="comment_text" class="form-control me-3 comment_text" placeholder="write your comment" onchange="clearError(this)">
                                     <span id='comment_text_error' class='text-danger comment_text_error'></span>
                                 </div>
 
-                                <button class="btn btn-primary ms-2">Send</button>
+                                <button id='submit-button' class="btn btn-primary  mt-3">Comment</button>
                          </form>
 
                     `) : ''}
@@ -206,6 +206,10 @@ if (sizeof($explode) === 3) {
                         "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
                         "Authorization": token,
                     },
+                    beforeSend: function () {
+                        $('#submit-button').prop('disabled', true);
+                        $('#preloader').removeClass('d-none');
+                    },
                     success: function (response) {
                         toastr.success(response.message)
                         location.reload()
@@ -223,6 +227,10 @@ if (sizeof($explode) === 3) {
                                 });
                             }
                         }
+                    },
+                    complete: function (xhr, status) {
+                        $('#submit-button').prop('disabled', false);
+                        $('#preloader').addClass('d-none');
                     }
                 });
 

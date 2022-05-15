@@ -174,6 +174,11 @@ $(document).ready(function () {
         }
     });
 
+
+    if(!getCookie('COOKIE_LOCATION') && getCookie('COOKIE_AGE')){
+        $('#locationModal').modal('show')
+    }
+
     /**
      * SET SEARCH ADDRESS BY COOKIE
      */
@@ -185,13 +190,22 @@ $(document).ready(function () {
      * FETCH USER WHEN SEARCH FORM ADDRESS FIELD EMPTY
      */
     let searchFormAddress = $(".getLocation").val();
+    console.log('searchFormAddress', searchFormAddress)
 
     let formData = new FormData();
+
+
+
+
+
+
     if (searchFormAddress === "") {
         let user = JSON.parse(localStorage.getItem("user"));
+
         if (user) {
             formData.append("id", user.id);
         }
+
         if (token) {
             $.ajax({
                 type: "POST",
@@ -252,6 +266,7 @@ $(document).ready(function () {
             contentType: false,
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                "Authorization": token,
             },
             success: function (response) {
                 if (response.status === "success" && response.data.length > 0) {
@@ -522,6 +537,8 @@ uploader = function (
         data: formData,
         beforeSend: function () {
             $('#preloader').removeClass('d-none');
+            $('#submit-button').prop('disabled', true);
+            $('#update-button').prop('disabled', true);
             $("#" + waitMsg).removeClass("d-none");
         },
         success: function (res) {
@@ -538,6 +555,8 @@ uploader = function (
         complete: function (xhr, status) {
             $("#" + waitMsg).addClass("d-none");
             $('#preloader').addClass('d-none');
+            $('#submit-button').prop('disabled', false);
+            $('#update-button').prop('disabled', false);
         },
     });
 };
@@ -602,6 +621,9 @@ $(document).on("click", ".editCategory", function () {
 });
 
 userList = function (res) {
+    let getUserInfo =  JSON.parse(localStorage.getItem('user'))
+
+
 
 
     let date = new Date();
@@ -685,8 +707,8 @@ userList = function (res) {
                             </div>
 
                         </div>
-                        <div class="col-lg-3 col-sm-12 col-12">
-                            <ul class="extra-list" id="userListExtraMenu">
+                        <div class="col-lg-3 col-sm-12 col-12" id="extraCol${item.id}">
+                            <ul class="extra-list userListExtraMenu" id="userListExtraMenu${item.id}">
                                 <li class="extra-list-item">
                                     <span
                                         id="messengerIcon${item.id}"
@@ -696,8 +718,8 @@ userList = function (res) {
                                         data-icon="bxs:message-rounded"
                                         data-width="30"
                                         data-height="30" onclick="messenger('messengerIcon${
-            item.id
-        }', ${item.id})"></span>
+                                            item.id
+                                        }', ${item.id})"></span>
                                 </li>
 
                                 <li class="extra-list-item">
@@ -792,7 +814,16 @@ userList = function (res) {
         let moreIcon = document.querySelectorAll("#moreIcon" + item.id);
         authAction(image, flashIcon, moreIcon);
 
+        if(getUserInfo){
+            if(getUserInfo.id && item.id === getUserInfo.id){
+                $('#extraCol'+item.id).addClass('d-none')
+
+            }
+        }
+
     });
+
+
 };
 
 visitProfile = function (userid) {
@@ -845,6 +876,7 @@ favouriteHandler = function (userId) {
             },
             success: function (res) {
                 toastr.success(res.message);
+                location.reload()
             },
             error: function (jqXhr, ajaxOptions, thrownError) {
                 console.log(jqXhr);
@@ -873,19 +905,17 @@ blockHandler = function (userId) {
             url: window.origin + "/api/block/store",
             type: "POST",
             data: formData,
-            dataType: "json",
-            processData: false,
-            contentType: false,
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
                 Authorization: token,
             },
             success: function (res) {
                 toastr.success(res.message);
+                location.reload()
             },
             error: function (jqXhr, ajaxOptions, thrownError) {
                 console.log(jqXhr);
-            },
+            }
         });
     } else {
         $("#loginModal").modal("show");

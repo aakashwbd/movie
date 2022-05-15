@@ -41,7 +41,7 @@
                                 <input type="text" name="name" id="name" class="form-control name"  placeholder="Flash Title"  onchange="clearError(this)">
                                 <span id="name_error" class="text-danger name_error"></span>
                             </div>
-                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="submit" id="submit-button" class="btn btn-primary">Save</button>
                             <button type="button" data-bs-dismiss="modal" class="btn btn-outline-secondary">Cancel</button>
                         </form>
                     </div>
@@ -99,6 +99,10 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                     'Authorization': token
                 },
+                beforeSend: function () {
+                    $('#submit-button').prop('disabled', true);
+                    $('#preloader').removeClass('d-none');
+                },
                 success: function (response) {
                     toastr.success(response.message)
                     location.reload()
@@ -115,6 +119,11 @@
                             });
                         }
                     }
+                },
+
+                complete: function (xhr, status) {
+                    $('#preloader').addClass('d-none');
+                    $('#submit-button').prop('disabled', false);
                 }
             });
         })
@@ -181,6 +190,9 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                 },
+                beforeSend: function () {
+                    $('#preloader').removeClass('d-none');
+                },
                 success: function (response) {
                     $('#editFlashFormContent').html('')
                     if(response.status === 'success'){
@@ -190,7 +202,7 @@
                                     <label for="name" class="form-label">Flash Title</label>
                                     <input value='${response.data.name}' type="text" name="name" id="editName" class="form-control" placeholder="Flash Title">
                                 </div>
-                                <button type="submit" class="btn btn-primary">Update</button>
+                                <button type="submit" id='update-button' class="btn btn-primary">Update</button>
                                 <button type="button" data-bs-dismiss="modal" class="btn btn-outline-secondary">Cancel</button>
                             </form>
                         `)
@@ -212,22 +224,29 @@
                                 headers: {
                                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                                 },
+                                beforeSend: function () {
+                                    $('#update-button').prop('disabled', true);
+                                    $('#preloader').removeClass('d-none');
+                                },
                                 success: function (response) {
                                     toastr.success(response.message)
-
-                                    setTimeout(function () {
-                                        location.reload();
-                                    }, 1000);
-
+                                    location.reload();
                                 }, error: function (xhr, resp, text) {
-
                                     console.log(xhr && xhr.responseJSON)
+                                },
+                                complete: function (xhr, status) {
+                                    $('#preloader').addClass('d-none');
+                                    $('#update-button').prop('disabled', false);
                                 }
                             });
                         })
                     }
                 }, error: function (xhr, resp, text) {
                     console.log(xhr && xhr.responseJSON)
+                },
+
+                complete: function (xhr, status) {
+                    $('#preloader').addClass('d-none');
                 }
             });
         }

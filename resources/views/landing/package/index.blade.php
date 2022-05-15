@@ -9,8 +9,8 @@
                     <div class="package-item" id="free">
                         <h6 class="package-title" id="package-title-1"></h6>
 
-                        <ul class="package-list">
-                            <li class="package-list-item package-list-active" onclick="clickHandler()">
+                        <ul class="package-list" id="package-list-item-1">
+                            <li class="package-list-item package-list-active">
                                 <span class="iconify icon" data-icon="emojione-monotone:heavy-check-mark"
                                       data-width="20" data-height="20"></span>
 
@@ -49,7 +49,7 @@
                     <div class="package-item bronze" id="bronze">
                         <h6 class="package-title" id="package-title-2"></h6>
 
-                        <ul class="package-list">
+                        <ul class="package-list" id="package-list-item-2">
                             <li class="package-list-item package-list-active">
                                 <span class="iconify icon" data-icon="emojione-monotone:heavy-check-mark"
                                       data-width="20" data-height="20"></span>
@@ -83,9 +83,9 @@
                         <h6 class="package-price" id="package-price-2"></h6>
 
                         <span class="d-block">per month</span>
-                        <span class="d-block text-capitalize">unlimited <span id="unlimited-2"></span> month</span>
-                        <span class="d-block text-capitalize">(<span id="limited-2"></span> month free)</span>
-                        <span class="d-block text-capitalize">7 month billed a payment of 42</span>
+                        <span class="d-block text-capitalize" id="package-price-unlimited-2"></span>
+                        <span class="d-block text-capitalize" id="package-price-limited-2"></span>
+{{--                        <span class="d-block text-capitalize">7 month billed a payment of 42</span>--}}
                         <button class="btn btn-outline-light mt-3" id="payBtn2">Buy Now</button>
                     </div>
                 </div>
@@ -95,7 +95,7 @@
                         <h6 class="package-title" id="package-title-3"></h6>
                         <span>popular plan</span>
 
-                        <ul class="package-list">
+                        <ul class="package-list" id="package-list-item-3">
                             <li class="package-list-item package-list-active">
                                 <span class="iconify icon" data-icon="emojione-monotone:heavy-check-mark"
                                       data-width="20" data-height="20"></span>
@@ -129,9 +129,9 @@
                         <h6 class="package-price" id="package-price-3"></h6>
 
                         <span class="d-block">per month</span>
-                        <span class="d-block text-capitalize">unlimited 6 month</span>
-                        <span class="d-block text-capitalize">(3 month free)</span>
-                        <span class="d-block text-capitalize">7 month billed a payment of 42</span>
+                        <span class="d-block text-capitalize" id="package-price-unlimited-3"></span>
+                        <span class="d-block text-capitalize" id="package-price-limited-3"></span>
+{{--                        <span class="d-block text-capitalize">7 month billed a payment of 42</span>--}}
                         <button class="btn btn-outline-light mt-3" id="payBtn3">Buy Now</button>
                     </div>
                 </div>
@@ -139,7 +139,7 @@
                 <div class="col-lg-3 col-sm-12 col-12 mb-3">
                     <div class="package-item plus">
                         <h6 class="package-title" id="package-title-4"></h6>
-                        <ul class="package-list">
+                        <ul class="package-list" id="package-list-item-4">
                             <li class="package-list-item package-list-active">
                                 <span class="iconify icon" data-icon="emojione-monotone:heavy-check-mark"
                                       data-width="20" data-height="20"></span>
@@ -173,19 +173,13 @@
                         <h6 class="package-price" id="package-price-4"></h6>
 
                         <span class="d-block">per month</span>
-                        <span class="d-block text-capitalize">unlimited 6 month</span>
-                        <span class="d-block text-capitalize">(3 month free)</span>
-                        <span class="d-block text-capitalize">7 month billed a payment of 42</span>
+                        <span class="d-block text-capitalize" id="package-price-unlimited-4"></span>
+                        <span class="d-block text-capitalize" id="package-price-limited-4"></span>
+{{--                        <span class="d-block text-capitalize">7 month billed a payment of 42</span>--}}
 
                         <button class="btn btn-outline-light mt-3" id="payBtn4">Buy Now</button>
                     </div>
                 </div>
-
-{{--                <div class="col-lg-2 col-sm-12 col-12 mb-3">--}}
-{{--                    <div class="private-room">--}}
-{{--                        <span>Top Room Private</span>--}}
-{{--                    </div>--}}
-{{--                </div>--}}
             </div>
         </div>
     </div>
@@ -231,7 +225,6 @@
                     <h6 class="text-capitalize">Payment: </h6>
                 </div>
                 <div class="modal-body">
-
                     <span id="modal-package-name4"></span>
                     <h6 id="modal-package-price4"></h6>
 
@@ -257,6 +250,8 @@
         let plusPrice = null
 
         let bronzePackage = null
+        let silverPackage = null
+        let plusPackage = null
 
 
         $(document).ready(function () {
@@ -271,32 +266,101 @@
                 },
                 success: function (res) {
                     if (res.status === 'success') {
-                        console.log(typeof res.data[0])
-                        bronzePackage = res.data[1]
+                        res.data.forEach(item=>{
+                            console.log(item)
 
-                        $('#package-title-1').text(res.data[0].name)
-                        $('#package-title-2').text(res.data[1].name)
-                        $('#package-title-3').text(res.data[2].name)
-                        $('#package-title-4').text(res.data[3].name)
+                            if(item.id === 1){
+                                $('#package-title-1').text(item.name ? item.name : '')
+                                $('#package-price-1').text(item.price ? item.price : '')
 
-                        $('#modal-package-name2').text('Package Name: ' + res.data[1].name)
-                        $('#modal-package-name3').text('Package Name: ' + res.data[2].name)
-                        $('#modal-package-name4').text('Package Name: ' + res.data[3].name)
+                                if(item.list){
+                                    item.list.forEach(list=>{
+                                        $('#package-list-item-1').append(`
+                                                <li class="package-list-item package-list-active">
+                                                    <span class="iconify icon" data-icon="emojione-monotone:heavy-check-mark"
+                                                          data-width="20" data-height="20"></span>
+                                                    <span>${list}</span>
+                                                </li>
+                                            `)
+                                    })
+                                }
+                            }
+
+                            if(item.id === 2){
+                                $('#package-title-2').text(item.name ? item.name : '')
+                                $('#package-price-2').text(item.price ? '$ '+ item.price : '')
+                                $('#modal-package-name2').text('Package Name: ' + item.name)
+                                $('#modal-package-price2').text(item.price ? 'Price: $' + item.price : '')
+                                bronzePrice = item.price
+                                bronzePackage = item
+
+                                if(item.list){
+                                     item.list.forEach(list=>{
+                                         $('#package-list-item-2').append(`
+                                                <li class="package-list-item package-list-active">
+                                                    <span class="iconify icon" data-icon="emojione-monotone:heavy-check-mark"
+                                                          data-width="20" data-height="20"></span>
+                                                    <span>${list}</span>
+                                                </li>
+                                            `)
+                                     })
+                                }
+
+                                $('#package-price-unlimited-2').text(item.unlimited ? 'unlimited '+ item.unlimited+  ' month' : '')
+                                $('#package-price-limited-2').text(item.limited ? '( ' +item.limited + ' month free) ' : '')
+
+                            }
+
+                            if(item.id === 3){
+                                $('#package-title-3').text(item.name ? item.name : '')
+                                $('#package-price-3').text(item.price ? '$ '+ item.price : '')
+                                $('#modal-package-name3').text('Package Name: ' + item.name)
+                                $('#modal-package-price3').text(item.price ? 'Price: $' + item.price : '')
+                                silverPrice = item.price
+                                silverPackage = item
 
 
+                                if(item.list){
+                                    item.list.forEach(list=>{
+                                        $('#package-list-item-3').append(`
+                                                <li class="package-list-item package-list-active">
+                                                    <span class="iconify icon" data-icon="emojione-monotone:heavy-check-mark"
+                                                          data-width="20" data-height="20"></span>
+                                                    <span>${list}</span>
+                                                </li>
+                                            `)
+                                    })
+                                }
 
-                        $('#package-price-1').text(res.data[0].price ? res.data[0].price : 'Free')
-                        $('#package-price-2').text(res.data[1].price ? "$ "+ res.data[1].price : '$ ')
-                        $('#package-price-3').text(res.data[2].price ? "$ "+ res.data[2].price : '$')
-                        $('#package-price-4').text(res.data[3].price ? "$ "+ res.data[3].price : '$')
+                                $('#package-price-unlimited-3').text(item.unlimited ? 'unlimited '+ item.unlimited+  ' month' : '')
+                                $('#package-price-limited-3').text(item.limited ? '( ' +item.limited + ' month free) ' : '')
 
-                        $('#modal-package-price2').text('Price: $' + res.data[1].price)
-                        $('#modal-package-price3').text('Price: $' + res.data[2].price)
-                        $('#modal-package-price4').text(res.data[3].price ? 'Price: $' + res.data[3].price : 'Price: $')
+                            }
 
-                        bronzePrice = res.data[1].price
-                        silverPrice = res.data[2].price
-                        plusPrice = res.data[3].price
+                            if(item.id === 4){
+                                $('#package-title-4').text(item.name ? item.name : '')
+                                $('#package-price-4').text(item.price ? '$ '+ item.price : '')
+                                $('#modal-package-name4').text('Package Name: ' + item.name)
+                                $('#modal-package-price4').text(item.price ? 'Price: $' + item.price : '')
+                                plusPrice = item.price
+                                plusPackage = item
+
+                                $('#package-price-unlimited-4').text(item.unlimited ? 'unlimited '+ item.unlimited+  ' month' : '')
+                                $('#package-price-limited-4').text(item.limited ? '( ' +item.limited + ' month free) ' : '')
+
+                                if(item.list){
+                                    item.list.forEach(list=>{
+                                        $('#package-list-item-4').append(`
+                                                <li class="package-list-item package-list-active">
+                                                    <span class="iconify icon" data-icon="emojione-monotone:heavy-check-mark"
+                                                          data-width="20" data-height="20"></span>
+                                                    <span>${list}</span>
+                                                </li>
+                                            `)
+                                    })
+                                }
+                            }
+                        })
                     }
 
                 }, error: function (jqXhr, ajaxOptions, thrownError) {
@@ -310,31 +374,51 @@
 
         let price = null
         let packageList = null
-
+        let user = JSON.parse(localStorage.getItem('user'))
         $(document).on('click', '#payBtn2', function () {
-            $('#payModal2').modal('show')
-            price = bronzePrice
-            packageList = JSON.stringify(bronzePackage)
 
-            // localStorage.setItem('helloPackage', JSON.stringify(bronzePackage))
 
-            // console.log('brx', bronzePackage)
+            if(user){
+                $('#payModal2').modal('show')
+                price = bronzePrice
+                packageList = JSON.stringify(bronzePackage)
+            }else{
+                $('#loginModal').modal('show')
+            }
+
+
+
 
         })
 
         $(document).on('click', '#payBtn3', function () {
-            $('#payModal3').modal('show')
-            price = silverPrice
+
+
+            if(user){
+                $('#payModal3').modal('show')
+                price = silverPrice
+                packageList = JSON.stringify(silverPackage)
+            }else{
+                $('#loginModal').modal('show')
+            }
+
 
         })
 
         $(document).on('click', '#payBtn4', function () {
-            $('#payModal4').modal('show')
-            price = plusPrice
+
+            if(user){
+                $('#payModal4').modal('show')
+                price = plusPrice
+                packageList = JSON.stringify(plusPackage)
+            }else{
+                $('#loginModal').modal('show')
+            }
+
 
         })
 
-        let user = JSON.parse(localStorage.getItem('user'))
+
 
 
 

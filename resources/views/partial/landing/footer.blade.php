@@ -8,6 +8,7 @@
                          alt="">
                 </a>
 
+                <span id="footerWebsiteName" class="site-description d-block my-3"></span>
                 <span id="footerDescription" class="site-description d-block my-3"></span>
             </div>
 
@@ -373,13 +374,15 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.serializeJSON/3.2.1/jquery.serializejson.min.js"></script>
 <script src="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/cdbootstrap/js/cdb.min.js"></script>
+{{--<script src="https://cdn.jsdelivr.net/npm/cdbootstrap/js/cdb.min.js"></script>--}}
 
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{{asset('js/app.js')}}"></script>
 <script src="{{asset('js/main.js')}}"></script>
 <script src="{{asset('js/languages.js')}}"></script>
 <script>
+
+
     let userTokens = localStorage.getItem('accessToken')
 
     if(userTokens){
@@ -589,6 +592,13 @@
                 if (res.status === 'success' && res.data.length) {
 
                     Object.entries(res.data[0]).forEach(item => {
+
+                        if(item[0] === 'system_name'){
+                            $('#footerWebsiteName').text(item[1] ? item[1] : "")
+                        }
+                        // console.log('footer setting', item)
+                        //
+
                         if (item[0] === 'image') {
 
                             if(item[1]){
@@ -658,7 +668,7 @@
                     "Authorization":userActivity
                 },
                 success:function (res){
-                    console.log('useractive', res)
+
                 },
                 error:function(err){
                     console.log(err)

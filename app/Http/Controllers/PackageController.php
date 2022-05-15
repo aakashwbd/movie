@@ -4,13 +4,27 @@ namespace App\Http\Controllers;
 
 use App\Models\Package;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
 
 class PackageController extends Controller
 {
     public function update (Request $request){
         try {
+            $validator = Validator::make($request->all(), [
+                "price" => "required",
+                "limited" => "required",
+                "unlimited" => "required",
+
+            ]);
+
+            if ($validator->fails()) {
+                $errors = $validator->errors()->messages();
+                return validateError($errors);
+            }
+
             $package = Package::where('id',$request->package_id)->first();
+            $package->name =  $request->package_name;
             $package->list =  $request->list;
             $package->price = $request->price;
             $package->limited = $request->limited;

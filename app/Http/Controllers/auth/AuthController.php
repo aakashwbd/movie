@@ -339,6 +339,7 @@ class AuthController extends Controller
 
     public function searchUser(Request $request)
     {
+
         try {
             $min = (int)$request->minage;
             $max = (int)$request->maxage;
@@ -354,13 +355,6 @@ class AuthController extends Controller
             }else if($min && $max){
                 $user = User::whereBetween('age', [$min, $max])
                     ->get();
-                return response([
-                    "status" => "success",
-                    "action" => "search-user",
-                    "data" => $user
-                ]);
-            }else if($request->type){
-                $user = User::where('preference', 'LIKE', '%' . $request->type . '%')->get();
                 return response([
                     "status" => "success",
                     "action" => "search-user",
@@ -383,6 +377,25 @@ class AuthController extends Controller
                     "action" => "search-user",
                     "data" => $user
                 ]);
+            }else if($request->member === 'online' && $request->type){
+
+                $user = User::query()
+                    ->where('online_status', 1)
+
+                    ->get();
+                return response([
+                    "status" => "success",
+                    "action" => "search-user",
+                    "data" => $user
+                ]);
+            }else if($request->type){
+
+                $user = User::where('preference', 'LIKE', '%' . $request->type . '%')->get();
+                return response([
+                                    "status" => "success",
+                                    "action" => "search-user",
+                                    "data" => $user
+                                ]);
             }else if($request->keyword){
                 $user = User::query()
                     ->where('presentation', 'LIKE', '%' . $request->keyword . '%')

@@ -21,21 +21,34 @@ class BlockController extends Controller
 
 
             if($user){
-
                 $user = favourite::find($user->id)->delete();
             }
 
-            $block = new BlockList();
-            $block->user_id = auth()->id();
-            $block->block_user_id = $request->block_user_id;
+            $block = BlockList::where('block_user_id', $request->block_user_id)->first();
 
+            if($block){
+                $block = BlockList::where('block_user_id', $request->block_user_id)->delete();
 
-            if ($block->save()){
                 return response([
                                     "status" => "success",
-                                    "message" => "User blocked"
+                                    "message" => "User unblocked."
                                 ]);
+            }else{
+                $block = new BlockList();
+                $block->user_id = auth()->id();
+                $block->block_user_id = $request->block_user_id;
+
+
+                if ($block->save()){
+                    return response([
+                                        "status" => "success",
+                                        "message" => "User blocked"
+                                    ]);
+                }
+
             }
+
+
         }catch (\Exception $e){
             return response([
                                 'status' => 'serverError',

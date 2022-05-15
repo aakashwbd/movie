@@ -199,7 +199,6 @@
 
                     if(response.status === 'success' && response.data.length > 0){
                         response.data.forEach(item=>{
-                            console.log(item)
                             $('#shortMessage').append(`
                                     <li class="dropdown-item border-bottom py-3">
                                              <div class="d-flex">

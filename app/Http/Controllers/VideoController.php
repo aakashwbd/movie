@@ -16,6 +16,7 @@ class VideoController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 "title" => "required",
+                "category_id" => "required",
             ]);
 
             if ($validator->fails()) {

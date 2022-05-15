@@ -12,38 +12,38 @@
         <div class="container">
             <ul class="nav nav-tabs justify-content-center border-0 bg-primary" id="profileNav" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link {{ ((request()->get('tab')) == "information") ? "active" : ''}}"
+                    <button onclick="tabChangeHandler('information')" class="nav-link {{ ((request()->get('tab')) == "information") ? "active" : ''}}"
                             id="info-tab" data-bs-toggle="tab" data-bs-target="#information" type="button" role="tab"
                             aria-controls="home" aria-selected="true">Information
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link {{ ((request()->get('tab')) == "photos") ? "active" : ''}}" id="photos-tab"
+                    <button onclick="tabChangeHandler('photos')" class="nav-link {{ ((request()->get('tab')) == "photos") ? "active" : ''}}" id="photos-tab"
                             data-bs-toggle="tab" data-bs-target="#photos" type="button" role="tab"
                             aria-controls="profile" aria-selected="false">Photos/videos
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link {{ ((request()->get('tab')) == "setting") ? "active" : ''}}"
+                    <button onclick="tabChangeHandler('settings')" class="nav-link {{ ((request()->get('tab')) == "setting") ? "active" : ''}}"
                             id="setting-tab" data-bs-toggle="tab" data-bs-target="#setting"
                             type="button" role="tab" aria-controls="contact" aria-selected="false">Setting
                     </button>
                 </li>
 
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link {{ ((request()->get('tab')) == "favorite") ? "active" : ''}}"
+                    <button onclick="tabChangeHandler('favorite')" class="nav-link {{ ((request()->get('tab')) == "favorite") ? "active" : ''}}"
                             id="favorite-tab" data-bs-toggle="tab" data-bs-target="#favorite"
                             type="button" role="tab" aria-controls="home" aria-selected="true">Favorite
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link {{ ((request()->get('tab')) == "blacklist") ? "active" : ''}}"
+                    <button onclick="tabChangeHandler('block')" class="nav-link {{ ((request()->get('tab')) == "blacklist") ? "active" : ''}}"
                             id="blacklist-tab" data-bs-toggle="tab" data-bs-target="#blocklist"
                             type="button" role="tab" aria-controls="profile" aria-selected="false">Block List
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link {{ ((request()->get('tab')) == "premium") ? "active" : ''}} "
+                    <button onclick="tabChangeHandler('premium')" class="nav-link {{ ((request()->get('tab')) == "premium") ? "active" : ''}} "
                             id="premium-tab" data-bs-toggle="tab" data-bs-target="#premiumList"
                             type="button" role="tab" aria-controls="contact" aria-selected="false">Premium Access
                     </button>
@@ -358,14 +358,14 @@
                         <div class="card">
                             <div class="card-header">
                                 <h6>Payment By Credit</h6>
-                                <span class="text-black-50">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Expedita, nostrum!</span>
+                                <span class="text-black-50" id="premiumPackageHeading">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Expedita, nostrum!</span>
                             </div>
 
                             <div class="card-body">
                                 <div id="premiumPackageList"></div>
                                 <div class="text-center">
-                                    <p class="my-2">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fuga,
-                                        nam.</p>
+{{--                                    <p class="my-2" id="">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fuga,--}}
+{{--                                        nam.</p>--}}
                                     <button id="premiumPackageOfferButton" class="btn btn-primary w-25">Submit</button>
                                 </div>
                             </div>
@@ -467,6 +467,41 @@
         src="https://www.paypal.com/sdk/js?client-id={{env('PAYPAL_CLIENT_ID')}}&currency={{env('PAYPAL_CURRENCY')}}"></script>
 
     <script>
+
+
+        tabChangeHandler = function (tab){
+            if(tab === 'information'){
+                location.href = window.origin + '/profile?tab=information'
+            }
+
+
+            if(tab === 'photos'){
+                location.href = window.origin + '/profile?tab=photos'
+            }
+
+            if(tab === 'settings'){
+                location.href = window.origin + '/profile?tab=setting'
+            }
+
+            if(tab === 'favorite'){
+                location.href = window.origin + '/profile?tab=favorite'
+            }
+
+            if(tab === 'favorite'){
+                location.href = window.origin + '/profile?tab=favorite'
+            }
+
+            if(tab === 'block'){
+                location.href = window.origin + '/profile?tab=blacklist'
+            }
+
+            if(tab === 'premium'){
+                location.href = window.origin + '/profile?tab=premium'
+            }
+        }
+
+
+
         let token = localStorage.getItem('accessToken')
 
 
@@ -478,6 +513,7 @@
                 <option value='${item[1].nativeName}'>${item[1].nativeName}</option>
             `)
         })
+
 
         /***
          * The function is active when user want to his account in suspend mode
@@ -566,12 +602,12 @@
 
                     if (res.status === 'success') {
                         $('#alert_by_email').val(res.data.alert_by_email)
-                        $('#premium_status').val(res.data.premium_status)
-                        $('#colorblind_mode').val(res.data.colorblind_mode)
-                        $('#exhibits_notification').val(res.data.exhibits_notification)
-                        $('#reminder_message').val(res.data.reminder_message)
-                        $('#languages').val(res.data.language)
-                        $('#sound_notification').val(res.data.sound_notification)
+                        $('#premium_status').val(res.data.premium_status ? res.data.premium_status : "hide")
+                        $('#colorblind_mode').val(res.data.colorblind_mode ? res.data.colorblind_mode : 'enabled')
+                        $('#exhibits_notification').val(res.data.exhibits_notification ? res.data.exhibits_notification : "enabled")
+                        $('#reminder_message').val(res.data.reminder_message ? res.data.reminder_message : 'enabled')
+                        $('#languages').val(res.data.language ? res.data.language : 'english')
+                        $('#sound_notification').val(res.data.sound_notification ? res.data.sound_notification : 'enabled')
                     }
                 },
                 error: function (jqXhr, ajaxOptions, thrownError) {
@@ -970,40 +1006,70 @@
         })
 
         function favouriteList(res) {
-            res.data.forEach(item => {
-
-                $('#favouriteListShow').append(`
+            if(res.data.length > 0){
+                res.data.forEach(item => {
+                    $('#favouriteListShow').append(`
                     <div class="col-lg-6 col-12 col-sm-12 mb-3">
                             <div class="d-flex border-bottom p-2">
                                 <img class="avatar-sm" src="${item.favourite_user.image ? item.favourite_user.image : window.origin + "/asset/image/default.jpg"}" alt="">
                                 <div class="ms-3">
-                                   <h6>${item.favourite_user.username}</h6>
-                                   <span>${item.favourite_user.address}</span>
-                                   <p>${item.favourite_user.age} y.o</p>
+                                   <h6>${item.favourite_user.username ? item.favourite_user.username : ""}</h6>
+                                   <span>${item.favourite_user.address ? item.favourite_user.address : ""}</span>
+                                   <p>${item.favourite_user.age ? item.favourite_user.age + 'y.o' : ''}</p>
 
                                 </div>
                             </div>
                         </div>
                 `)
-            })
+                })
+
+            }else{
+                $('#favouriteListShow').append(`
+                    <div class="alert alert-warning text-center">
+                            Use
+                            <span class="iconify" data-icon="carbon:favorite" data-width="20" data-height="20"></span>
+                            button
+                            <br/>
+                            to save your favorites
+
+                    </div>
+
+                `)
+            }
+
         }
 
         function blockList(res) {
-            res.data.forEach(item => {
-                $('#blockListShow').append(`
+            if(res.data.length > 0){
+                res.data.forEach(item => {
+                    $('#blockListShow').append(`
                     <div class="col-lg-6 col-12 col-sm-12 mb-3">
                             <div class="d-flex border-bottom p-2">
                                 <img class="avatar-sm" src="${item.block_user.image ? item.block_user.image : window.origin + "/asset/image/default.jpg"}" alt="">
                                 <div class="ms-3">
-                                   <h6>${item.block_user.username}</h6>
-                                   <span>${item.block_user.address}</span>
-                                   <p>${item.block_user.age} y.o</p>
+                                   <h6>${item.block_user.username ? item.block_user.username : ''}</h6>
+                                   <span>${item.block_user.address ? item.block_user.address : ''}</span>
+                                   <p>${item.block_user.age ? item.block_user.age + 'y.o' : ''}</p>
 
                                 </div>
                             </div>
                         </div>
                 `)
-            })
+                })
+            }else{
+                $('#blockListShow').append(`
+                    <div class="alert alert-warning text-center">
+                            Use
+                            <span class="iconify" data-icon="akar-icons:block" data-width="20" data-height="20"></span>
+                            button
+                            <br/>
+                            to save your block list
+
+                    </div>
+
+                `)
+            }
+
         }
 
 
@@ -1017,8 +1083,6 @@
                     'Authorization': token
                 },
                 success: function (response) {
-
-
                     if (response.status === 'success' && response.data.length > 0) {
                         response.data.forEach(item => {
 
@@ -1038,6 +1102,18 @@
                                 </div>
                             `)
                         })
+                    }else{
+                        $('#premiumPackageOfferButton').hide()
+
+                        $('#premiumPackageHeading').html(`
+                            <span>
+                                    For premium access don't forget to bye <a href="{{url('/package')}}" class="text-decoration-underline">visit</a> our packages
+
+                            </span>
+
+                        `)
+
+                        //
                     }
                 }, error: function (xhr, resp, text) {
                     console.log(xhr)

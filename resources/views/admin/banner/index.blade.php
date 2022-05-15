@@ -48,7 +48,7 @@
                         <img style="width: 100%; height: 280px;" class="my-2 d-none" id="bannerImgPreview"
                              src=""
                              alt="">
-                        <button type="submit" class="btn btn-primary my-2">Save</button>
+                        <button type="submit" id="submit-button" class="btn btn-primary my-2">Save</button>
                         <button type="button" data-bs-dismiss="modal" class="btn btn-outline-secondary my-2">Cancel</button>
                     </form>
 
@@ -81,8 +81,6 @@
          * */
         window.location.pathname === '/admin/banner-image'? document.title = 'Dashboard | Banner' : ''
 
-
-
         function bannerImgUpload(event) {
             event.preventDefault();
             let file = event.target.files[0];
@@ -101,6 +99,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                 },
                 beforeSend: function () {
+                    $('#submit-button').prop('disabled', true);
                     $('#preloader').removeClass('d-none');
                 },
                 data: formData,
@@ -116,6 +115,7 @@
                     console.log(jqXhr)
                 },
                 complete: function (xhr, status) {
+                    $('#submit-button').prop('disabled', false);
                     $('#preloader').addClass('d-none');
                 }
             });
@@ -141,6 +141,7 @@
                 data: formData,
 
                 beforeSend: function () {
+                    $('#update-button').prop('disabled', true);
                     $('#preloader').removeClass('d-none');
                 },
                 success: function (res) {
@@ -153,6 +154,7 @@
                 }, error: function (jqXhr, ajaxOptions, thrownError) {
                     console.log(jqXhr)
                 }, complete: function (xhr, status) {
+                    $('#update-button').prop('disabled', false);
                     $('#preloader').addClass('d-none');
                 }
             });
@@ -173,6 +175,7 @@
                     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
                 },
                 beforeSend: function () {
+                    $('#submit-button').prop('disabled', true);
                     $('#preloader').removeClass('d-none');
                 },
                 success: function (response) {
@@ -194,6 +197,7 @@
                     }
                 },
                 complete: function (xhr, status) {
+                    $('#submit-button').prop('disabled', false);
                     $('#preloader').addClass('d-none');
                 }
             });
@@ -207,6 +211,10 @@
                 url: url,
                 headers: {
                     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                },
+
+                beforeSend: function () {
+                    $('#preloader').removeClass('d-none');
                 },
                 success: function (response) {
                     $('#editBannerFormContent').html('')
@@ -229,7 +237,7 @@
                         <img style="width: 100%; height: 280px;" class="my-2" id="editBannerImgPreview"
                              src="${response.data.image}"
                              alt="">
-                        <button type="submit" class="btn btn-primary my-2">Update</button>
+                        <button type="submit" id="update-button" class="btn btn-primary my-2">Update</button>
                         <button data-bs-dismiss='modal' type="button" class="btn btn-outline-secondary my-2">Cancel</button>
                                </form>
                     `)
@@ -250,6 +258,7 @@
                                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
                             },
                             beforeSend: function () {
+                                $('#update-button').prop('disabled', true);
                                 $('#preloader').removeClass('d-none');
                             },
                             success: function (response) {
@@ -259,6 +268,7 @@
                             error: function (xhr, resp, text) {
                                 console.log(xhr, resp)
                             },complete: function (xhr, status) {
+                                $('#update-button').prop('disabled', false);
                                 $('#preloader').addClass('d-none');
                             }
                         });
@@ -267,6 +277,9 @@
                 },
                 error: function (xhr, resp, text) {
                     console.log(xhr, resp)
+                },
+                complete: function (xhr, status) {
+                    $('#preloader').addClass('d-none');
                 }
             });
         }
@@ -281,6 +294,9 @@
                 contentType: false,
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                },
+                beforeSend: function () {
+                    $('#preloader').removeClass('d-none');
                 },
                 success: function (res) {
                     if (res.status === 'success' && res.data.length > 0) {
@@ -310,6 +326,9 @@
                     }
                 }, error: function (jqXhr, ajaxOptions, thrownError) {
                     console.log(jqXhr)
+                },
+                complete: function (xhr, status) {
+                    $('#preloader').addClass('d-none');
                 }
             });
         })
@@ -332,7 +351,7 @@
                         success: function (res) {
                             Swal.fire(
                                 'Deleted!',
-                                'The banner has been deleted.',
+                                'The banner image has been deleted.',
                                 'success'
                             )
                             setInterval(function () {

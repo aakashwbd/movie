@@ -65,7 +65,7 @@
                         <img style="width: 100%; height: 280px" id="categoryImagePreview" class="d-none my-3" src=""
                              alt="">
 
-                        <button type="submit" class="btn  btn-primary my-3">Save</button>
+                        <button type="submit" id="submit-button" class="btn  btn-primary my-3">Save</button>
                         <button type="button" data-bs-dismiss="modal" class="btn  btn-outline-secondary my-3">Cancel</button>
                     </form>
                 </div>
@@ -114,6 +114,7 @@
                     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
                 },
                 beforeSend: function () {
+                    $('#submit-button').prop('disabled', true);
                     $('#preloader').removeClass('d-none');
                 },
                 success: function (response) {
@@ -135,6 +136,7 @@
                     }
                 },
                 complete: function (xhr, status) {
+                    $('#submit-button').prop('disabled', false);
                     $('#preloader').addClass('d-none');
                 }
             });
@@ -160,6 +162,7 @@
                 },
                 data: formData,
                 beforeSend: function () {
+                    $('#submit-button').prop('disabled', true);
                     $('#preloader').removeClass('d-none');
                 },
 
@@ -176,6 +179,7 @@
 
                 complete: function (xhr, status) {
                     $('#preloader').addClass('d-none');
+                    $('#submit-button').prop('disabled', false);
                 }
 
             });
@@ -200,6 +204,7 @@
                 },
                 data: formData,
                 beforeSend: function () {
+                    $('#update-button').prop('disabled', true);
                     $('#preloader').removeClass('d-none');
                 },
                 success: function (res) {
@@ -212,6 +217,7 @@
                     console.log(jqXhr)
                 }
                 ,complete: function (xhr, status) {
+                    $('#update-button').prop('disabled', false);
                     $('#preloader').addClass('d-none');
                 }
             });
@@ -219,11 +225,17 @@
 
 
         $(document).ready(function () {
+
+
             $.ajax({
                 type: 'get',
                 url: window.origin + '/api/admin/category/all',
                 headers: {
                     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                },
+
+                beforeSend: function () {
+                    $('#preloader').removeClass('d-none');
                 },
                 success: function (response) {
                     if (response.status === 'success' && response.data.length > 0) {
@@ -262,6 +274,9 @@
                 error: function (xhr, resp, text) {
                     console.log(xhr, resp)
                 }
+                ,complete: function (xhr, status) {
+                    $('#preloader').addClass('d-none');
+                }
             });
         })
 
@@ -273,7 +288,9 @@
                 url: url,
                 headers: {
                     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-                },
+                }, beforeSend: function () {
+                $('#preloader').removeClass('d-none');
+            },
                 success: function (response) {
                     $('#editCategoryFormContent').html('')
                     if (response.status === 'success') {
@@ -307,7 +324,7 @@
                                 <img style='width: 100%; height: 250px;' class='my-3' id="editCategoryImagePreview" src="${image}" alt="">
 
 
-                                <button type="submit" class="btn  btn-primary">Update</button>
+                                <button type="submit" id='update-button' class="btn  btn-primary">Update</button>
 
                                  <button type="button"  data-bs-dismiss="modal" class="btn  btn-outline-secondary my-3">Cancel</button>
 
@@ -330,6 +347,7 @@
                             headers: {
                                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
                             }, beforeSend: function () {
+                                $('#update-button').prop('disabled', true);
                                 $('#preloader').removeClass('d-none');
                             },
                             success: function (response) {
@@ -339,6 +357,7 @@
                             error: function (xhr, resp, text) {
                                 console.log(xhr, resp)
                             }, complete: function (xhr, status) {
+                                $('#update-button').prop('disabled', false);
                                 $('#preloader').addClass('d-none');
                             }
                         });
@@ -346,6 +365,8 @@
                 },
                 error: function (xhr, resp, text) {
                     console.log(xhr, resp)
+                }, complete: function (xhr, status) {
+                    $('#preloader').addClass('d-none');
                 }
             });
         }

@@ -33,7 +33,7 @@ class BlogCommentController extends Controller
             if ($blog->save()){
                 return response([
                     "status" => "success",
-                    "message" => "Blog Comment Successfully Done"
+                    "message" => "Comment added successfully"
                 ]);
             }
 

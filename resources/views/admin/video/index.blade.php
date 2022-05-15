@@ -19,12 +19,15 @@
                                 <div class="form-group mb-3">
                                     <label for="title" id="title_label" class="form-label title_label">Video Title</label>
                                     <input class="form-control title" type="text" id="title" name="title" placeholder="Video Title"  onchange="clearError(this)">
-                                    <span class="text-danger title_error"></span>
+                                    <span class="text-danger title_error" id="title_error"></span>
                                 </div>
 
                                 <div class="form-group mb-3">
-                                    <label for="category" class="form-label">Select Category</label>
-                                    <select class="form-select" name="category_id" id="categorySelect"></select>
+                                    <label for="category" class="form-label category_label" id="category_label">Select Category</label>
+                                    <select  class="form-select category" name="category_id" id="category" onchange="clearError(this)">
+                                        <option value="">Select category</option>
+                                    </select>
+                                    <span class="text-danger category_error" id="category_error"></span>
                                 </div>
 
                                 <div id="videoPreview"></div>
@@ -36,7 +39,7 @@
 
                                 <input type="hidden" id="video" name="video">
 
-                                <button type="submit" class="btn btn-primary my-3">Save</button>
+                                <button type="submit" id="submit-button" class="btn btn-primary my-3">Save</button>
                                 <button type="button" class="btn btn-outline-secondary my-3" data-bs-dismiss="modal">Cancel</button>
                             </form>
                         </div>
@@ -102,6 +105,7 @@
                 },
                 data: formData,
                 beforeSend: function () {
+                    $('#submit-button').prop('disabled', true);
                     $('#preloader').removeClass('d-none');
                 },
                 success: function (res) {
@@ -121,6 +125,7 @@
                     console.log(jqXhr)
                 },
                 complete: function (xhr, status) {
+                    $('#submit-button').prop('disabled', false);
                     $('#preloader').addClass('d-none');
                 }
             });
@@ -137,7 +142,7 @@
                     if(response.status === 'success' && response.data.length > 0){
 
                         response.data.forEach(item=>{
-                            $('#categorySelect').append(`
+                            $('#category').append(`
                                 <option value="${item.id}">${item.name}</option>
                             `)
                         })
@@ -168,6 +173,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                 },
                 beforeSend: function () {
+                    $('#submit-button').prop('disabled', true);
                     $('#preloader').removeClass('d-none');
                 },
                 success: function (response) {
@@ -193,6 +199,7 @@
                     }
                 },
                 complete: function (xhr, status) {
+                    $('#submit-button').prop('disabled', false);
                     $('#preloader').addClass('d-none');
                 }
             });
@@ -287,12 +294,12 @@
                                     </video>
                                 </div>
 
-                                <input id="video-uploader" type="file" hidden onchange="editVideoUploader(event)">
-                                <label for="video-uploader" class="cursor-pointer btn border form-control">Upload a Video</label>
+                                <input id="edit_video-uploader" type="file" hidden onchange="editVideoUploader(event)">
+                                <label for="edit_video-uploader" class="cursor-pointer btn border form-control">Upload a Video</label>
 
                                 <input type="hidden" value='${response.data.video}' id="editVideo" name="video">
 
-                                <button type="submit" class="btn btn-primary my-3">Save</button>
+                                <button type="submit" id='update-button' class="btn btn-primary my-3">Update</button>
                                 <button type="button" data-bs-dismiss='modal' class="btn btn-outline-secondary my-3">Cancel</button>
                             </form>
                         `)
@@ -334,6 +341,7 @@
                                 headers: {
                                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                                 }, beforeSend: function () {
+                                    $('#submit-button').prop('disabled', true);
                                     $('#preloader').removeClass('d-none');
                                 },
                                 success: function (response) {
@@ -359,10 +367,57 @@
                                     }
                                 },
                                 complete: function (xhr, status) {
+                                    $('#submit-button').prop('disabled', false);
                                     $('#preloader').addClass('d-none');
                                 }
                             });
                         })
+
+
+                        editVideoUploader =function  (event) {
+                            event.preventDefault();
+                            let file = event.target.files[0];
+                            let formData = new FormData()
+                            formData.append('file', file);
+                            formData.append('folder', 'video');
+
+                            let showURL = window.origin + '/api/image-uploader';
+                            $.ajax({
+                                url: showURL,
+                                type: 'POST',
+                                dataType: "json",
+                                processData: false,
+                                contentType: false,
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                                },
+                                data: formData,
+                                beforeSend: function () {
+                                    $('#update-button').prop('disabled', true);
+                                    $('#preloader').removeClass('d-none');
+                                },
+                                success: function (res) {
+                                    if(res.status === 'success'){
+                                        $('#editVideoPreview').html('')
+                                        toastr.success(res.message)
+                                        $('#editVideo').val(res.data)
+
+                                        $('#editVideoPreview').append(`
+                                            <video style="width: 100%; height: 200px" controls>
+                                                <source src="${res.data}" type="video/mp4">
+                                                Your browser does not support the video tag.
+                                            </video>
+                                        `)
+                                    }
+                                }, error: function (jqXhr, ajaxOptions, thrownError) {
+                                    console.log(jqXhr)
+                                },
+                                complete: function (xhr, status) {
+                                    $('#update-button').prop('disabled', false);
+                                    $('#preloader').addClass('d-none');
+                                }
+                            });
+                        }
                     }
 
 
@@ -373,48 +428,7 @@
         }
 
 
-        function editVideoUploader (event) {
-            event.preventDefault();
-            let file = event.target.files[0];
-            let formData = new FormData()
-            formData.append('file', file);
-            formData.append('folder', 'video');
 
-            let showURL = window.origin + '/api/image-uploader';
-            $.ajax({
-                url: showURL,
-                type: 'POST',
-                dataType: "json",
-                processData: false,
-                contentType: false,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                },
-                data: formData,
-                beforeSend: function () {
-                    $('#preloader').removeClass('d-none');
-                },
-                success: function (res) {
-                    if(res.status === 'success'){
-                        toastr.success(res.message)
-                        $('#editVideo').val(res.data)
-                        $('#editVideoPreview').html('')
-                        $('#editVideoPreview').append(`
-                            <video style="width: 100%; height: 200px" controls>
-                                <source src="${res.data}" type="video/mp4">
-                                Your browser does not support the video tag.
-                            </video>
-                        `)
-
-                    }
-                }, error: function (jqXhr, ajaxOptions, thrownError) {
-                    console.log(jqXhr)
-                },
-                complete: function (xhr, status) {
-                    $('#preloader').addClass('d-none');
-                }
-            });
-        }
 
         function clearError(input) {
             $('#' + input.id).removeClass('is-invalid');

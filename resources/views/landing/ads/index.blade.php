@@ -16,7 +16,8 @@
                                     </div>
                                     <div class="col-lg-12">
                                         <select name="preference" class="form-select mb-3">
-                                            <option value="both" selected>Who Hosts and/or Visits</option>
+                                            <option value="" selected>Select preference</option>
+                                            <option value="both">Who Hosts and/or Visits</option>
                                             <option value="host">Who Hosts</option>
                                             <option value="visitor">Who Visits</option>
                                         </select>
@@ -35,7 +36,7 @@
 
                                     <div class="col-lg-12">
                                         <select name="member" class="form-select mb-3">
-                                            <option value="closest" selected>The Closest</option>
+                                            <option value="" selected>The Closest</option>
                                             <option value="online">Online Members</option>
                                             <option value="recent">Recent Members</option>
                                         </select>
@@ -145,7 +146,7 @@
                                 </label>
                             </div>
 
-                            <button type="submit" class="btn btn-primary my-3">Save</button>
+                            <button type="submit" id="submit-button" class="btn btn-primary my-3">Save</button>
                             <button type="button" data-bs-dismiss="modal" class="btn btn-outline-secondary my-3">
                                 Cancel
                             </button>
@@ -215,6 +216,7 @@
                 },
                 data: formData,
                 beforeSend: function () {
+                    $('#submit-button').prop('disabled', true);
                     $('#preloader').removeClass('d-none');
                 },
 
@@ -231,6 +233,7 @@
                     console.log(jqXhr)
                 },
                 complete: function (xhr, status) {
+                    $('#submit-button').prop('disabled', false);
                     $('#preloader').addClass('d-none');
                 }
             });
@@ -255,6 +258,7 @@
                 },
                 data: formData,
                 beforeSend: function () {
+                    $('#update-button').prop('disabled', true);
                     $('#preloader').removeClass('d-none');
                 },
 
@@ -271,6 +275,7 @@
                     console.log(jqXhr)
                 },
                 complete: function (xhr, status) {
+                    $('#update-button').prop('disabled', false);
                     $('#preloader').addClass('d-none');
                 }
             });
@@ -294,6 +299,10 @@
                     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
                     "Authorization": token,
                 },
+                beforeSend: function () {
+                    $('#submit-button').prop('disabled', true);
+                    $('#preloader').removeClass('d-none');
+                },
                 success: function (response) {
                     toastr.success(response.message)
                     location.reload()
@@ -311,6 +320,10 @@
                             });
                         }
                     }
+                },
+                complete: function (xhr, status) {
+                    $('#submit-button').prop('disabled', false);
+                    $('#preloader').addClass('d-none');
                 }
             });
         })
@@ -340,7 +353,13 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                     'Authorization': token
-                }, success: function (response) {
+                }
+                ,
+                beforeSend: function () {
+                $('#preloader').removeClass('d-none');
+            },
+
+                success: function (response) {
                     // console.log(response)
                     if(response.status === 'success' && response.data.length > 0){
                         $('#placeList').html('')
@@ -356,6 +375,9 @@
 
                 }, error: function (xhr, resp, text) {
                     console.log(xhr)
+                },
+                complete: function (xhr, status) {
+                    $('#preloader').addClass('d-none');
                 }
             });
         })
@@ -547,7 +569,7 @@
                                                         </label>
                                                     </div>
 
-                                                    <button type="submit" class="btn btn-primary my-3">Update</button>
+                                                    <button type="submit" id='update-button' class="btn btn-primary my-3">Update</button>
                                                     <button type="button" data-bs-dismiss="modal" class="btn btn-outline-secondary my-3">
                                                         Cancel
                                                     </button>
@@ -582,6 +604,10 @@
                             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
                             "Authorization": token,
                         },
+                        beforeSend: function () {
+                        $('#update-button').prop('disabled', true);
+                        $('#preloader').removeClass('d-none');
+                    },
                         success: function (response) {
 
                             toastr.success(response.message)
@@ -590,6 +616,10 @@
                         },
                         error: function (xhr, resp, text) {
                             console.log(xhr);
+                        },
+                        complete: function (xhr, status) {
+                            $('#upload-button').prop('disabled', false);
+                            $('#preloader').addClass('d-none');
                         }
                     });
                 })

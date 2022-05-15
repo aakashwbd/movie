@@ -114,6 +114,9 @@ Route::prefix('admin')->group(function () {
     Route::post('invite-code/store', [\App\Http\Controllers\InviteCodeController::class, 'store']);
     Route::get('invite-code/get-all', [\App\Http\Controllers\InviteCodeController::class, 'index']);
     Route::get('invite-code/get-by-user', [\App\Http\Controllers\InviteCodeController::class, 'getByUser']);
+    Route::get('invite-code/{id}', [\App\Http\Controllers\InviteCodeController::class, 'getSingleCode']);
+    Route::patch('invite-code/{id}', [\App\Http\Controllers\InviteCodeController::class, 'update']);
+    Route::delete('invite-code/{id}', [\App\Http\Controllers\InviteCodeController::class, 'delete']);
 
     Route::post('notification/store', [\App\Http\Controllers\NotificationController::class, 'store']);
     Route::get('notification/get-all', [\App\Http\Controllers\NotificationController::class, 'index']);

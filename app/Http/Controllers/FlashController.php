@@ -51,8 +51,6 @@ class FlashController extends Controller
 
     public function sendFlash (Request $request){
 
-
-
         try {
             $flash = new UserFlash();
             $flash->sender_id = auth()->id();
@@ -62,7 +60,7 @@ class FlashController extends Controller
             if ($flash->save()){
                 return response([
                     "status" => "success",
-                    "message" => "Flash information has been updated."
+                    "message" => "User flashed."
                 ]);
             }
 
@@ -133,7 +131,7 @@ class FlashController extends Controller
     public function allList (Request $request){
 
         try {
-            $flash = Flash::query()->get();
+            $flash = Flash::latest()->get();
 
             if ($request->ajax()) {
                 return Datatables::of($flash)
@@ -175,7 +173,7 @@ class FlashController extends Controller
                 if ($flashData->update()) {
                     return response([
                         "status" => "success",
-                        "message" => "Flash Update Successfully Complete"
+                        "message" => "Flash information has been updated."
                     ]);
                 }
             }

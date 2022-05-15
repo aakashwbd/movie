@@ -152,17 +152,16 @@ class AdController extends Controller
 
     public function search (Request $request){
         try {
-//            dd($request->all());
+
 //                $ad = Ad::with('user')->where('address', 'LIKE', '%'.$request->address.'%')
 //                    ->whereHas('user', function ($query) use($request){
 //                        $query->whereBetween('age', [$request->minage, $request->maxage]);
 //                    })
 //                    ->get();
-//               dd($request->all());
-               $target    = Ad::leftJoin('users', 'users.id', 'ads.user_id');
-//               dd($target);
 
-               //begin filtering
+
+               $target    = Ad::leftJoin('users', 'users.id', 'ads.user_id');
+
                $address = $request->address;
                if (!empty($address)) {
                    $target->where(function ($query) use ($address) {
@@ -208,7 +207,7 @@ class AdController extends Controller
                }else if($request->member === 'recent'){
                    $ad = Ad::with('user')
                        ->whereHas('user', function ($query) {
-                           $query->limit(5);
+                           $query->limit(10);
                        })
                        ->get();
                    return response([
@@ -220,13 +219,13 @@ class AdController extends Controller
 
                //end filtering
 
-//               $target = $target->with(['user'])
-//                   ->get();
-//
-//                return response([
-//                    "status" => "success",
-//                    "data" => $target
-//                ]);
+               $target = $target->with(['user'])
+                   ->get();
+
+                return response([
+                    "status" => "success",
+                    "data" => $target
+                ]);
         }catch (\Exception $e){
             return response([
                 'status' => 'serverError',

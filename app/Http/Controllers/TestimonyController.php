@@ -68,6 +68,7 @@ class TestimonyController extends Controller
         }
 
     }
+
     public function getAll ($id){
         try {
             $testimony= Testimony::with('user')
@@ -87,4 +88,25 @@ class TestimonyController extends Controller
         }
 
     }
+    public function fetchAll ($id){
+        try {
+            $testimony= Testimony::with('user')
+                ->get();
+
+            if ($testimony){
+                return response([
+                    "status" => "success",
+                    "data" => $testimony
+                ]);
+            }
+        }catch (\Exception $e){
+            return response([
+                'status' => 'serverError',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+
+    }
+
+
 }

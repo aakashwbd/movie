@@ -25,7 +25,7 @@
                             <span class="text-danger password_error" id="password_error"></span>
                         </div>
 
-                        <button type="submit" class="btn btn-primary text-capitalize mb-3 form-control rounded-0 py-2">
+                        <button type="submit" id="submit-button" class="btn btn-primary text-capitalize mb-3 form-control rounded-0 py-2">
                             login
                         </button>
                     </form>
@@ -68,6 +68,8 @@
                 data: formData,
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                }, beforeSend: function () {
+                    $('#submit-button').prop('disabled', true);
                 },
                 success: function (response) {
                     if(response.status === 'success'){
@@ -88,6 +90,9 @@
                             });
                         }
                     }
+                },
+                complete: function (xhr, status) {
+                    $('#submit-button').prop('disabled', false);
                 }
             });
         })

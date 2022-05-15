@@ -126,7 +126,7 @@ class BlogController extends Controller
     public function show (){
 
         try {
-            $blog =  Blog::all();
+            $blog =  Blog::latest()->get();
             if ($blog){
                 return response([
                                     "status" => "success",

@@ -15,6 +15,10 @@
 <script src="{{asset('js/main.js')}}"></script>
 
 <script>
+
+
+
+
     let constant = {
         token: localStorage.getItem('adminAccess'),
         currentPath: window.location.pathname,

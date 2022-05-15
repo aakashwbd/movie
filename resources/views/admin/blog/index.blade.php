@@ -55,7 +55,7 @@
                                 <span id="description_error" class="text-danger description_error"></span>
                             </div>
 
-                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="submit" id="submit-button" class="btn btn-primary">Save</button>
                             <button type="button" data-bs-dismiss="modal" class="btn btn-outline-secondary">Cancel
                             </button>
 
@@ -113,6 +113,7 @@
                 data: formData,
 
                 beforeSend: function () {
+                    $('#submit-button').prop('disabled', true);
                     $('#preloader').removeClass('d-none');
                 },
                 success: function (res) {
@@ -127,6 +128,7 @@
                 }, error: function (jqXhr, ajaxOptions, thrownError) {
                     console.log(jqXhr)
                 }, complete: function (xhr, status) {
+                    $('#submit-button').prop('disabled', false);
                     $('#preloader').addClass('d-none');
                 }
             });
@@ -152,6 +154,7 @@
                 data: formData,
 
                 beforeSend: function () {
+                    $('#update-button').prop('disabled', true);
                     $('#preloader').removeClass('d-none');
                 },
                 success: function (res) {
@@ -164,6 +167,7 @@
                 }, error: function (jqXhr, ajaxOptions, thrownError) {
                     console.log(jqXhr)
                 }, complete: function (xhr, status) {
+                    $('#update-button').prop('disabled', false);
                     $('#preloader').addClass('d-none');
                 }
             });
@@ -216,6 +220,9 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                 },
+                beforeSend: function () {
+                    $('#preloader').removeClass('d-none');
+                },
                 success: function (response) {
                     if (response.status === 'success') {
                         let image = "{{asset('images/Default_Image_Thumbnail.png')}}"
@@ -254,7 +261,7 @@
                                     <textarea name="description" id="description" class="form-control" placeholder="Blog Description">${response.data.description}</textarea>
                                 </div>
 
-                                <button type="submit" class="btn btn-primary">Update</button>
+                                <button type="submit" id='update-button' class="btn btn-primary">Update</button>
                                 <button type="button" data-bs-dismiss="modal" class="btn btn-outline-secondary my-2">Cancel</button>
 
                             </form>
@@ -279,6 +286,7 @@
                                 },
 
                                 beforeSend: function () {
+                                    $('#update-button').prop('disabled', true);
                                     $('#preloader').removeClass('d-none');
                                 },
                                 success: function (response) {
@@ -293,6 +301,7 @@
                                     console.log(xhr && xhr.responseJSON)
                                 },
                                 complete: function (xhr, status) {
+                                    $('#update-button').prop('disabled', false);
                                     $('#preloader').addClass('d-none');
                                 }
 
@@ -327,15 +336,12 @@
                     'Authorization': token
                 },
                 beforeSend: function () {
+                    $('#submit-button').prop('disabled', true);
                     $('#preloader').removeClass('d-none');
                 },
                 success: function (response) {
                     toastr.success(response.message)
-
-                    setTimeout(function () {
-                        location.reload();
-                    }, 1000);
-
+                    location.reload();
                 }, error: function (xhr, resp, text) {
 
                     if (xhr && xhr.responseJSON) {
@@ -352,6 +358,7 @@
                     }
                 },
                 complete: function (xhr, status) {
+                    $('#submit-button').prop('disabled', false);
                     $('#preloader').addClass('d-none');
                 }
             });
@@ -364,6 +371,9 @@
                 url: window.origin + '/api/admin/blog/get-all',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                },
+                beforeSend: function () {
+                    $('#preloader').removeClass('d-none');
                 },
                 success: function (response) {
                     if (response.status === 'success' && response.data.length > 0) {
@@ -397,6 +407,9 @@
                     }
                 }, error: function (xhr, resp, text) {
                     console.log(xhr && xhr.responseJSON)
+                },
+                complete: function (xhr, status) {
+                    $('#preloader').addClass('d-none');
                 }
             });
         })

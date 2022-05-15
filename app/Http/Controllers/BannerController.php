@@ -10,7 +10,7 @@ class BannerController extends Controller
 {
     public function index (Request $request){
         try {
-            $banner = Banner::all();
+            $banner = Banner::latest()->get();
             return response([
                 "status" => "success",
                 "data" => $banner
@@ -59,7 +59,7 @@ class BannerController extends Controller
             if ($banner){
                 return response([
                     "status" => "success",
-                    "message" => "Banner information has been updated."
+                    "message" => "Banner information has been deleted."
                 ]);
             }
         }catch (\Exception $e){
@@ -99,7 +99,7 @@ class BannerController extends Controller
             if ($banner->update()){
                 return response([
                     "status" => "success",
-                    "message" => "Banner Image Successfully Updated"
+                    "message" => "Banner information has been updated."
                 ]);
             }
         }catch (\Exception $e){

@@ -64,12 +64,18 @@
                     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
                 },
                 data: form_data,
+                beforeSend: function () {
+                    $('#preloader').removeClass('d-none');
+                },
                 success: function (res) {
                     toastr.success(res.message)
                     location.reload()
                 },
                 error: function (jqXhr, ajaxOptions, thrownError) {
                     console.log(jqXhr);
+                },
+                complete: function (xhr, status) {
+                    $('#preloader').addClass('d-none');
                 }
             });
         }
@@ -88,12 +94,18 @@
                     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
                 },
                 data: form_data,
+                beforeSend: function () {
+                    $('#preloader').removeClass('d-none');
+                },
                 success: function (res) {
                     toastr.success(res.message)
                     location.reload()
                 },
                 error: function (jqXhr, ajaxOptions, thrownError) {
                     console.log(jqXhr);
+                },
+                complete: function (xhr, status) {
+                    $('#preloader').addClass('d-none');
                 }
             });
         }
