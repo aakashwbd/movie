@@ -16,10 +16,11 @@ class MessengerController extends Controller
     public function store(Request $request)
     {
 
+//        dd($request->all());
         try {
 
             $validator = Validator::make($request->all(), [
-                "messages" => "required",
+                "message" => "required",
             ]);
 
             if ($validator->fails()) {

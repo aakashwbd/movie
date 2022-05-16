@@ -11,7 +11,10 @@
             <img id="navLogo" class="logo" src="{{asset('images\default.png')}}" alt="logo">
         </a>
 
-        <span class="iconify cursor-pointer nav-toggler" id="navbar-toggler-btn" data-icon="gg:menu" data-width="25" data-height="25"></span>
+        <button id="navbar-toggler-btn" class="btn btn-outline-secondary">
+            <span class="iconify cursor-pointer nav-toggler" id="" data-icon="gg:menu" data-width="25" data-height="25"></span>
+        </button>
+
 
         <ul id="siteNav-list" class="list">
             <li class="list-item">

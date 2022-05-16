@@ -1082,18 +1082,23 @@ messenger = function (id, userid) {
             }
             });
 
-            const options = {
-                method: "post",
-                url: "/send-message",
-                data: {
-                    from_user_id: currentUser.id,
-                    to_user_id: to_user_id.value,
-                    message: input.value,
-                },
-            };
 
 
-            axios(options);
+            if(input.value){
+                const options = {
+                    method: "post",
+                    url: "/send-message",
+                    data: {
+                        from_user_id: currentUser.id,
+                        to_user_id: to_user_id.value,
+                        message: input.value ,
+                    },
+                };
+
+                axios(options);
+            }
+
+
         });
 
         window.Echo.channel("chat").listen(".message", (e) => {
