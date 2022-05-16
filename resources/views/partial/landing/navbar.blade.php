@@ -11,7 +11,7 @@
             <img id="navLogo" class="logo" src="{{asset('images\default.png')}}" alt="logo">
         </a>
 
-        <button id="navbar-toggler-btn" class="btn btn-outline-secondary">
+        <button id="navbar-toggler-btn" class="btn btn-outline-secondary nav-toggler">
             <span class="iconify cursor-pointer nav-toggler" id="" data-icon="gg:menu" data-width="25" data-height="25"></span>
         </button>
 
