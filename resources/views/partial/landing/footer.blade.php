@@ -188,31 +188,31 @@
                 <div class="text-center mb-3">
                     <span>You have a question, a problem, a suggestion ... contact us</span>
                 </div>
-                <form action="">
+                <form action="{{url('/api/contact-us')}}" id="contactForm">
                     <div class="row">
                         <div class="col-lg-6 col-12 mb-3">
                             <div class="form-group">
-                                <input type="email" class="form-control" placeholder="email">
-                                <span class="text-danger"></span>
+                                <input type="email" name="email" id="email"  class="form-control email" placeholder="email"  onchange="clearError(this)">
+                                <span class="text-danger email_error" id="email_error"></span>
                             </div>
                         </div>
 
                         <div class="col-lg-6 col-12 mb-3">
                             <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Object">
-                                <span class="text-danger"></span>
+                                <input type="text" name="subject" id="subject" class="subject form-control" placeholder="Subject"  onchange="clearError(this)">
+                                <span class="text-danger subject_error" id="subject_error"></span>
                             </div>
                         </div>
 
                         <div class="col-lg-12 col-12 mb-3">
                             <div class="form-group">
-                                <textarea class="form-control" placeholder="Message"></textarea>
-                                <span class="text-danger"></span>
+                                <textarea name="message" id="message"  class="form-control message" placeholder="Message" onchange="clearError(this)"></textarea>
+                                <span class="text-danger message_error" id="message_error"></span>
                             </div>
                         </div>
 
                         <div class="col-lg-6 col-12 offset-lg-3">
-                            <button class="btn btn-primary form-control">Send</button>
+                            <button id="contact-submit-button" class="btn btn-primary form-control">Send</button>
                         </div>
                     </div>
                 </form>
@@ -340,9 +340,8 @@
                               onchange="clearError(this)"></textarea>
                     <span id="message_error" class="text-danger message_error"></span>
 
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-primary form-control w-50 ">Alert</button>
-                    </div>
+                    <button type="submit" id="alert-submit-button" class="btn btn-primary">Alert</button>
+                    <button type="button" data-bs-dismiss="modal" class="btn btn-outline-secondary">Cancel</button>
                 </form>
 
 
@@ -374,9 +373,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.serializeJSON/3.2.1/jquery.serializejson.min.js"></script>
 <script src="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.js"></script>
-{{--<script src="https://cdn.jsdelivr.net/npm/cdbootstrap/js/cdb.min.js"></script>--}}
+<script src="https://cdn.jsdelivr.net/npm/cdbootstrap/js/cdb.min.js"></script>
 
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script src="{{asset('js/app.js')}}"></script>
 <script src="{{asset('js/main.js')}}"></script>
 <script src="{{asset('js/languages.js')}}"></script>
@@ -418,6 +418,8 @@
             },
 
             beforeSend: function () {
+                $('#alert-submit-button').prop('disabled', true);
+
                 $('#preloader').removeClass('d-none');
             },
             success: function (response) {
@@ -441,6 +443,58 @@
             },
             complete: function (xhr, status) {
                 $('#preloader').addClass('d-none');
+                $('#alert-submit-button').prop('disabled', false);
+            }
+
+        });
+    })
+
+    $('#contactForm').submit(function (e) {
+        e.preventDefault();
+        let token = localStorage.getItem("accessToken");
+        let form = $(this);
+        let form_data = JSON.stringify(form.serializeJSON());
+        let formData = JSON.parse(form_data)
+
+        let url = form.attr('action');
+
+
+        $.ajax({
+            type: "post",
+            url: url,
+            data: formData,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                Authorization: token,
+            },
+
+            beforeSend: function () {
+                $('#contact-submit-button').prop('disabled', true);
+
+                $('#preloader').removeClass('d-none');
+            },
+            success: function (response) {
+
+                toastr.success(response.message)
+                location.reload();
+            }, error: function (xhr, resp, text) {
+
+                if (xhr && xhr.responseJSON) {
+                    let response = xhr.responseJSON;
+                    if (response.status && response.status === "validate_error") {
+                        $.each(response.message, function (index, message) {
+                            $("." + message.field).addClass("is-invalid");
+                            $("." + message.field + "_label").addClass(
+                                "text-danger"
+                            );
+                            $("." + message.field + "_error").html(message.error);
+                        });
+                    }
+                }
+            },
+            complete: function (xhr, status) {
+                $('#preloader').addClass('d-none');
+                $('#contact-submit-button').prop('disabled', false);
             }
 
         });

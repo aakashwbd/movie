@@ -328,7 +328,8 @@
                 },
                 success: function (response) {
                     toastr.success(response.message)
-                    // location.reload()
+                    // $('#adminModal').modal('hide')
+                    location.reload()
                 },
                 error: function (xhr, resp, text) {
                     if (xhr && xhr.responseJSON) {

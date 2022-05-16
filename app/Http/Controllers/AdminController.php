@@ -72,13 +72,14 @@
 
         public function update(Request $request,$id) {
 
-
             try {
                 $data = User::where('id', $id)->first();
 
+                $data->name = $request->name ?? $data->name;
+                $data->user_role_id = $request->user_role_id ?? $data->user_role_id;
+
                 if($data->update()){
-                    $data->name = $request->name ?? $data->name;
-                    $data->user_role_id = $request->user_role_id ?? $data->user_role_id;
+
 
                     return response([
                         "status" => "success",

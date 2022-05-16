@@ -656,7 +656,7 @@ userList = function (res) {
 
                     <input type="text" class="form-control" placeholder="write your message...." id="message_input${item.id}">
 
-                    <button class="btn" type="submit">
+                    <button class="btn" type="submit" id="message-submit-button${item.id}">
                         <span class="iconify text-primary" data-icon="bi:send-fill" data-width="20" data-height="20"></span>
                     </button>
                 </form>
@@ -750,7 +750,7 @@ userList = function (res) {
 
                                     <ul class="dropdown-menu dropdown-menu-end p-2">
                                         <li class="dropdown-item">
-                                            <button onclick="favouriteHandler(${
+                                            <button id="favourite-submit-button${item.id}" onclick="favouriteHandler(${
             item.id
         })" class="btn form-control text-capitalize">
                                                 <span
@@ -794,7 +794,7 @@ userList = function (res) {
                                         <li class="dropdown-divider"></li>
 
                                         <li class="dropdown-item">
-                                            <button onclick="blockHandler(${
+                                            <button id="block-submit-button${item.id}" onclick="blockHandler(${
             item.id
         })" class="btn form-control text-capitalize">
                                     <span class="iconify" data-icon="akar-icons:block" data-width="20"
@@ -875,6 +875,10 @@ favouriteHandler = function (userId) {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
                 Authorization: token,
             },
+            beforeSend: function () {
+                $('#favourite-submit-button'+userId).prop('disabled', true);
+                $('#preloader').removeClass('d-none');
+            },
             success: function (res) {
                 toastr.success(res.message);
                 location.reload()
@@ -882,6 +886,11 @@ favouriteHandler = function (userId) {
             error: function (jqXhr, ajaxOptions, thrownError) {
                 console.log(jqXhr);
             },
+            complete: function (xhr, status) {
+
+            $('#preloader').addClass('d-none');
+            $('#favourite-submit-button'+userId).prop('disabled', false);
+        }
         });
     } else {
         $("#loginModal").modal("show");
@@ -910,13 +919,22 @@ blockHandler = function (userId) {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
                 Authorization: token,
             },
+            beforeSend: function () {
+                $('#block-submit-button'+userId).prop('disabled', true);
+                $('#preloader').removeClass('d-none');
+            },
             success: function (res) {
                 toastr.success(res.message);
                 location.reload()
             },
             error: function (jqXhr, ajaxOptions, thrownError) {
                 console.log(jqXhr);
-            }
+            },
+            complete: function (xhr, status) {
+
+            $('#preloader').addClass('d-none');
+            $('#block-submit-button'+userId).prop('disabled', false);
+        }
         });
     } else {
         $("#loginModal").modal("show");
@@ -1046,12 +1064,22 @@ messenger = function (id, userid) {
                     ),
                     Authorization: token,
                 },
+                beforeSend: function () {
+                    $('#message-submit-button'+userid).prop('disabled', true);
+                    $('#preloader').removeClass('d-none');
+                },
                 success: function (res) {
                     input.value = "";
                 },
                 error: function (jqXhr, ajaxOptions, thrownError) {
                     console.log(jqXhr);
                 },
+
+                complete: function (xhr, status) {
+
+                $('#preloader').addClass('d-none');
+                $('#message-submit-button'+userid).prop('disabled', false);
+            }
             });
 
             const options = {

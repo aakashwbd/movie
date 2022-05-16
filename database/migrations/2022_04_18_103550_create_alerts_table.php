@@ -15,10 +15,10 @@ return new class extends Migration
     {
         Schema::create('alerts', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('user_id');
-            $table->bigInteger('reported_user_id');
-            $table->json('reports');
-            $table->longText('message');
+            $table->bigInteger('user_id')->nullable();
+            $table->bigInteger('reported_user_id')->nullable();
+            $table->json('reports')->nullable();
+            $table->longText('message')->nullable();
             $table->timestamps();
         });
     }

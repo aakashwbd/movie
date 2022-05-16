@@ -11,7 +11,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.serializeJSON/3.2.1/jquery.serializejson.min.js"></script>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-{{--<script src="{{asset('js/app.js')}}"></script>--}}
+<script src="{{asset('js/app.js')}}"></script>
 <script src="{{asset('js/main.js')}}"></script>
 
 <script>

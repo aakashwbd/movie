@@ -6,7 +6,9 @@
                 <div class="col-lg-4 col-sm-12 order-sm-2 order-lg-1 mb-3">
                     <div class="row">
                         <div class="col-lg-10 col-12 offset-lg-1">
-                            <button class="btn btn-primary mb-3" onclick="showLoginForm('placeButton')" id="advertisementButton">Place your advertisement</button>
+                            <button class="btn btn-primary mb-3" onclick="showLoginForm('placeButton')"
+                                    id="advertisementButton">Place your advertisement
+                            </button>
                             <h6 class="text-white text-capitalize">filter ads:</h6>
                             <form action="{{url('/api/news/search')}}" id="newsSearchForm">
                                 <div class="row">
@@ -42,7 +44,9 @@
                                         </select>
                                     </div>
                                 </div>
-                                <button class="btn btn-primary form-control mb-3">search</button>
+                                <button id="place-search-submit-button" class="btn btn-primary form-control mb-3">
+                                    search
+                                </button>
                             </form>
                         </div>
                     </div>
@@ -56,11 +60,12 @@
             </div>
         </div>
 
-        <div id="adsResultDiv" class="d-none py-2 my-5 bg-primary text-white d-flex align-items-center justify-content-center">
-{{--                <span class="iconify me-5 cursor-pointer" data-icon="ant-design:reload-outlined" data-width="20"--}}
-{{--                      data-height="20"></span>--}}
+        <div id="adsResultDiv"
+             class="d-none py-2 my-5 bg-primary text-white d-flex align-items-center justify-content-center">
+            {{--                <span class="iconify me-5 cursor-pointer" data-icon="ant-design:reload-outlined" data-width="20"--}}
+            {{--                      data-height="20"></span>--}}
             <span id="adSearchlistheading"></span>
-{{--            <span class="iconify ms-5 cursor-pointer" data-icon="ep:close" data-width="20" data-height="20"></span>--}}
+            {{--            <span class="iconify ms-5 cursor-pointer" data-icon="ep:close" data-width="20" data-height="20"></span>--}}
         </div>
         <div class="row" id="placeList">
 
@@ -186,8 +191,9 @@
 @push('custom-js')
     <script>
         let token = localStorage.getItem('accessToken')
-        function showLoginForm(buttonName){
-            if(buttonName){
+
+        function showLoginForm(buttonName) {
+            if (buttonName) {
                 if (token) {
                     $('#placeModal').modal('show')
                 } else {
@@ -356,20 +362,22 @@
                 }
                 ,
                 beforeSend: function () {
-                $('#preloader').removeClass('d-none');
-            },
+                    $('#preloader').removeClass('d-none');
+                    $('#place-search-submit-button').prop('disabled', true);
+
+                },
 
                 success: function (response) {
                     // console.log(response)
-                    if(response.status === 'success' && response.data.length > 0){
+                    if (response.status === 'success' && response.data.length > 0) {
                         $('#placeList').html('')
-                        $('#adSearchlistheading').text('Result : from ' +  formData.minage + ' years old to ' +  formData.maxage + ' years old - who ' +  ' - in ' + formData.type + " "+  formData.address + ' and around ')
+                        $('#adSearchlistheading').text('Result : from ' + formData.minage + ' years old to ' + formData.maxage + ' years old - who ' + ' - in ' + formData.type + " " + formData.address + ' and around ')
                         $('#adsResultDiv').removeClass('d-none')
                         placeItem(response)
 
-                    }else if(response.status === 'success' && response.data.length === 0){
+                    } else if (response.status === 'success' && response.data.length === 0) {
                         $('#placeList').html('')
-                        $('#adSearchlistheading').text('Result : from ' +  formData.min_age + ' years old to ' +  formData.max_age + ' years old - who ' +  ' - in ' + formData.preference + " "+  formData.address + ' and around ')
+                        $('#adSearchlistheading').text('Result : from ' + formData.min_age + ' years old to ' + formData.max_age + ' years old - who ' + ' - in ' + formData.preference + " " + formData.address + ' and around ')
                         $('#adsResultDiv').removeClass('d-none')
                     }
 
@@ -378,6 +386,7 @@
                 },
                 complete: function (xhr, status) {
                     $('#preloader').addClass('d-none');
+                    $('#place-search-submit-button').prop('disabled', false);
                 }
             });
         })
@@ -415,7 +424,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: window.origin + '/api/place/'+id,
+                        url: window.origin + '/api/place/' + id,
                         type: 'DELETE',
                         dataType: "json",
                         success: function (res) {
@@ -438,14 +447,13 @@
         }
 
 
-
-        function placeItem (res){
+        function placeItem(res) {
             let user = JSON.parse(localStorage.getItem('user'))
             res.data.forEach((item, index) => {
 
-                let image =window.origin + '/asset/image/place.jpg'
+                let image = window.origin + '/asset/image/place.jpg'
 
-                if(item.image){
+                if (item.image) {
                     image = item.image
                 }
 
@@ -504,19 +512,19 @@
                                                         <div class="d-flex align-items-center justify-content-center my-2">
 
                                                             <div class="form-check me-3">
-                                                                <input ${item.duration.month ? "checked": ""} class="form-check-input" type="radio" value="month" name="duration" id="monthEdit">
+                                                                <input ${item.duration.month ? "checked" : ""} class="form-check-input" type="radio" value="month" name="duration" id="monthEdit">
                                                                 <label class="form-check-label" for="month">1 month</label>
                                                             </div>
 
                                                             <div class="form-check me-3">
-                                                                <input ${item.duration.week ? "checked": ""} class="form-check-input" type="radio" value="week" name="duration"id="weekEdit">
+                                                                <input ${item.duration.week ? "checked" : ""} class="form-check-input" type="radio" value="week" name="duration"id="weekEdit">
                                                                 <label class="form-check-label" for="week">
                                                                     1 week
                                                                 </label>
                                                             </div>
 
                                                             <div class="form-check me-3">
-                                                                <input ${item.duration.hour ? "checked": ""} class="form-check-input" type="radio" value="hour" name="duration"
+                                                                <input ${item.duration.hour ? "checked" : ""} class="form-check-input" type="radio" value="hour" name="duration"
                                                                        id="hourEdit">
                                                                 <label class="form-check-label" for="hour">
                                                                     24 hours
@@ -605,9 +613,9 @@
                             "Authorization": token,
                         },
                         beforeSend: function () {
-                        $('#update-button').prop('disabled', true);
-                        $('#preloader').removeClass('d-none');
-                    },
+                            $('#update-button').prop('disabled', true);
+                            $('#preloader').removeClass('d-none');
+                        },
                         success: function (response) {
 
                             toastr.success(response.message)
@@ -625,80 +633,15 @@
                 })
 
 
-
-
             })
         }
 
         /**
          * Change the current page title
          * */
-        window.location.pathname === '/ads'? document.title = 'Advertisement' : ''
+        window.location.pathname === '/ads' ? document.title = 'Advertisement' : ''
 
 
     </script>
 @endpush
 
-{{--<div class="modal" id="editplaceModal${item.id}">--}}
-{{--    <div class="modal-dialog modal-dialog-centered">--}}
-{{--        <div class="modal-content">--}}
-{{--            <div class="modal-header border-bottom justify-content-center">--}}
-{{--                <h4>Update advertisement information</h4>--}}
-{{--            </div>--}}
-{{--            <div class="modal-body">--}}
-{{--                <form action="{{'/api/place/update'}}" id="editPlaceForm${item.id}">--}}
-{{--                    <input type='hidden' name='ad_id' value='${item.id}'/>--}}
-{{--                    <div class="text-center">--}}
-{{--                        <span>your ad will expired</span>--}}
-
-{{--                        <div class="d-flex align-items-center justify-content-center my-2">--}}
-{{--                            <div class="form-check me-3">--}}
-{{--                                <input class="form-check-input" type="radio" value="1 month" name="duration" id="month">--}}
-{{--                                <label class="form-check-label" for="month">--}}
-{{--                                    1 month--}}
-{{--                                </label>--}}
-{{--                            </div>--}}
-
-{{--                            <div class="form-check me-3">--}}
-{{--                                <input class="form-check-input" type="radio" value="1 week" name="duration" id="week">--}}
-{{--                                <label class="form-check-label" for="week">--}}
-{{--                                    1 week--}}
-{{--                                </label>--}}
-{{--                            </div>--}}
-
-{{--                            <div class="form-check me-3">--}}
-{{--                                <input class="form-check-input" type="radio" value="24 hour" name="duration" id="hour">--}}
-{{--                                <label class="form-check-label" for="hour">--}}
-{{--                                    24 hours--}}
-{{--                                </label>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-
-{{--                    <input type="text" value='${item.title}' name="title" class="form-control mb-3" placeholder="Message Title">--}}
-{{--                    <input type="text" value='${item.address}' name="address" class="form-control mb-3" placeholder="Location">--}}
-{{--                    <textarea name="description" placeholder="message" class="form-control mb-3">${item.description}</textarea>--}}
-
-{{--                    <div class="row">--}}
-{{--                        <div class="col-lg-6">--}}
-{{--                            <img class="avatar-sm me-3 d-none" id="placeImagePreview" src="" alt="">--}}
-{{--                            <input type="hidden" name="image" id="placeImageURL">--}}
-{{--                            <input type="file" id="file-uploader" hidden name="image" onchange="placeImgUpload(event)"/>--}}
-{{--                            <label for="file-uploader"--}}
-{{--                                   class="d-flex align-items-center cursor-pointer">--}}
-{{--                                                                <span class="iconify me-3" data-icon="fa-solid:camera" data-width="20"--}}
-{{--                                                                      data-height="20"></span>--}}
-{{--                                Upload Ad Image--}}
-{{--                            </label>--}}
-{{--                        </div>--}}
-
-{{--                        <div class="col-lg-6">--}}
-{{--                            <button type="submit" class="btn btn-primary">Submit</button>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                </form>--}}
-
-{{--            </div>--}}
-{{--        </div>--}}
-{{--    </div>--}}
-{{--</div>--}}

@@ -6,7 +6,7 @@
             <span class="text-white fw-bold">About Us</span>
         </div>
         <div class="bg-white p-2">
-            <article id="aboutUs"></article>
+            <article id="aboutUs">Please create an about at admin panel to view in your site</article>
 
         </div>
 

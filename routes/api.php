@@ -75,6 +75,7 @@ Route::post('send-messages', [\App\Http\Controllers\MessengerController::class, 
 Route::get('get-message/{id}', [\App\Http\Controllers\MessengerController::class, 'getMessage']);
 Route::get('get-message/all', [\App\Http\Controllers\MessengerController::class, 'getAllMessage']);
 Route::get('short-messages', [\App\Http\Controllers\MessengerController::class, 'getByPersonMessage']);
+Route::post('contact-us', [\App\Http\Controllers\ContactUsController::class, 'store']);
 
 
 //Route::get('/check', [AuthController::class, 'userOnlineStatus']);

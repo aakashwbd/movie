@@ -132,7 +132,7 @@
                                 <button type="button" onclick="cancleHandler()"
                                         class="btn btn-outline-secondary form-control text-capitalize me-2">cancel
                                 </button>
-                                <button type="submit" class="btn btn-primary form-control text-capitalize">save</button>
+                                <button type="submit" id="information-submit-button" class="btn btn-primary form-control text-capitalize">save</button>
                             </div>
                         </div>
                     </form>
@@ -742,7 +742,7 @@
                                 Make Private
                               </label>
                             </div>
-                            <button type="submit" class="btn btn-primary form-control p-1 rounded">save</button>
+                            <button type="submit" id='video-submit-button' class="btn btn-primary form-control p-1 rounded">save</button>
                         </form>
                     </div>
                 `)
@@ -843,6 +843,10 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                     'Authorization': accessToken
                 },
+                beforeSend: function () {
+                    $('#information-submit-button').prop('disabled', true);
+                    $('#preloader').removeClass('d-none');
+                },
                 success: function (response) {
                     toastr.success(response.message)
                     location.reload()
@@ -850,7 +854,12 @@
                     localStorage.setItem('user', JSON.stringify(response.user))
                 }, error: function (xhr, resp, text) {
                     console.log(resp)
+                },
+                complete: function (xhr, status) {
+                    $('#information-submit-button').prop('disabled', false);
+                    $('#preloader').addClass('d-none');
                 }
+
             });
         })
 
@@ -921,12 +930,21 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                     'Authorization': token
+                },  beforeSend: function () {
+                    $('#video-submit-button').prop('disabled', true);
+                    $('#preloader').removeClass('d-none');
                 },
+
                 success: function (response) {
                     toastr.success(response.message)
-                    // location.reload()
+                    location.reload()
                 }, error: function (xhr, resp, text) {
                     console.log(xhr)
+                }
+                ,
+                complete: function (xhr, status) {
+                    $('#video-submit-button').prop('disabled', false);
+                    $('#preloader').addClass('d-none');
                 }
             });
         }

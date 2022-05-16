@@ -16,28 +16,31 @@
 @endsection
 @push('custom-js')
     <script>
-
         /**
          * Change the current page title
          * */
-        window.location.pathname === '/maps'? document.title = 'Maps' : ''
+        window.location.pathname === '/maps' ? document.title = 'Maps' : ''
 
 
+        /**
+         * Get Logged user token
+         * */
         let token = localStorage.getItem('accessToken')
 
+        /**
+         * Element Select
+         * */
         let button = document.getElementById('locationButton')
-        let long = document.getElementById('long')
-        let lat = document.getElementById('lat')
-
-        // const data = [
-        //     {long: 12.55, lat: 55.70, title: 'hi'},
-        //     {long: 14.554729, lat: 56.70651, title: 'hello'},
-        //     {long: 16.554729, lat: 57.70651, title: 'bye'},
-        //     {long: 18.554729, lat: 58.70651, title: 'good bye'},
-        // ]
-
+        let longitude = document.getElementById('long')
+        let latitude = document.getElementById('lat')
+        /**
+         * Mapbox API
+         * */
         mapboxgl.accessToken = 'pk.eyJ1IjoiYWthc2gtd2JkIiwiYSI6ImNsMmVoZTRkNzAwcWIzYm52N2ljcWFkdmgifQ.09ZCXCfd8NEGvJoFqOzOyg';
 
+        /**
+         * By default, map showing center
+         * */
         const map = new mapboxgl.Map({
             container: 'map',
             style: 'mapbox://styles/mapbox/streets-v11',
@@ -45,49 +48,52 @@
             zoom: 5
         })
 
-        // data.forEach((item, i) => {
-        //     const popup = new mapboxgl.Popup({offset: 25}).setText(item.title);
-        //     new mapboxgl.Marker()
-        //         .setLngLat([item.long, item.lat])
-        //         .setPopup(popup)
-        //         .addTo(map);
-        // })
+        /**
+         * Mapbox find my location controller
+         * */
         var geolocate = new mapboxgl.GeolocateControl();
         map.addControl(geolocate);
 
-
-
-
+        /**
+         * After clicking find my location button getting long & lat
+         * */
         geolocate.on('geolocate', function (e) {
             var lon = e.coords.longitude;
-            var latt = e.coords.latitude
-           var position = [lon, lat];
+            var latt = e.coords.latitude;
 
-
-            if(token){
+            if (token) {
                 button.classList.remove('d-none')
             }
 
-            long.value =lon
-            lat.value =latt
+            longitude.value = lon
+            latitude.value = latt
+        });
 
+        /**
+         * After clicking anywhere in map getting long & lat
+         * */
+        map.on('click', function (e) {
+            let coordinates = e;
 
-            // positions(position)
+            if (token) {
+                button.classList.remove('d-none')
+            }
 
+            longitude.value = coordinates.lngLat.lng
+            latitude.value = coordinates.lngLat.lat
 
         });
 
-        // function positions (position){
-        //     return position
-        // }
-        //
-        button.addEventListener('click', ()=>{
+
+        /**
+         * Set pin location button
+         * */
+        button.addEventListener('click', () => {
             let user = JSON.parse(localStorage.getItem('user'))
             let formData = new FormData()
-            formData.append('long', long.value)
-            formData.append('lat', lat.value)
+            formData.append('long', longitude.value)
+            formData.append('lat', latitude.value)
             formData.append('name', user.username)
-            let token = localStorage.getItem('accessToken')
 
             $.ajax({
                 url: window.origin + '/api/set-location',
@@ -112,7 +118,10 @@
         })
 
 
-        $(document).ready(function (){
+        /**
+         * Get user long & lat
+         * */
+        $(document).ready(function () {
             $.ajax({
                 url: window.origin + '/api/get-location',
                 type: 'GET',
@@ -123,15 +132,19 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                 },
                 success: function (res) {
-                    console.log(res)
+                    if(res.status === 'success' && res.data.length > 0){
+                        res.data.forEach((item, i) => {
+                            const popup = new mapboxgl.Popup({offset: 25}).setText(item.name);
+                            new mapboxgl.Marker()
+                                .setLngLat([item.long, item.lat])
+                                .setPopup(popup)
+                                .addTo(map);
+                        })
+                    }else{
+                        console.log('login please')
+                    }
 
-                    res.data.forEach((item, i) => {
-                        const popup = new mapboxgl.Popup({offset: 25}).setText(item.name);
-                        new mapboxgl.Marker()
-                            .setLngLat([item.long, item.lat])
-                            .setPopup(popup)
-                            .addTo(map);
-                    })
+
                 }, error: function (jqXhr, ajaxOptions, thrownError) {
                     console.log(jqXhr)
                 }

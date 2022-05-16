@@ -22,6 +22,7 @@ class UserSeeder extends Seeder
                          'user_role_id'=> 1,
                          'email'=> 'admin@admin.com',
                          'dob'=>1990,
+                         'age'=>32,
                          'image'=>  "https://www.dallalii.com/img/admin/logo.png",
                          'password'=> Hash::make('admin123456')
                      ]);
@@ -30,6 +31,7 @@ class UserSeeder extends Seeder
              'user_role_id'=> 3,
              'email'=> 'test1@user.com',
              'dob'=>1980,
+             'age'=>27,
              'address'=>'Dhaka, Bangladesh',
              'image'=>  "https://www.dallalii.com/img/admin/logo.png",
              'password'=> Hash::make('123456')

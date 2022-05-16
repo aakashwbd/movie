@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\File;
 use App\Models\User;
 use App\Models\Video;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -17,25 +18,27 @@ class VideoSeeder extends Seeder
     public function run()
     {
 
-//        $link = [
-//            'https://www.youtube.com/watch?v=zuSQtohLL70&ab_channel=DhrubaTV',
-//            'https://www.youtube.com/watch?v=zuSQtohLL70&ab_channel=DhrubaTV',
-//            'https://www.youtube.com/watch?v=zuSQtohLL70&ab_channel=DhrubaTV',
-//            'https://www.youtube.com/watch?v=zuSQtohLL70&ab_channel=DhrubaTV',
-//            'https://www.youtube.com/watch?v=zuSQtohLL70&ab_channel=DhrubaTV',
-//            'https://www.youtube.com/watch?v=zuSQtohLL70&ab_channel=DhrubaTV',
-//            'https://www.youtube.com/watch?v=zuSQtohLL70&ab_channel=DhrubaTV',
-//            'https://www.youtube.com/watch?v=zuSQtohLL70&ab_channel=DhrubaTV',
-//            'https://www.youtube.com/watch?v=zuSQtohLL70&ab_channel=DhrubaTV',
-//            'https://www.youtube.com/watch?v=zuSQtohLL70&ab_channel=DhrubaTV'
-//        ];
-//
-//        foreach ($link as $video){
-//            Video::create([
-//                              'user_id'=>User::all()->random()->id,
-//                              'video'=> $video,
-//                          ]);
-//        }
+        $link = [
+            'https://flix.teamprojectx.xyz//asset/video/test_video.mp4',
+            'https://flix.teamprojectx.xyz//asset/video/test_video.mp4',
+            'https://flix.teamprojectx.xyz//asset/video/test_video.mp4',
+            'https://flix.teamprojectx.xyz//asset/video/test_video.mp4',
+            'https://flix.teamprojectx.xyz//asset/video/test_video.mp4',
+            'https://flix.teamprojectx.xyz//asset/video/test_video.mp4',
+            'https://flix.teamprojectx.xyz//asset/video/test_video.mp4',
+            'https://flix.teamprojectx.xyz//asset/video/test_video.mp4',
+            'https://flix.teamprojectx.xyz//asset/video/test_video.mp4',
+            'https://flix.teamprojectx.xyz//asset/video/test_video.mp4',
+            'https://flix.teamprojectx.xyz//asset/video/test_video.mp4',
+        ];
+
+        foreach ($link as $video){
+            File::create([
+                              'user_id'=>User::all()->random()->id,
+                              'video'=> $video,
+                              'privacy'=> 'public',
+                          ]);
+        }
 
 
 

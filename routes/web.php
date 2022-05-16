@@ -64,8 +64,13 @@ Route::prefix('admin')->group(function () {
 Route::get('/auth/twitter', [SocialAuthTwitterController::class, 'redirect']);
 Route::get('/auth/callback/twitter', [SocialAuthTwitterController::class, 'callback']);
 
-Route::get('/streaming', 'App\Http\Controllers\WebrtcStreamingController@index');
-Route::get('/streaming/{streamId}', 'App\Http\Controllers\WebrtcStreamingController@consumer');
+//Route::get('/streaming', 'App\Http\Controllers\WebrtcStreamingController@index');
+//Route::get('/streaming/{streamId}', 'App\Http\Controllers\WebrtcStreamingController@consumer');
+
+    Route::get('/streaming', 'App\Http\Controllers\WebrtcStreamingController@index');
+    Route::get('/streaming/{streamId}', 'App\Http\Controllers\WebrtcStreamingController@consumer');
+    Route::post('/stream-offer', 'App\Http\Controllers\WebrtcStreamingController@makeStreamOffer');
+    Route::post('/stream-answer', 'App\Http\Controllers\WebrtcStreamingController@makeStreamAnswer');
 
 Route::post('/send-message', function (Request $request) {
     event($data = new Message($request->from_user_id, $request->to_user_id, $request->message));

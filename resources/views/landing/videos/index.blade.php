@@ -217,6 +217,7 @@
             function singleVideo(res) {
                 $('#singleVideoTitle').text(res.data.user.username)
                 $('#videoId').val(res.data.id)
+                $('#videoItem').html('')
                 $('#videoItem').append(`
                     <video
                         id="my-video"
@@ -241,6 +242,7 @@
 
             function videoComment(res){
                 if(res.status === 'success' && res.data.length > 0){
+                    $('#commentBody').html('')
                     res.data.forEach(item =>{
                         $('#commentBody').append(`
                          <li class="border-bottom d-flex py-1">
@@ -255,9 +257,9 @@
                     `)
                     })
                 }else{
+                    $('#commentBody').text('')
                     $('#commentBody').append(`
                         <div class="alert alert-warning text-center">No one commented in this video.</div>
-
                     `)
                 }
 

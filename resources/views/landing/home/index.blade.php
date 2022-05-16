@@ -35,7 +35,7 @@
                             <option value="all">All Members</option>
                         </select>
                         <input type="text" class="form-control mb-3" name="keyword" placeholder="Keyword">
-                        <button type="submit" class="btn btn-primary form-control mb-3 text-capitalize">search</button>
+                        <button type="submit" id="search-submit-button" class="btn btn-primary form-control mb-3 text-capitalize">search</button>
                     </form>
                 </div>
 
@@ -116,6 +116,10 @@
                     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
                     Authorization: token,
                 },
+                beforeSend: function () {
+                    $('#search-submit-button').prop('disabled', true);
+                    $('#preloader').removeClass('d-none');
+                },
                 success: function (response) {
                     if (response.status === "success" && response.action === "search-user") {
                         $('html, body').animate({
@@ -129,6 +133,12 @@
                 error: function (xhr, resp, text) {
                     console.log(xhr);
 
+                },
+
+                complete: function (xhr, status) {
+
+                    $('#preloader').addClass('d-none');
+                    $('#search-submit-button').prop('disabled', false);
                 }
             });
         })

@@ -161,6 +161,11 @@
                 data: formData,
                 headers: {
                     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                }
+                ,
+                beforeSend: function () {
+                    $('#submit-button').prop('disabled', true);
+                    $('#preloader').removeClass('d-none');
                 },
                 success: function (response) {
                     if (
@@ -188,6 +193,10 @@
                             });
                         }
                     }
+                },
+                complete: function (xhr, status) {
+                    $('#submit-button').prop('disabled', false);
+                    $('#preloader').addClass('d-none');
                 }
             });
         })

@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Hash;
 use DataTables;
 use Validator;
 
+
 class AuthController extends Controller
 {
     public function __construct()
@@ -25,6 +26,8 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         try {
+
+
             $validator = Validator::make($request->all(), [
                 "email" => "unique:users|email:rfc,dns",
                 "phone" => "unique:users",
@@ -54,22 +57,23 @@ class AuthController extends Controller
             if ($user->user_role_id === 3) {
                 $user->status = 'pending';
             }
+
+            $user->save();
             if ($request->user_role_id) {
                 return response([
                                     "status" => "success",
                                     "form" => 'registration',
                                     "message" => "A new admin has been created."
                                 ]);
-            }
-
-
-            if ($user->save()) {
+            }else{
                 return response([
-                    "status" => "success",
-                    "form" => 'registration',
-                    "message" => "Registration Successfully Complete"
-                ]);
+                                    "status" => "success",
+                                    "form" => 'registration',
+                                    "message" => "Registration Successfully Complete"
+                                ]);
             }
+
+
 
         } catch (Exception $e) {
             return response([

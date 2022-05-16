@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Message;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class MessengerController extends Controller
 {
@@ -14,8 +15,18 @@ class MessengerController extends Controller
 
     public function store(Request $request)
     {
-//        dd($request->all());
+
         try {
+
+            $validator = Validator::make($request->all(), [
+                "messages" => "required",
+            ]);
+
+            if ($validator->fails()) {
+                $errors = $validator->errors()->messages();
+                return validateError($errors);
+            }
+
             $message            = new Message();
             $message->from_user = auth()->id();
             $message->to_user   = $request->to_user_id;

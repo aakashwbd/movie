@@ -43,7 +43,7 @@
                         </div>
 
                         <div class="form-group mb-3">
-                            <button type="submit" class="btn btn-primary form-control">Login</button>
+                            <button type="submit" id="login-submit-button" class="btn btn-primary form-control">Login</button>
                         </div>
                         <div class="text-center mb-3">
                             <span>or</span>
@@ -116,7 +116,12 @@
                 data: formData,
                 headers: {
                     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-                },
+                }
+                ,
+                beforeSend: function () {
+                $('#login-submit-button').prop('disabled', true);
+                $('#preloader').removeClass('d-none');
+            },
                 success: function (response) {
 
                     if (response.status === "success" && response.form === "login") {
@@ -145,6 +150,11 @@
                             });
                         }
                     }
+                },
+                complete: function (xhr, status) {
+
+                    $('#preloader').addClass('d-none');
+                    $('#login-submit-button').prop('disabled', false);
                 }
             });
         })

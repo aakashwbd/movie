@@ -4,25 +4,25 @@
         <div class="container">
             <ul class="nav nav-tabs justify-content-center border-0 bg-primary" id="profileNav" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link {{ ((request()->get('tab')) == "faq") ? "active" : ''}}" id="info-tab"
+                    <button onclick="pageTabChanger('help')" class="nav-link {{ ((request()->get('tab')) == "faq") ? "active" : ''}}" id="info-tab"
                             data-bs-toggle="tab" data-bs-target="#information" type="button" role="tab"
                             aria-controls="home" aria-selected="true">Help
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link {{ ((request()->get('tab')) == "terms") ? "active" : ''}}" id="photos-tab"
+                    <button onclick="pageTabChanger('terms')" class="nav-link {{ ((request()->get('tab')) == "terms") ? "active" : ''}}" id="photos-tab"
                             data-bs-toggle="tab" data-bs-target="#photos" type="button" role="tab"
                             aria-controls="profile" aria-selected="false">Terms of use
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link {{ ((request()->get('tab')) == "legal") ? "active" : ''}}" id="setting-tab"
+                    <button onclick="pageTabChanger('legal')" class="nav-link {{ ((request()->get('tab')) == "legal") ? "active" : ''}}" id="setting-tab"
                             data-bs-toggle="tab" data-bs-target="#setting" type="button" role="tab"
                             aria-controls="contact" aria-selected="false">Legal Notice
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link {{ ((request()->get('tab')) == "refund") ? "active" : ''}}" id="setting-tab"
+                    <button onclick="pageTabChanger('refund')" class="nav-link {{ ((request()->get('tab')) == "refund") ? "active" : ''}}" id="setting-tab"
                             data-bs-toggle="tab" data-bs-target="#refund" type="button" role="tab"
                             aria-controls="contact" aria-selected="false">Refund Policy
                     </button>
@@ -48,11 +48,13 @@
 
 
                         </div>
+                        <div class="notFoundData">Please create faq at admin panel to show in your site</div>
 
                     </div>
                 </div>
                 <div class="tab-pane fade show p-4 {{ ((request()->get('tab')) == "terms") ? "active" : ''}}" id="photos" role="tabpanel">
                     <div id="terms"></div>
+                    <div class="notFoundData">Please create terms of use & conditions at admin panel to show in your site</div>
                 </div>
                 <div class="tab-pane fade show p-4 {{ ((request()->get('tab')) == "legal") ? "active" : ''}}"
                      id="setting" role="tabpanel">
@@ -60,6 +62,7 @@
                         <h4 class="my-3"></h4>
 
                         <span id="legalInfo"></span>
+                        <div class="notFoundData">Please create legal information at admin panel to show in your site</div>
                         <address></address>
                     </div>
                 </div>
@@ -70,6 +73,7 @@
                         <h4 class="my-3"></h4>
 
                         <span id="refundInfo"></span>
+                        <div class="notFoundData">Please create refund policies at admin panel to show in your site</div>
                         <address></address>
                     </div>
                 </div>
@@ -93,6 +97,16 @@
         currentPath === '?tab=terms'? document.title = 'Terms of use' : ''
 
 
+        /**
+         * tab changer
+         * */
+        pageTabChanger = function (tab){
+            tab === 'help' ? location.href = window.origin + '/information?tab=faq' : ''
+            tab === 'legal' ? location.href = window.origin + 'information?tab=legal' : ''
+            tab === 'refund' ? location.href = window.origin + '/information?tab=refund' : ''
+            tab === 'terms' ? location.href = window.origin + '/information?tab=terms' : ''
+        }
+
 
         $.ajax({
             url: window.origin + '/api/admin/setting/get-all',
@@ -113,20 +127,21 @@
 
                         if (item[0] === "help") {
                             if (item[1]) {
+                                $('.notFoundData').addClass('d-none')
                                 item[1].forEach((value, index) => {
                                     $("#accordionExample").append(`
-                                       <div class="accordion-item">
-                                            <h2 class="accordion-header" id="headingOne${index}">
-                                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                                    ${value.question}
-                                                </button>
-                                            </h2>
-                                            <div id="collapseOne${index}" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                                                <div class="accordion-body">
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="question${index}">
+                                                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#answer${index}" >
+                                                              ${value.question}
+                                                  </button>
+                                                </h2>
+                                                <div id="answer${index}" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                                                  <div class="accordion-body">
                                                     <strong>${value.answer}</strong>
+                                                  </div>
                                                 </div>
-                                            </div>
-                                        </div>
+                                              </div>
                                    `)
 
                                 })
@@ -140,9 +155,11 @@
 
                                 if(value[0] === "'terms_of_use'"){
                                     $('#terms').text(value[1])
+                                    $('.notFoundData').addClass('d-none')
                                 }
                                 if(value[0] === "'refund_policy'"){
                                     $('#refundInfo').text(value[1])
+                                    $('.notFoundData').addClass('d-none')
                                 }
                             })
                         }

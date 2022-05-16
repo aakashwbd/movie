@@ -2,6 +2,8 @@
 @section('content')
     <div>
         <Broadcast />
+
+        <Viewer/>
     </div>
 
 @endsection
