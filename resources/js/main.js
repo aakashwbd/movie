@@ -1180,24 +1180,14 @@ function fetchMSG(to_user_id, userid) {
     });
 }
 
-//
-// $(document).ready(function () {
-//     let token = localStorage.getItem("accessToken");
-//     $.ajax({
-//         url: window.origin + "/api/get-message/all",
-//         type: "GET",
-//         dataType: "json",
-//         processData: false,
-//         contentType: false,
-//         headers: {
-//             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-//             Authorization: token,
-//         },
-//         success: function (res) {
-//         },
-//         error: function (jqXhr, ajaxOptions, thrownError) {
-//             console.log(jqXhr);
-//         },
-//     });
-// });
 
+
+
+//  showPage = function() {
+//     document.getElementById("loader").style.display = "none";
+//     document.getElementById("member-page").style.display = "block";
+// }
+// var myVar;
+// loaderHandler = function (){
+//     myVar = setTimeout(showPage, 3000);
+// }

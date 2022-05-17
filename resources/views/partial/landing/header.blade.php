@@ -25,9 +25,9 @@
 
 
 </head>
-<body id="landing-main">
-
+<body  id="landing-main">
+<div id="loader"></div>
 <div id="preloader" class="d-none">
-    <div id="status">
-    </div>
+    <div id="status"></div>
 </div>
+

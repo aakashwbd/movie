@@ -350,9 +350,7 @@
     </div>
 </div>
 
-<div id="message-box">
-
-</div>
+<div id="message-box"></div>
 
 
 @include('partial.landing.auth.login')

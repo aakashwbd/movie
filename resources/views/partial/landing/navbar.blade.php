@@ -1,8 +1,8 @@
 <?php
-    $currentControllerName = Request::segment(1);
-    $currentFullRouteName = Route::getFacadeRoot()
-        ->current()
-        ->uri();
+$currentControllerName = Request::segment(1);
+$currentFullRouteName = Route::getFacadeRoot()
+    ->current()
+    ->uri();
 ?>
 
 <nav id="siteNav" class="">
@@ -12,7 +12,8 @@
         </a>
 
         <button id="navbar-toggler-btn" class="btn btn-outline-secondary nav-toggler">
-            <span class="iconify cursor-pointer nav-toggler" id="" data-icon="gg:menu" data-width="25" data-height="25"></span>
+            <span class="iconify cursor-pointer nav-toggler" id="" data-icon="gg:menu" data-width="25"
+                  data-height="25"></span>
         </button>
 
 
@@ -26,27 +27,33 @@
             </li>
 
             <li class="list-item">
-                <a href="{{url('/live')}}" class="list-link {{ $currentControllerName == 'live' || '' ? 'active' : '' }}">live</a>
+                <a href="{{url('/live')}}"
+                   class="list-link {{ $currentControllerName == 'live' || '' ? 'active' : '' }}">live</a>
             </li>
 
             <li class="list-item">
-                <a href="{{url('/videos')}}" class="list-link {{ $currentControllerName == 'videos' || '' ? 'active' : '' }}">videos</a>
+                <a href="{{url('/videos')}}"
+                   class="list-link {{ $currentControllerName == 'videos' || '' ? 'active' : '' }}">videos</a>
             </li>
 
             <li class="list-item">
-                <a href="{{url('/maps')}}" class="list-link {{ $currentControllerName == 'maps' || '' ? 'active' : '' }}">maps</a>
+                <a href="{{url('/maps')}}"
+                   class="list-link {{ $currentControllerName == 'maps' || '' ? 'active' : '' }}">maps</a>
             </li>
 
             <li class="list-item">
-                <a href="{{url('/blogs?tab=blogs')}}" class="list-link {{ $currentControllerName == 'blogs' || '' ? 'active' : '' }}">blogs</a>
+                <a href="{{url('/blogs?tab=blogs')}}"
+                   class="list-link {{ $currentControllerName == 'blogs' || '' ? 'active' : '' }}">blogs</a>
             </li>
 
             <li class="list-item">
-                <a href="{{url('/package')}}" class="list-link {{ $currentControllerName == 'package' || '' ? 'active' : '' }}">packages</a>
+                <a href="{{url('/package')}}"
+                   class="list-link {{ $currentControllerName == 'package' || '' ? 'active' : '' }}">packages</a>
             </li>
 
             <li class="list-item" id="inscriptionNavItem">
-                <a href="{{url('/inscription')}}" class="list-link {{ $currentControllerName == 'inscription' || '' ? 'active' : '' }}">inscriptions</a>
+                <a href="{{url('/inscription')}}"
+                   class="list-link {{ $currentControllerName == 'inscription' || '' ? 'active' : '' }}">inscriptions</a>
             </li>
 
             <li class="list-item" id="connectionNavItem">
@@ -54,12 +61,13 @@
             </li>
 
             <li class="list-item d-none" id="graph">
-                <a href="{{url('/graph?tab=visitor')}}" class="list-link {{ $currentControllerName == 'graph' || '' ? 'active' : '' }}">
+                <a href="{{url('/graph?tab=visitor')}}"
+                   class="list-link {{ $currentControllerName == 'graph' || '' ? 'active' : '' }}">
                     <span class="iconify" data-icon="bi:flag" data-width="20" data-height="20"></span>
                 </a>
             </li>
 
-            <li class="list-item dropdown d-none" id="message" >
+            <li class="list-item dropdown d-none" id="message">
                 <a href="#" class="list-link " data-bs-toggle="dropdown">
                     <span class="iconify" data-icon="bx:message-rounded" data-width="20" data-height="20"></span>
                 </a>
@@ -79,11 +87,12 @@
 
                 <ul class="dropdown-menu-end dropdown-menu text-center">
                     <li class="border-bottom py-2">
-                        <a href="{{url('profile?tab=information')}}" class="dropdown-item text-capitalize">edit my profile</a>
+                        <a href="{{url('profile?tab=information')}}" class="dropdown-item text-capitalize">edit my
+                            profile</a>
                     </li>
-{{--                    <li class="border-bottom py-2">--}}
-{{--                        <a href="" class="dropdown-item text-capitalize">show</a>--}}
-{{--                    </li>--}}
+                    {{--                    <li class="border-bottom py-2">--}}
+                    {{--                        <a href="" class="dropdown-item text-capitalize">show</a>--}}
+                    {{--                    </li>--}}
                     <li class="border-bottom py-2">
                         <a href="{{url('profile?tab=photos')}}" class="dropdown-item text-capitalize">photos/videos</a>
                     </li>
@@ -97,11 +106,12 @@
                         <a href="{{url('profile?tab=blacklist')}}" class="dropdown-item text-capitalize">block list</a>
                     </li>
                     <li class=" py-2">
-                        <a href="{{url('profile?tab=premium')}}" class="dropdown-item text-capitalize">premium access</a>
+                        <a href="{{url('profile?tab=premium')}}" class="dropdown-item text-capitalize">premium
+                            access</a>
                     </li>
-{{--                    <li class="">--}}
-{{--                        <a href="{{url('profile?tab=invisible')}}" class="dropdown-item text-capitalize">become invisible</a>--}}
-{{--                    </li>--}}
+                    {{--                    <li class="">--}}
+                    {{--                        <a href="{{url('profile?tab=invisible')}}" class="dropdown-item text-capitalize">become invisible</a>--}}
+                    {{--                    </li>--}}
                 </ul>
             </li>
 
@@ -122,10 +132,12 @@
                         <a href="{{url('/information?tab=faq')}}" class="dropdown-item text-capitalize">help</a>
                     </li>
                     <li class="border-bottom py-2">
-                        <a href="#" data-bs-target="#contactModal" data-bs-toggle="modal" class="dropdown-item text-capitalize">contact</a>
+                        <a href="#" data-bs-target="#contactModal" data-bs-toggle="modal"
+                           class="dropdown-item text-capitalize">contact</a>
                     </li>
                     <li class="border-bottom py-2">
-                        <a href="{{url('/information?tab=legal')}}" class="dropdown-item text-capitalize">legal notice</a>
+                        <a href="{{url('/information?tab=legal')}}" class="dropdown-item text-capitalize">legal
+                            notice</a>
                     </li>
                     <li class="">
                         <a href="#" class="dropdown-item text-capitalize" id="signOut">disconnect</a>
@@ -143,18 +155,12 @@
 
 @push('custom-js')
     <script>
-        // $(document).on('click','#navbarToggler', function (){
-        //     $('#topNavigation').toggleClass('show')
-        // })
 
-        // $("#siteNav").on("click", function () {
-        //     $("#siteNav-list").toggleClass("nav-show");
-        // });
         $("#navbar-toggler-btn").on("click", function () {
             $("#siteNav-list").toggleClass("nav-show");
         });
 
-        $(document).ready(function (){
+        $(document).ready(function () {
             let constant = {
                 token: localStorage.getItem('accessToken'),
                 userInfo: JSON.parse(localStorage.getItem('user')),
@@ -165,47 +171,48 @@
                     graph: document.getElementById('graph'),
                     message: document.getElementById('message'),
                     inscriptionNavItem: document.getElementById('inscriptionNavItem'),
-                    connectionNavItem:  document.getElementById('connectionNavItem'),
+                    connectionNavItem: document.getElementById('connectionNavItem'),
                     navbarProfileImg: document.getElementById('navbarProfileImg')
                 }
             }
 
-            if(constant.token){
+            if (constant.token) {
                 Object.keys(constant.moreItem).forEach(item => {
-                    if(item === 'connectionNavItem'){
-                        $('#'+item).addClass('d-none')
-                    }else if(item === 'inscriptionNavItem'){
-                        $('#'+item).addClass('d-none')
-                    }else if(item === 'navbarProfileImg'){
+                    if (item === 'connectionNavItem') {
+                        $('#' + item).addClass('d-none')
+                    } else if (item === 'inscriptionNavItem') {
+                        $('#' + item).addClass('d-none')
+                    } else if (item === 'navbarProfileImg') {
                         let img = constant.moreItem.defaultImage
 
-                        if(constant.userInfo.image){
+                        if (constant.userInfo.image) {
 
-                            img= constant.userInfo.image
-                         }
-                        $('#'+item).attr('src', img)
-                    }else{
-                        $('#'+item).removeClass('d-none')
+                            img = constant.userInfo.image
+                        }
+                        $('#' + item).attr('src', img)
+                    } else {
+                        $('#' + item).removeClass('d-none')
                     }
                 })
             }
 
 
-            $.ajax({
-                type: 'GET',
-                url: window.origin + '/api/short-messages',
-                headers: {
-                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-                    "Authorization": constant.token,
-                },
-                success: function (response) {
+            if (constant.token) {
+                $.ajax({
+                    type: 'GET',
+                    url: window.origin + '/api/short-messages',
+                    headers: {
+                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                        "Authorization": constant.token,
+                    },
+                    success: function (response) {
 
-                    if(response.status === 'success' && response.data.length > 0){
-                        response.data.forEach(item=>{
-                            $('#shortMessage').append(`
+                        if (response.status === 'success' && response.data.length > 0) {
+                            response.data.forEach(item => {
+                                $('#shortMessage').append(`
                                     <li class="dropdown-item border-bottom py-3">
                                              <div class="d-flex">
-                                                <img style="width: 20px; height: 20px" class="me-2" src="${item.user.image ?  item.user.image : window.origin + '/asset/image/default.jpg'}"/>
+                                                <img style="width: 20px; height: 20px" class="me-2" src="${item.user.image ? item.user.image : window.origin + '/asset/image/default.jpg'}"/>
 
                                                     <div>
                                                      <p>${item.user.username ? item.user.username : ''}</p>
@@ -215,20 +222,21 @@
                                              </div>
                                     </li>
                             `)
-                        })
-                    }else{
-                        $('#shortMessage').append(`
+                            })
+                        } else {
+                            $('#shortMessage').append(`
                                 <li class="dropdown-item">Please, conversation first</li>
                         `)
+                        }
+
+
+                    },
+                    error: function (xhr, resp, text) {
+                        console.log(xhr);
+
                     }
-
-
-                },
-                error: function (xhr, resp, text) {
-                    console.log(xhr);
-
-                }
-            });
+                });
+            }
         })
 
 
