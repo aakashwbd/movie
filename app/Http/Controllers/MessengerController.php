@@ -64,10 +64,13 @@ class MessengerController extends Controller
     public function getByPersonMessage()
     {
 
+
+
         $messages = Message::with('user')
             ->where("to_user", auth()->id())
+            ->orWhere("from_user", auth()->id())
             ->latest()
-//            ->limit(1)
+            ->limit(5)
             ->get();
 
         return response([

@@ -34,7 +34,7 @@
                     <div class="container">
                         <div class="row align-items-center">
                             <div class="col-lg-6">
-                                <input type="search" placeholder="Search.." class="form-control">
+                                <input id="faqSearch" type="search" name="search" placeholder="Search.." class="form-control">
                             </div>
                             <div class="col-lg-6">
                                 <span class="text-black-50">The FAQ answers practical questions that you can ask yourself using the site. A search engin is available if you can not find a response <a
@@ -48,6 +48,7 @@
 
 
                         </div>
+                        <div id="helpNotFoundMsg"></div>
                         <div class="notFoundData">Please create faq at admin panel to show in your site</div>
 
                     </div>
@@ -60,9 +61,9 @@
                      id="setting" role="tabpanel">
                     <div class="container">
                         <h4 class="my-3"></h4>
-
                         <span id="legalInfo"></span>
                         <div class="notFoundData">Please create legal information at admin panel to show in your site</div>
+
                         <address></address>
                     </div>
                 </div>
@@ -102,10 +103,58 @@
          * */
         pageTabChanger = function (tab){
             tab === 'help' ? location.href = window.origin + '/information?tab=faq' : ''
-            tab === 'legal' ? location.href = window.origin + 'information?tab=legal' : ''
+            tab === 'legal' ? location.href = window.origin + '/information?tab=legal' : ''
             tab === 'refund' ? location.href = window.origin + '/information?tab=refund' : ''
             tab === 'terms' ? location.href = window.origin + '/information?tab=terms' : ''
         }
+
+        $("#faqSearch").keypress(function(){
+            let searchData = $(this).val();
+
+            $.ajax({
+                url: window.origin + '/api/admin/setting/faq/search',
+                type: 'GET',
+                data: {
+                    "search":searchData
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                },
+
+                success: function (res) {
+
+                    if(res.status === 'success'){
+                        if(res.data && res.data[0] && res.data[0].help){
+                            res.data[0].help.forEach((value, index) => {
+                                $("#accordionExample").html('')
+                                $("#accordionExample").append(`
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="question${index}">
+                                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#answer${index}" >
+                                                  ${value.question}
+                                      </button>
+                                    </h2>
+                                    <div id="answer${index}" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                                      <div class="accordion-body">
+                                        <strong>${value.answer}</strong>
+                                      </div>
+                                    </div>
+                                  </div>
+                            `)
+                            })
+                        }else if (res.data && res.data.length > 0){
+                            $('#helpNotFoundMsg').text('Please try with another words')
+                        }
+                    }
+
+                }, error: function (jqXhr, ajaxOptions, thrownError) {
+                    console.log(jqXhr)
+                }
+            })
+
+
+        });
+
 
 
         $.ajax({
@@ -121,15 +170,14 @@
             success: function (res) {
 
                 if (res.status === 'success' && res.data.length) {
-                    // console.log(res)
-
                     Object.entries(res.data[0]).forEach(item => {
 
                         if (item[0] === "help") {
                             if (item[1]) {
                                 $('.notFoundData').addClass('d-none')
                                 item[1].forEach((value, index) => {
-                                    $("#accordionExample").append(`
+                                    if(value && value.question && value.answer){
+                                        $("#accordionExample").append(`
                                             <div class="accordion-item">
                                                 <h2 class="accordion-header" id="question${index}">
                                                   <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#answer${index}" >
@@ -142,7 +190,10 @@
                                                   </div>
                                                 </div>
                                               </div>
-                                   `)
+                                        `)
+                                    }else{
+                                        $('#helpNotFoundMsg').text('Please create faq at admin panel to show in your site')
+                                    }
 
                                 })
                             }
@@ -152,13 +203,18 @@
                         if (item[0] === "legal_information") {
 
                             Object.entries(item[1]).forEach(value=>{
-
                                 if(value[0] === "'terms_of_use'"){
-                                    $('#terms').text(value[1])
-                                    $('.notFoundData').addClass('d-none')
+                                    if(value[1]){
+                                        $('#terms').text(value[1])
+                                        $('.notFoundData').addClass('d-none')
+                                    }else{
+                                        $('#terms').text('Please create legal information at admin panel to show in your site')
+                                    }
                                 }
+
                                 if(value[0] === "'refund_policy'"){
-                                    $('#refundInfo').text(value[1])
+
+                                    $('#refundInfo').text(value[1] ? value[1] : 'Please create refund policy at admin panel to show in your site')
                                     $('.notFoundData').addClass('d-none')
                                 }
                             })

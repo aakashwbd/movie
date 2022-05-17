@@ -1,7 +1,7 @@
 
 <script src="{{asset('asset/vendor/jquery/jquery-3.6.0.min.js')}}"></script>
 <script src="{{asset('asset/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
-<script src="{{asset('asset\vendor\bootstrap\js\bootstrap.min.js')}}"></script>
+{{--<script src="{{asset('asset\vendor\bootstrap\js\bootstrap.min.js')}}"></script>--}}
 <script src="{{asset('asset/vendor/Minimalist-jQuery-Plugin-For-Birthday-Selector-DOB-Picker/dobpicker.js')}}"></script>
 <script src="{{asset('asset/vendor/toastr/toastr.js')}}"></script>
 <script src="{{asset('asset/vendor/ImagesLoader-main/jquery.imagesloader-1.0.1.js')}}"></script>

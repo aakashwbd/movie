@@ -3,14 +3,18 @@
 namespace App\Http\Controllers\auth;
 
 use App\Http\Controllers\Controller;
+use App\Mail\SendVerificationCodeMail;
 use App\Models\favourite;
+use App\Models\Otp;
 use App\Models\Profile;
+use App\Models\Smtp;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 use DataTables;
 use Validator;
@@ -23,6 +27,17 @@ class AuthController extends Controller
         $this->middleware(['auth:sanctum'], ['only' => ['getAll', 'profileInfo','userOnlineStatus']]);
     }
 
+
+    public function generateRandomString($length)
+    {
+        $characters       = '0123456789';
+        $charactersLength = strlen($characters);
+        $randomString     = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
+    }
     public function register(Request $request)
     {
         try {
@@ -176,17 +191,50 @@ class AuthController extends Controller
 
     public function checkEmail(Request $request)
     {
-
         try {
             $user = User::where('phone', $request->phone)
                 ->where('email', $request->email)
                 ->first();
 
-            return response([
-                "status" => "success",
-                "form" => "recoverForm",
-                "data" => $user
-            ]);
+            $prevCode = Otp::where('email', $request->email)->first();
+
+            if (!empty($prevCode)) {
+                $prevCode->delete();
+            }
+
+            $code                    = new Otp;
+            $code->email             = $request->email;
+            $code->verification_code = $this->generateRandomString(6);
+            $code->save();
+
+            if ($code->save()) {
+                $smtpSettings = Smtp::first();
+
+                if($smtpSettings){
+                    config([
+                               'mail.default'                 => 'smtp',
+                               'mail.mailers.smtp.host'       => $smtpSettings->host ?? '',
+                               'mail.mailers.smtp.port'       => $smtpSettings->port ?? '',
+                               'mail.mailers.smtp.encryption' => $smtpSettings->encryption ?? '',
+                               'mail.mailers.smtp.username'   => $smtpSettings->username ?? '',
+                               'mail.mailers.smtp.password'   => $smtpSettings->password ?? '',
+                           ]);
+                    Mail::to($request->email)->send(new SendVerificationCodeMail($code->verification_code));
+                    return response([
+                                        'status'            => 'success',
+                                        'message'           => 'Account verification code send your email, please check your email.',
+                                        "form"              => "recoverForm",
+                                        'email'             => $code->email,
+                                        'verification_code' => $code->verification_code,
+                                    ], 200);
+                }else{
+                    return response([
+                                        'status'  => 'error',
+                                        'message' => 'Please configure your smtp server.',
+                                    ], 400);
+                }
+            }
+
         } catch (Exception $e) {
             return response([
                 'status' => 'serverError',
@@ -195,6 +243,67 @@ class AuthController extends Controller
 
         }
 
+    }
+
+
+
+    public function matchOTP(Request $request)
+    {
+        try {
+
+            $validator = Validator::make(request()->all(), [
+                'email'             => 'required|email|exists:users',
+                'verification_code'              => 'required|min:6|max:6'
+            ]);
+
+            if ($validator->fails()) {
+                $errors = $validator->errors()->messages();
+                return validateError($errors);
+            }
+
+            $code = Otp::where('email', $request->email)
+                ->where('verification_code', $request->verification_code)
+                ->first();
+
+
+            if (empty($code)) {
+                return response([
+                                    'status'  => 'error',
+                                    'message' => 'No code found.',
+                                ], 404);
+            }
+
+            //validation expire check
+            if (($code->updated_at->addHour(1)) < (now())) {
+                return response([
+                                    'status'  => 'error',
+                                    'message' => 'Your code is expired! Please resend code.',
+                                    'code' => $code->verification_code
+                                ], 404);
+            }
+
+            if (($code->verification_code) == ($request->verification_code)) {
+                $forgotRequest         = Otp::where('email', $request->email)->first();
+                if ($forgotRequest->update()) {
+                    $code->delete();
+                    return response([
+                                        'status'  => 'success',
+                                        'form'  => 'otp_form',
+                                        'message' => 'User verified. Go forword for next step.',
+                                    ], 200);
+                }
+
+            }
+            return response([
+                                'status'  => 'error',
+                                'message' => 'Code not matched',
+                            ], 404);
+        } catch (\Exception$e) {
+            return response([
+                                'status'  => 'server_error',
+                                'message' => $e->getMessage(),
+                            ], 500);
+        }
     }
 
     public function userOnlineStatus(Request $request)
@@ -254,12 +363,15 @@ class AuthController extends Controller
 
     public function updatePassword(Request $request)
     {
+
         try {
             $userData = User::where('phone', $request->phone)
                 ->where('email', $request->email)
                 ->first();
             if ($userData) {
                 $userData->password = Hash::make($request->password) ?? $userData->password;
+
+
 
                 if ($userData->update()) {
                     return response([

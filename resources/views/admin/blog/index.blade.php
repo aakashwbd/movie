@@ -168,7 +168,7 @@
                     console.log(jqXhr)
                 }, complete: function (xhr, status) {
                     $('#update-button').prop('disabled', false);
-                    $('#preloader').addClass('d-none');
+
                 }
             });
         }
@@ -194,9 +194,10 @@
                                 'The blog has been deleted.',
                                 'success'
                             )
-                            setInterval(function () {
-                                location.reload();
-                            }, 1000)
+
+                            window.setTimeout( function() {
+                                window.location.reload();
+                            }, 2000);
 
                         },
                         error: function (xhr, resp, text) {
@@ -292,9 +293,10 @@
                                 success: function (response) {
                                     toastr.success(response.message)
 
-                                    setTimeout(function () {
-                                        location.reload();
-                                    }, 1000);
+
+                                    window.setTimeout( function() {
+                                        window.location.reload();
+                                    }, 2000);
 
                                 }, error: function (xhr, resp, text) {
 
@@ -341,7 +343,10 @@
                 },
                 success: function (response) {
                     toastr.success(response.message)
-                    location.reload();
+
+                    window.setTimeout( function() {
+                        window.location.reload();
+                    }, 2000);
                 }, error: function (xhr, resp, text) {
 
                     if (xhr && xhr.responseJSON) {
@@ -385,7 +390,7 @@
                             $('#blogList').append(`
                             <div class="col-lg-4 col-12 mb-3">
                                 <div class="card">
-                                    <img class="card-img-top border-bottom" style="width: 100%; height: 220px;" src="${image}" alt="">
+                                    <img class="card-img-top border-bottom" style="width: 100%; height: 240px; object-fit: cover;" src="${image}" alt="">
                                     <div class='card-img-overlay'>
                                         <button class="btn bg-white" onclick="editHandler('/api/admin/blog/${item.id}')">
                                             <span class="iconify" data-icon="bxs:edit" data-width="20" data-height="20"></span>
@@ -396,7 +401,7 @@
                                     </div>
                                     <div class="card-body">
                                         <h6>${item.title}</h6>
-                                        <span>${item.description}</span>
+                                        <p class=" text-wrap">${(item.description).slice(0,100).concat('...')}</p>
                                     </div>
                                 </div>
                             </div>

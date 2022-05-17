@@ -64,10 +64,7 @@
                     <span class="iconify" data-icon="bx:message-rounded" data-width="20" data-height="20"></span>
                 </a>
 
-                <ul class="dropdown-menu dropdown-menu-end" id="shortMessage">
-
-
-                </ul>
+                <ul class="dropdown-menu dropdown-menu-end" style="width: 350px" id="shortMessage"></ul>
             </li>
 
             <li class="list-item dropdown d-none" id="profileNavItem">
@@ -143,13 +140,7 @@
 
 @push('custom-js')
     <script>
-        // $(document).on('click','#navbarToggler', function (){
-        //     $('#topNavigation').toggleClass('show')
-        // })
 
-        // $("#siteNav").on("click", function () {
-        //     $("#siteNav-list").toggleClass("nav-show");
-        // });
         $("#navbar-toggler-btn").on("click", function () {
             $("#siteNav-list").toggleClass("nav-show");
         });
@@ -177,60 +168,81 @@
                     }else if(item === 'inscriptionNavItem'){
                         $('#'+item).addClass('d-none')
                     }else if(item === 'navbarProfileImg'){
+                        let user = constant.userInfo
+
+                        if(typeof user === 'string'){
+                            user = JSON.parse(constant.userInfo.replaceAll('&quot;', '"'))
+                        }
+
                         let img = constant.moreItem.defaultImage
 
-                        if(constant.userInfo.image){
+                        if(user.image){
+                            img= user.image
+                        }
 
-                            img= constant.userInfo.image
-                         }
                         $('#'+item).attr('src', img)
                     }else{
                         $('#'+item).removeClass('d-none')
                     }
                 })
-            }
 
 
-            $.ajax({
-                type: 'GET',
-                url: window.origin + '/api/short-messages',
-                headers: {
-                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-                    "Authorization": constant.token,
-                },
-                success: function (response) {
+                $.ajax({
+                    type: 'GET',
+                    url: window.origin + '/api/short-messages',
+                    headers: {
+                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                        "Authorization": constant.token,
+                    },
+                    success: function (response) {
 
-                    if(response.status === 'success' && response.data.length > 0){
-                        response.data.forEach(item=>{
-                            $('#shortMessage').append(`
-                                    <li class="dropdown-item border-bottom py-3">
-                                             <div class="d-flex">
-                                                <img style="width: 20px; height: 20px" class="me-2" src="${item.user.image ?  item.user.image : window.origin + '/asset/image/default.jpg'}"/>
+                        if(response.status === 'success' && response.data.length > 0){
+                            response.data.forEach((item, number)=>{
 
-                                                    <div>
+                                $('#shortMessage').append(`
+                                    <li class="dropdown-item border-bottom py-1">
+                                         <div class="d-flex">
+                                            <img style="width: 40px; height: 40px" class="me-2" src="${item.user.image ?  item.user.image : window.origin + '/asset/image/default.jpg'}"/>
+                                                <div>
                                                      <p>${item.user.username ? item.user.username : ''}</p>
                                                      <p class='d-block'>${item.messages}</p>
-                                                    </div>
-
-                                             </div>
+                                                </div>
+                                         </div>
                                     </li>
-                            `)
-                        })
-                    }else{
-                        $('#shortMessage').append(`
-                                <li class="dropdown-item">Please, conversation first</li>
+
+                                    ${number === 4 ? (`
+                                         <li class="dropdown-item py-1 text-center">
+                                              <span>Your latest conversation</span>
+                                        </li>
+
+                                    `): '' }
+                                `)
+                            })
+                        }else{
+                            $('#shortMessage').append(`
+                                <li class="dropdown-item">
+                                        Please, conversation first
+                                </li>
                         `)
+                        }
+
+
+                    },
+                    error: function (xhr, resp, text) {
+                        console.log(xhr);
+
                     }
-
-
-                },
-                error: function (xhr, resp, text) {
-                    console.log(xhr);
-
-                }
-            });
+                });
+            }
         })
 
+
+        // messengerOpenHandlder = function (from_user_id, to_user_id){
+        //     console.log(from_user_id, to_user_id)
+        //
+        //     $("#messenger" + to_user_id).removeClass("d-none");
+        // }
+        // onclick="messengerOpenHandlder(${item.from_user}, ${item.to_user})"
 
     </script>
 @endpush

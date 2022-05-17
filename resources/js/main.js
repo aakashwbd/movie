@@ -71,11 +71,11 @@ $(document).ready(function () {
                 Object.entries(res.data[0]).forEach(value => {
                     if (value[0] === 'age') {
 
-                        if(value[1]) {
+                        if (value[1]) {
                             var max_age = parseInt(value[1].max_age)
                             var min_age = parseInt(value[1].min_age)
                         }
-                        getAge(max_age,min_age)
+                        getAge(max_age, min_age)
                     }
                 })
 
@@ -86,14 +86,14 @@ $(document).ready(function () {
         }
     })
 
-    getAge = function (max, min){
+    getAge = function (max, min) {
         var maximumAge = max ? max : 100
         var minimumAge = min ? min : 10
 
         const age = {
             defaultYear: "Birth Year",
-            minAge: minimumAge  ,
-            maxAge: maximumAge ,
+            minAge: minimumAge,
+            maxAge: maximumAge,
         };
 
         setBirthYear("#dobyear", age.defaultYear, age.minAge, age.maxAge);
@@ -107,10 +107,6 @@ $(document).ready(function () {
             $("#confirmModal").modal("show");
         }
     }
-
-
-
-
 
 
     // const age = {
@@ -175,7 +171,7 @@ $(document).ready(function () {
     });
 
 
-    if(!getCookie('COOKIE_LOCATION') && getCookie('COOKIE_AGE')){
+    if (!getCookie('COOKIE_LOCATION') && getCookie('COOKIE_AGE')) {
         $('#locationModal').modal('show')
     }
 
@@ -190,13 +186,8 @@ $(document).ready(function () {
      * FETCH USER WHEN SEARCH FORM ADDRESS FIELD EMPTY
      */
     let searchFormAddress = $(".getLocation").val();
-    console.log('searchFormAddress', searchFormAddress)
 
     let formData = new FormData();
-
-
-
-
 
 
     if (searchFormAddress === "") {
@@ -221,7 +212,7 @@ $(document).ready(function () {
                     "Authorization": token,
                 },
                 success: function (response) {
-                    if(response.status === 'success' && response.data.length > 0){
+                    if (response.status === 'success' && response.data.length > 0) {
                         userList(response);
                         $('#searchResultHeading').text('Result for : all people around you ')
                     }
@@ -244,7 +235,7 @@ $(document).ready(function () {
                     ),
                 },
                 success: function (response) {
-                    if(response.status === 'success' && response.data.length > 0){
+                    if (response.status === 'success' && response.data.length > 0) {
                         userList(response);
                         $('#searchResultHeading').text('Result for : all people around you ')
                     }
@@ -271,9 +262,9 @@ $(document).ready(function () {
             success: function (response) {
                 if (response.status === "success" && response.data.length > 0) {
                     userList(response);
-                    $('#searchResultHeading').text('Result : People around - '+ searchFormAddress)
-                }else{
-                    $('#searchResultHeading').text('There are no people around - '+ searchFormAddress)
+                    $('#searchResultHeading').text('Result : People around - ' + searchFormAddress)
+                } else {
+                    $('#searchResultHeading').text('There are no people around - ' + searchFormAddress)
                 }
             },
             error: function (err) {
@@ -479,21 +470,21 @@ $("#signOut").click(function () {
 
     var userActivity = localStorage.getItem('accessToken')
 
-    if(userActivity){
+    if (userActivity) {
         $.ajax({
-            url: window.origin+"/api/user-activity-check",
+            url: window.origin + "/api/user-activity-check",
             method: "patch",
-            data:{
-              "status":false
+            data: {
+                "status": false
             },
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                "Authorization":userActivity
+                "Authorization": userActivity
             },
-            success:function (res){
+            success: function (res) {
                 console.log(res)
             },
-            error:function(err){
+            error: function (err) {
                 console.log(err)
             }
 
@@ -502,8 +493,6 @@ $("#signOut").click(function () {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("user");
     location.href = window.origin
-
-
 
 
 });
@@ -622,9 +611,7 @@ $(document).on("click", ".editCategory", function () {
 });
 
 userList = function (res) {
-    let getUserInfo =  JSON.parse(localStorage.getItem('user'))
-
-
+    let getUserInfo = JSON.parse(localStorage.getItem('user'))
 
 
     let date = new Date();
@@ -685,7 +672,7 @@ userList = function (res) {
                                  <span id="user-address">${item.address}</span>
                                  <span class="mx-3">|</span>`) : ""
         }
-                            ${currentDate > createdDate   ? '' : (`
+                            ${currentDate > createdDate ? '' : (`
                                 <span class="iconify text-danger" data-icon="clarity:new-solid" data-width="20" data-height="20"></span>
                             `)}
 
@@ -719,8 +706,8 @@ userList = function (res) {
                                         data-icon="bxs:message-rounded"
                                         data-width="30"
                                         data-height="30" onclick="messenger('messengerIcon${
-                                            item.id
-                                        }', ${item.id})"></span>
+            item.id
+        }', ${item.id})"></span>
                                 </li>
 
                                 <li class="extra-list-item">
@@ -815,9 +802,9 @@ userList = function (res) {
         let moreIcon = document.querySelectorAll("#moreIcon" + item.id);
         authAction(image, flashIcon, moreIcon);
 
-        if(getUserInfo){
-            if(getUserInfo.id && item.id === getUserInfo.id){
-                $('#extraCol'+item.id).addClass('d-none')
+        if (getUserInfo) {
+            if (getUserInfo.id && item.id === getUserInfo.id) {
+                $('#extraCol' + item.id).addClass('d-none')
 
             }
         }
@@ -876,7 +863,7 @@ favouriteHandler = function (userId) {
                 Authorization: token,
             },
             beforeSend: function () {
-                $('#favourite-submit-button'+userId).prop('disabled', true);
+                $('#favourite-submit-button' + userId).prop('disabled', true);
                 $('#preloader').removeClass('d-none');
             },
             success: function (res) {
@@ -888,9 +875,9 @@ favouriteHandler = function (userId) {
             },
             complete: function (xhr, status) {
 
-            $('#preloader').addClass('d-none');
-            $('#favourite-submit-button'+userId).prop('disabled', false);
-        }
+                $('#preloader').addClass('d-none');
+                $('#favourite-submit-button' + userId).prop('disabled', false);
+            }
         });
     } else {
         $("#loginModal").modal("show");
@@ -920,7 +907,7 @@ blockHandler = function (userId) {
                 Authorization: token,
             },
             beforeSend: function () {
-                $('#block-submit-button'+userId).prop('disabled', true);
+                $('#block-submit-button' + userId).prop('disabled', true);
                 $('#preloader').removeClass('d-none');
             },
             success: function (res) {
@@ -932,9 +919,9 @@ blockHandler = function (userId) {
             },
             complete: function (xhr, status) {
 
-            $('#preloader').addClass('d-none');
-            $('#block-submit-button'+userId).prop('disabled', false);
-        }
+                $('#preloader').addClass('d-none');
+                $('#block-submit-button' + userId).prop('disabled', false);
+            }
         });
     } else {
         $("#loginModal").modal("show");
@@ -988,7 +975,6 @@ authAction = function (image, flashIcon, moreIcon) {
         let div = item.getAttribute("id");
         let flashId = "#" + div;
         let user_id = item.getAttribute('data-user-id')
-
 
 
         $(document).on("click", flashId, function () {
@@ -1049,49 +1035,53 @@ messenger = function (id, userid) {
             let formData = new FormData();
             formData.append("from_user_id", currentUser.id);
             formData.append("to_user_id", to_user_id.value);
+
             formData.append("message", input.value);
 
-            $.ajax({
-                url: window.origin + "/api/send-messages",
-                type: "POST",
-                data: formData,
-                dataType: "json",
-                processData: false,
-                contentType: false,
-                headers: {
-                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
-                        "content"
-                    ),
-                    Authorization: token,
-                },
-                beforeSend: function () {
-                    $('#message-submit-button'+userid).prop('disabled', true);
-                    $('#preloader').removeClass('d-none');
-                },
-                success: function (res) {
-                    input.value = "";
-                },
-                error: function (jqXhr, ajaxOptions, thrownError) {
-                    console.log(jqXhr);
-                },
-
-                complete: function (xhr, status) {
-
-                $('#preloader').addClass('d-none');
-                $('#message-submit-button'+userid).prop('disabled', false);
-            }
-            });
 
 
 
-            if(input.value){
+
+            if (input.value) {
+                $.ajax({
+                    url: window.origin + "/api/send-messages",
+                    type: "POST",
+                    data: formData,
+                    dataType: "json",
+                    processData: false,
+                    contentType: false,
+                    headers: {
+                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                            "content"
+                        ),
+                        Authorization: token,
+                    },
+                    beforeSend: function () {
+                        $('#message-submit-button' + userid).prop('disabled', true);
+                        // $('#preloader').removeClass('d-none');
+                    },
+                    success: function (res) {
+                        input.value = "";
+                    },
+                    error: function (jqXhr, ajaxOptions, thrownError) {
+                        console.log(jqXhr);
+                    },
+
+                    complete: function (xhr, status) {
+
+                        // $('#preloader').addClass('d-none');
+                        $('#message-submit-button' + userid).prop('disabled', false);
+                    }
+                });
+
+
                 const options = {
                     method: "post",
                     url: "/send-message",
                     data: {
                         from_user_id: currentUser.id,
                         to_user_id: to_user_id.value,
-                        message: input.value ,
+                        message: input.value,
                     },
                 };
 
@@ -1102,7 +1092,8 @@ messenger = function (id, userid) {
         });
 
         window.Echo.channel("chat").listen(".message", (e) => {
-
+            $("#messenger" + fromuserId).removeClass("d-none");
+            console.log(TouserId)
 
             $("#messages" + e.to_user_id).append(`
                 <li class="${

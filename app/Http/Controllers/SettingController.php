@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\setting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class SettingController extends Controller
@@ -80,6 +81,26 @@ class SettingController extends Controller
             return response([
                                 "status" => "success",
                                 "data" => $setting
+                            ]);
+
+        }catch (\Exception $e){
+            return response([
+                                'status' => 'serverError',
+                                'message' => $e->getMessage(),
+                            ], 500);
+        }
+    }
+
+    public function faqSearch (Request $request){
+        try {
+
+            $users = setting::query()
+                ->where('help', 'LIKE', "%{$request->search}%")
+                ->get('help');
+
+            return response([
+                                "status" => "success",
+                                "data" => $users
                             ]);
 
         }catch (\Exception $e){

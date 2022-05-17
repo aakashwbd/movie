@@ -36,7 +36,7 @@
                             </span>
 
                         </label>
-                        <img style="width: 100%; height: 200px;" id="logoImgPreview" class="d-none my-3" src="" alt="">
+                        <img style="width: 30%; height: 220px; border-radius: 50%; margin: auto;" id="logoImgPreview" class="d-none my-3" src="" alt="">
 
 
                     </div>
@@ -55,7 +55,7 @@
 
                         </label>
 
-                        <img style="width: 100%; height: 200px;" id="logoIconImgPreview" class="d-none my-3" src="" alt="">
+                        <img style="width: 30%; height: 220px; border-radius: 50%; margin: auto;" id="logoIconImgPreview" class="d-none my-3" src="" alt="">
                     </div>
 
                     <div class="col-lg-6 col-sm-12 col-12 mb-3">

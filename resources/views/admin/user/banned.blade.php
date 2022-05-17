@@ -65,6 +65,10 @@
                 data: form_data,
                 success: function (res) {
                     toastr.success(res.message)
+
+                    window.setTimeout( function() {
+                        window.location.reload();
+                    }, 2000);
                 },
                 error: function (jqXhr, ajaxOptions, thrownError) {
                     console.log(jqXhr);

@@ -271,20 +271,36 @@
                               id="emailorphone_register_error">Please, Registered first</span>
                     </div>
                     <div class="text-center my-3">
-                        <button type="submit" class="btn btn-primary form-control">Submit</button>
+                        <button type="submit" id="recover-submit-button" class="btn btn-primary">Send OTP</button>
+                        <a href="{{url('/')}}"  class="btn btn-outline-secondary">Cancel</a>
                     </div>
                 </form>
 
 
-                <form action="{{url('api/recover-password')}}" class="d-none" id="recoverPasswordForm">
+                <form action="{{url('api/otp')}}" class="d-none" id="otpForm">
                     <input type="hidden" name="email" id="recoverEmailHiddenInput">
                     <input type="hidden" name="phone" id="recoverPhoneHiddenInput">
+
+                    <div class="form-group">
+                        <input required type="number" name="verification_code" id="otp"
+                               class="form-control otp" placeholder='0000000'>
+                    </div>
+                    <div class="text-center my-3">
+                        <button type="submit" id="otp-submit-button" class="btn btn-primary">Match OTP</button>
+                        <a href="{{url('/')}}"  class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+
+                <form action="{{url('api/recover-password')}}" class="d-none" id="recoverPasswordForm">
+                    <input type="hidden" name="email" id="passwordChangeHiddenEmailInput">
+                    <input type="hidden" name="phone" id="passwordChangeHiddenPhoneInput">
                     <div class="form-group">
                         <input required type="password" name="password" id="password"
                                class="form-control email phone" placeholder="New Password">
                     </div>
                     <div class="text-center my-3">
-                        <button type="submit" class="btn btn-primary form-control">Submit</button>
+                        <button type="submit" id="recover-password-submit-button" class="btn btn-primary">Recover Password</button>
+                        <a href="{{url('/')}}"  class="btn btn-outline-secondary">Cancel</a>
                     </div>
                 </form>
             </div>
@@ -564,26 +580,114 @@
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
             },
+            beforeSend: function () {
+                $('#recover-submit-button').prop('disabled', true);
+                $('#preloader').removeClass('d-none');
+            },
             success: function (response) {
-                console.log(response)
-                if (response.form === "recoverForm") {
-                    if (response.data) {
-                        $("#recoverPasswordForm").removeClass("d-none");
-                        $("#recoverForm").addClass("d-none");
-
-                        if (response.data.email) {
-                            $("#recoverEmailHiddenInput").val(response.data.email);
-                            $("#forget_modal_title").text("Set a new password for "+ response.data.email );
-                        } else if (response.data.phone) {
-                            $("#recoverPhoneHiddenInput").val(response.data.phone);
-                            $("#forget_modal_title").text("Set a new password for "+ response.data.phone);
-
-                        }
-                    } else {
-                        if(formData.emailorphone !== ''){
-                            $("#emailorphone_register_error").removeClass("d-none");
-                        }
+                if (response.status === 'success' && response.form === "recoverForm") {
+                    $("#otpForm").removeClass("d-none");
+                    $("#recoverForm").addClass("d-none");
+                    $("#recoverEmailHiddenInput").val(response.email);
+                    $("#passwordChangeHiddenEmailInput").val(response.email);
+                    $("#forget_modal_title").text("We sent an otp code in you email "+ response.email );
+                }
+            },
+            error: function (xhr, resp, text) {
+                if (xhr && xhr.responseJSON) {
+                    let response = xhr.responseJSON;
+                    if (response.status && response.status === "validate_error") {
+                        $.each(response.message, function (index, message) {
+                            $("." + message.field).addClass("is-invalid");
+                            $("." + message.field + "_label").addClass(
+                                "text-danger"
+                            );
+                            $("." + message.field + "_error").html(message.error);
+                        });
                     }
+                }
+            },
+            complete: function (xhr, status) {
+                $('#preloader').addClass('d-none');
+                $('#recover-submit-button').prop('disabled', false);
+            }
+        });
+    })
+
+    $('#otpForm').submit(function (e) {
+        e.preventDefault();
+        let form = $(this);
+        let form_data = JSON.stringify(form.serializeJSON());
+        let formData = JSON.parse(form_data);
+        let url = form.attr("action");
+        $.ajax({
+            type: 'post',
+            url: url,
+            data: formData,
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+            beforeSend: function () {
+            $('#otp-submit-button').prop('disabled', true);
+            $('#preloader').removeClass('d-none');
+        },
+            success: function (response) {
+                if(response.status === 'success' && response.form === 'otp_form'){
+                    $("#otpForm").addClass("d-none");
+                    $("#recoverForm").addClass("d-none");
+                    $("#recoverPasswordForm").removeClass("d-none");
+                    $("#forget_modal_title").text(response.message);
+
+                }
+
+            },
+            error: function (xhr, resp, text) {
+                if (xhr && xhr.responseJSON) {
+                    let response = xhr.responseJSON;
+                    if (response.status && response.status === "validate_error") {
+                        $.each(response.message, function (index, message) {
+                            $("." + message.field).addClass("is-invalid");
+                            $("." + message.field + "_label").addClass(
+                                "text-danger"
+                            );
+                            $("." + message.field + "_error").html(message.error);
+                        });
+                    }
+                }
+            },
+            complete: function (xhr, status) {
+                $('#preloader').addClass('d-none');
+                $('#otp-submit-button').prop('disabled', false);
+            }
+        });
+    })
+
+
+    $('#recoverPasswordForm').submit(function (e) {
+        e.preventDefault();
+        let form = $(this);
+        let form_data = JSON.stringify(form.serializeJSON());
+        let formData = JSON.parse(form_data);
+        let url = form.attr("action");
+        $.ajax({
+            type: 'post',
+            url: url,
+            data: formData,
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+            beforeSend: function () {
+            $('#recover-password-submit-button').prop('disabled', true);
+            $('#preloader').removeClass('d-none');
+        },
+            success: function (response) {
+                if(response.status === 'success'){
+                    toastr.success(response.message)
+
+                    setTimeout(function () {
+                        location.reload();
+                    }, 1000);
+
                 }
 
 
@@ -601,16 +705,15 @@
                         });
                     }
                 }
+            },
+            complete: function (xhr, status) {
+                $('#preloader').addClass('d-none');
+                $('#recover-password-submit-button').prop('disabled', false);
             }
         });
     })
 
-    $('#recoverPasswordForm').submit(function (e) {
-        e.preventDefault();
 
-        let form = $(this);
-        formSubmit("post", form);
-    })
 
 
     $(document).ready(function () {
@@ -668,16 +771,16 @@
                             if (item[1]) {
                                 Object.entries(item[1]).forEach(value => {
                                     if (value[0] === "'description'") {
-                                        $('#footerDescription').text(value[1])
+                                        $('#footerDescription').text(value[1] ? value[1]: '')
                                     }
                                     if (value[0] === "'terms_of_use'") {
                                         $('#confirmDialogTermsCondition').text(value[1] ? value[1]: '')
                                     }
                                     if (value[0] === "'about'") {
-                                        $('#aboutUs').text(value[1] ? value[1]: '')
+                                        $('#aboutUs').text(value[1] ? value[1]: 'Please create an about at admin panel to view in your site')
                                     }
                                     if (value[0] === "'notice'") {
-                                        $('#legalInfo').text(value[1] ? value[1]: '')
+                                        $('#legalInfo').text(value[1] ? value[1]: 'Please create an legal notice at admin panel to view in your site')
                                     }
 
                                 })

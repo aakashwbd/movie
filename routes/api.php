@@ -48,6 +48,7 @@ Route::post('user/{id}', [AuthController::class, 'statusUpdate']);
 
 Route::post('forgot-password', [AuthController::class, 'checkEmail']);
 Route::post('recover-password', [AuthController::class, 'updatePassword']);
+Route::post('otp', [AuthController::class, 'matchOTP']);
 
 Route::get('/share-website', [\App\Http\Controllers\SocialShareController::class, 'index']);
 
@@ -84,6 +85,7 @@ Route::post('contact-us', [\App\Http\Controllers\ContactUsController::class, 'st
 Route::prefix('admin')->group(function () {
 
 
+
     Route::get('/all', [\App\Http\Controllers\AdminController::class, 'index']);
     Route::patch('/update-password', [\App\Http\Controllers\AdminController::class, 'updatePassword']);
     Route::patch('/profile-update', [\App\Http\Controllers\AdminController::class, 'profileUpdate']);
@@ -109,6 +111,7 @@ Route::prefix('admin')->group(function () {
 
     Route::post('setting/store', [\App\Http\Controllers\SettingController::class, 'store']);
     Route::get('setting/get-all', [\App\Http\Controllers\SettingController::class, 'index']);
+    Route::get('setting/faq/search', [\App\Http\Controllers\SettingController::class, 'faqSearch']);
 
     Route::post('category/store', [\App\Http\Controllers\CategoryController::class, 'store']);
     Route::get('category/all', [\App\Http\Controllers\CategoryController::class, 'getAll']);

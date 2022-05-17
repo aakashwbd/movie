@@ -5,7 +5,8 @@
             <div class="d-flex align-items-center">
                 <h6 class="portion-title">Invitation Code</h6>
 
-                <button class="btn btn-primary rounded-32 my-3 ms-3" data-bs-target="#inviteModal" data-bs-toggle="modal">
+                <button class="btn btn-primary rounded-32 d-flex align-items-center my-3 ms-3" data-bs-target="#inviteModal" data-bs-toggle="modal">
+                    <span class="iconify" data-icon="carbon:add" data-width="20" data-height="20"></span>
                     Generate Invite Code
                 </button>
 

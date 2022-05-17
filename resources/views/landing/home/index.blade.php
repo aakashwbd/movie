@@ -3,7 +3,9 @@
     @if(session()->has('token'))
         <script>
             let token = "{{session()->get('token')}}"
+            let user = "{{session()->get('user')}}"
             localStorage.setItem('accessToken', token)
+            localStorage.setItem('user', JSON.stringify(user));
         </script>
     @endif
     <div class="container content-config" id="member-page">

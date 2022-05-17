@@ -110,6 +110,7 @@
                                 <label for="phone" class="form-label phone_label" id="phone_label">Phone</label>
                                 <input type="text" class="form-control py-2 rounded-0" name="phone" id="phone"
                                        placeholder="">
+                                <span class="text-danger phone_error" id="phone_error"></span>
                             </div>
 
                             <div class="form-group mb-2">

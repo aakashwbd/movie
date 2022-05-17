@@ -5,7 +5,10 @@
             <div class="d-flex align-items-center mb-5">
                 <h6 class="portion-title">Clean Video</h6>
 
-                <button data-bs-target="#videoModal" data-bs-toggle="modal" class="btn btn-primary rounded-32 ms-3">Add Video</button>
+                <button data-bs-target="#videoModal" data-bs-toggle="modal" class="btn btn-primary d-flex align-items-center rounded-32 ms-3">
+                    <span class="iconify" data-icon="carbon:add" data-width="20" data-height="20"></span>
+                    Add Video
+                </button>
             </div>
 
             <div class="modal fade" id="videoModal" data-bs-keyboard="false" tabindex="-1">
@@ -23,19 +26,29 @@
                                 </div>
 
                                 <div class="form-group mb-3">
-                                    <label for="category" class="form-label category_label" id="category_label">Select Category</label>
-                                    <select  class="form-select category" name="category_id" id="category" onchange="clearError(this)">
+                                    <label for="category" class="form-label category_id_label" id="category_id_label">Select Category</label>
+                                    <select  class="form-select category_id" name="category_id" id="category_id" onchange="clearError(this)">
                                         <option value="">Select category</option>
                                     </select>
-                                    <span class="text-danger category_error" id="category_error"></span>
+                                    <span class="text-danger category_id_error" id="category_id_error"></span>
                                 </div>
-
-                                <div id="videoPreview"></div>
 
                                 <label for="" class="form-label">Video</label>
 
-                                <input id="video-uploader" type="file" hidden onchange="videoUploader(event)">
-                                <label for="video-uploader" class="cursor-pointer btn border form-control">Click here to upload video</label>
+                                <div id="videoPreview"></div>
+
+
+
+                                <div id="videoUploaderDiv">
+                                    <input id="video-uploader" accept="video/*" type="file" hidden onchange="videoUploader(event)">
+                                    <label for="video-uploader" class="cursor-pointer btn border form-control">Click here to upload video</label>
+                                </div>
+
+                                <button id="re-upload-button" type="button" class="btn form-control border my-2 d-none">
+                                    click here to change the video
+                                </button>
+
+
 
                                 <input type="hidden" id="video" name="video">
 
@@ -85,6 +98,15 @@
          * */
         window.location.pathname === '/admin/video'? document.title = 'Dashboard | Video' : ''
 
+        $('#re-upload-button').on('click', function (){
+            $('#videoUploaderDiv').removeClass('d-none')
+            $('#re-upload-button').addClass('d-none')
+            $('#videoPreview').addClass('d-none')
+            $('#videoPreview').html('')
+            $('.uploaded_video').attr('src', '')
+
+
+        })
 
         function videoUploader (event) {
             event.preventDefault();
@@ -112,13 +134,17 @@
                     if(res.status === 'success'){
                         toastr.success(res.message)
                         $('#video').val(res.data)
+                        $('#videoPreview').removeClass('d-none')
 
                         $('#videoPreview').append(`
-                            <video style="width: 100%; height: 200px" controls>
+                            <video class="uploaded_video" style="width: 100%; height: 200px" controls>
                                 <source src="${res.data}" type="video/mp4">
                                 Your browser does not support the video tag.
                             </video>
                         `)
+
+                        $('#videoUploaderDiv').addClass('d-none')
+                        $('#re-upload-button').removeClass('d-none')
 
                     }
                 }, error: function (jqXhr, ajaxOptions, thrownError) {
@@ -142,7 +168,7 @@
                     if(response.status === 'success' && response.data.length > 0){
 
                         response.data.forEach(item=>{
-                            $('#category').append(`
+                            $('#category_id').append(`
                                 <option value="${item.id}">${item.name}</option>
                             `)
                         })
