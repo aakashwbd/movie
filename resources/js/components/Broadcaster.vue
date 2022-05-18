@@ -80,17 +80,18 @@ export default {
             // you can improve streamId generation code. As long as we include the
             // broadcaster's user id, we are assured of getting unique streaming link everytime.
             // the current code just generates a fixed streaming link for a particular user.
-            // return `${this.auth_user_id}12acde2`;
-            return `abc`;
+            return `${this.auth_user_id}12acde2`;
+            // return `abc`;
         },
 
         streamLink() {
             // just a quick fix. can be improved by setting the app_url
-            if (this.env === "production") {
-                return `https://laravel-video-call.herokuapp.com/streaming/${this.streamId}`;
-            } else {
-                return `http://127.0.0.1:8000/streaming/${this.streamId}`;
-            }
+            // if (this.env === "production") {
+            //     return `${window.origin}/streaming/${this.streamId}`;
+            // } else {
+            //     return `${window.origin}/streaming/${this.streamId}`;
+            // }
+            return `${window.origin}/streaming/${this.streamId}`;
         },
     },
     methods: {
